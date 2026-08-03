@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0%" stop-color="#28345c"/>
+      <stop offset="55%" stop-color="#171f38"/>
+      <stop offset="100%" stop-color="#0b0f19"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%"   stop-color="#f7d98c"/>
+      <stop offset="42%"  stop-color="#e0b054"/>
+      <stop offset="100%" stop-color="#a8762a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.92" r="0.62">
+      <stop offset="0%"   stop-color="#f0c76e" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#f0c76e" stop-opacity="0"/>
+    </radialGradient>
+    <path id="archPath" d="M150 400 V250 C150 168 236 150 256 88 C276 150 362 168 362 250 V400 Z"/>
+    <clipPath id="archClip"><use href="#archPath"/></clipPath>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+
+  <!-- شبكية هندسية خفيفة في الخلفية -->
+  <g opacity=".13" stroke="#b9c7ea" stroke-width="2" fill="none">
+    <g transform="rotate(45 256 256)">
+      <path d="M-120 40H640M-120 120H640M-120 200H640M-120 280H640M-120 360H640M-120 440H640"/>
+      <path d="M40 -120V640M120 -120V640M200 -120V640M280 -120V640M360 -120V640M440 -120V640"/>
+    </g>
+  </g>
+
+  <!-- القوس ممتلئ بالنور -->
+  <use href="#archPath" fill="url(#gold)"/>
+
+  <!-- شبكية داخل القوس -->
+  <g clip-path="url(#archClip)" opacity=".2" stroke="#5c3f12" stroke-width="2.5" fill="none">
+    <g transform="rotate(45 256 256)">
+      <path d="M60 -60V620M120 -60V620M180 -60V620M240 -60V620M300 -60V620M360 -60V620M420 -60V620"/>
+      <path d="M-60 60H620M-60 120H620M-60 180H620M-60 240H620M-60 300H620M-60 360H620M-60 420H620"/>
+    </g>
+  </g>
+
+  <!-- قوس داخلي رفيع -->
+  <path d="M194 400 V254 C194 196 244 184 256 142 C268 184 318 196 318 254 V400"
+        fill="none" stroke="#7d551a" stroke-width="5" opacity=".34" stroke-linecap="round"/>
+
+  <!-- نجمة ثمانية فوق القوس -->
+  <g transform="translate(256 46)" fill="#e8bc60">
+    <rect x="-19" y="-19" width="38" height="38" rx="3"/>
+    <rect x="-19" y="-19" width="38" height="38" rx="3" transform="rotate(45)"/>
+  </g>
+
+  <!-- قاعدة -->
+  <rect x="122" y="400" width="268" height="22" rx="7" fill="#c9963c"/>
+</svg>
