@@ -1626,15 +1626,22 @@ document.documentElement.setAttribute("lang","ar");
         'link[rel~="apple-touch-icon"],link[rel~="apple-touch-icon-precomposed"],' +
         'link[rel~="icon"],link[rel="shortcut icon"],link[rel="mask-icon"]'
       );
-      for(var i=0;i<stale.length;i++){
-        if(stale[i].getAttribute("href") !== ICON) stale[i].parentNode.removeChild(stale[i]);
+      function ours(href){
+        return !!href && (href === ICON || /icon-(180|512|1024)\.png(\?.*)?$/.test(href));
       }
+      var keep = false;
+      for(var i=0;i<stale.length;i++){
+        var href = stale[i].getAttribute("href");
+        if(ours(href)){ if(/apple-touch-icon/.test(stale[i].getAttribute("rel")||"")) keep = true; }
+        else stale[i].parentNode.removeChild(stale[i]);
+      }
+      if(keep) return;   /* أيقونتنا الثابتة موجودة — لا حاجة للحقن */
       function add(tag, attrs){
         var n = doc.createElement(tag);
         for(var k in attrs) n.setAttribute(k, attrs[k]);
         h.appendChild(n);
       }
-      if(!h.querySelector('link[rel="apple-touch-icon"][href="' + ICON.slice(0,60) + '"]')){
+      if(!h.querySelector('link[rel="apple-touch-icon"]')){
         add("link", { rel:"apple-touch-icon", sizes:"180x180", href:ICON });
         add("link", { rel:"apple-touch-icon-precomposed", sizes:"180x180", href:ICON });
         add("link", { rel:"icon", type:"image/png", href:ICON });
@@ -1682,6 +1689,15 @@ document.addEventListener("visibilitychange", function(){
     renderAll();
   }
 });
+
+/* عامل الخدمة: يجعل التطبيق يعمل بلا إنترنت عند استضافته على رابط https */
+try{
+  if("serviceWorker" in navigator && window.isSecureContext && !/claude\.ai$/.test(location.hostname)){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+}catch(e){}
 
 applyTheme();
 renderAll();
