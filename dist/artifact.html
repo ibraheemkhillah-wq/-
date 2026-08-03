@@ -1,0 +1,1512 @@
+<div id="app" dir="rtl" lang="ar">
+
+<style>
+/* ═══════════════ الرموز التصميمية ═══════════════ */
+:root{
+  --ground:#eef0f6;
+  --surface:#ffffff;
+  --surface-2:#e4e8f2;
+  --surface-3:#dae0ee;
+  --ink:#161a2b;
+  --ink-2:#4b5268;
+  --ink-3:#7b8299;
+  --line:#d6dce9;
+  --gold:#b8862f;
+  --gold-2:#8f671f;
+  --gold-wash:#f0e3c4;
+  --lapis:#2d4a7c;
+  --good:#35755a;
+  --warn:#a85434;
+  --shadow:0 1px 2px rgba(22,26,43,.06), 0 8px 24px -12px rgba(22,26,43,.18);
+  --shadow-sm:0 1px 2px rgba(22,26,43,.07);
+  --r:16px;
+  --r-sm:11px;
+  --font-display:"Damascus","SF Arabic","Geeza Pro","Noto Naskh Arabic",serif;
+  --font-body:"SF Arabic","Geeza Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --font-num:ui-rounded,"SF Pro Rounded",-apple-system,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0f1420;
+    --surface:#171d2d;
+    --surface-2:#212a3f;
+    --surface-3:#2b3550;
+    --ink:#e8ebf2;
+    --ink-2:#a3abbf;
+    --ink-3:#6d7690;
+    --line:#2a3348;
+    --gold:#d9a94a;
+    --gold-2:#f0c76e;
+    --gold-wash:#3a301a;
+    --lapis:#7b9de0;
+    --good:#4f9c78;
+    --warn:#d17a4d;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0f1420; --surface:#171d2d; --surface-2:#212a3f; --surface-3:#2b3550;
+  --ink:#e8ebf2; --ink-2:#a3abbf; --ink-3:#6d7690; --line:#2a3348;
+  --gold:#d9a94a; --gold-2:#f0c76e; --gold-wash:#3a301a; --lapis:#7b9de0;
+  --good:#4f9c78; --warn:#d17a4d;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+}
+:root[data-theme="light"]{
+  --ground:#eef0f6; --surface:#ffffff; --surface-2:#e4e8f2; --surface-3:#dae0ee;
+  --ink:#161a2b; --ink-2:#4b5268; --ink-3:#7b8299; --line:#d6dce9;
+  --gold:#b8862f; --gold-2:#8f671f; --gold-wash:#f0e3c4; --lapis:#2d4a7c;
+  --good:#35755a; --warn:#a85434;
+  --shadow:0 1px 2px rgba(22,26,43,.06), 0 8px 24px -12px rgba(22,26,43,.18);
+  --shadow-sm:0 1px 2px rgba(22,26,43,.07);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+#app{
+  direction:rtl;
+  font-family:var(--font-body);
+  background:var(--ground);
+  color:var(--ink);
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  -webkit-text-size-adjust:100%;
+  -webkit-tap-highlight-color:transparent;
+  font-size:16px;
+  line-height:1.6;
+}
+/* :where() يصفّر الأولوية حتى لا يبتلع خلفيات الأزرار المصنّفة أدناه */
+:where(#app button){font-family:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;-webkit-appearance:none;appearance:none;}
+#app :focus-visible{outline:2px solid var(--lapis);outline-offset:2px;border-radius:6px;}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums;letter-spacing:0;}
+
+/* ═══════════════ الترويسة ═══════════════ */
+.hdr{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb, var(--ground) 82%, transparent);
+  backdrop-filter:saturate(1.6) blur(14px);
+  -webkit-backdrop-filter:saturate(1.6) blur(14px);
+  border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top) + 10px) 16px 10px;
+  display:flex;align-items:center;gap:12px;
+}
+.brand{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;}
+.brand b{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:700;line-height:1.15;
+  letter-spacing:.01em;
+  color:var(--ink);
+}
+.brand small{font-size:.72rem;color:var(--ink-3);letter-spacing:.02em;}
+.hdr-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--ink-2);
+  box-shadow:var(--shadow-sm);flex:none;
+  transition:transform .15s ease;
+}
+.hdr-btn:active{transform:scale(.92);}
+
+main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto;}
+.view{display:none;flex-direction:column;gap:14px;}
+.view.on{display:flex;animation:fade .22s ease both;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  padding:15px;
+}
+.card-t{
+  font-family:var(--font-display);
+  font-size:1.02rem;font-weight:700;margin:0 0 3px;
+  text-wrap:balance;
+}
+.card-s{font-size:.78rem;color:var(--ink-3);margin:0 0 12px;}
+
+/* ═══════════════ متصفح التاريخ ═══════════════ */
+.nav-bar{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:7px 8px;box-shadow:var(--shadow-sm);
+}
+.nav-arrow{
+  width:36px;height:36px;flex:none;border-radius:10px;
+  background:var(--surface-2);display:grid;place-items:center;
+  color:var(--ink-2);font-size:1.05rem;transition:background .15s,transform .15s;
+}
+.nav-arrow:active{transform:scale(.9);}
+.nav-arrow:disabled{opacity:.3;pointer-events:none;}
+.nav-mid{flex:1;text-align:center;min-width:0;line-height:1.35;}
+.nav-mid b{display:block;font-size:.97rem;font-weight:700;}
+.nav-mid span{display:block;font-size:.73rem;color:var(--ink-3);}
+.today-btn{
+  font-size:.75rem;padding:5px 11px;border-radius:9px;
+  background:var(--gold-wash);color:var(--gold-2);font-weight:700;flex:none;
+}
+
+/* ═══════════════ قوس المحراب ═══════════════ */
+.mihrab-card{
+  background:linear-gradient(175deg, var(--surface) 0%, var(--surface-2) 100%);
+  border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:16px 15px 15px;
+  display:flex;align-items:center;gap:16px;
+  position:relative;overflow:hidden;
+}
+.mihrab-wrap{position:relative;width:104px;height:140px;flex:none;}
+.mihrab-wrap svg{width:100%;height:100%;display:block;overflow:visible;}
+.mihrab-read{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding-top:14px;text-align:center;
+  pointer-events:none;
+}
+.mihrab-read .big{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:2.15rem;font-weight:800;line-height:1;color:var(--ink);
+  text-shadow:0 0 10px var(--surface),0 0 18px var(--surface);
+}
+.mihrab-read .sub{
+  font-size:.68rem;color:var(--ink-2);margin-top:3px;letter-spacing:.04em;
+  text-shadow:0 0 8px var(--surface),0 0 12px var(--surface);
+}
+.mihrab-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:9px;}
+.mihrab-side h2{
+  font-family:var(--font-display);font-size:1.16rem;font-weight:700;
+  margin:0;line-height:1.35;text-wrap:balance;
+}
+.mihrab-side p{margin:0;font-size:.82rem;color:var(--ink-2);line-height:1.55;}
+.pct-line{display:flex;align-items:center;gap:8px;}
+.pct-line b{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:1.5rem;color:var(--gold);line-height:1;}
+.pct-line small{font-size:.72rem;color:var(--ink-3);}
+.mihrab-card.full::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 22% 60%, color-mix(in srgb,var(--gold) 16%,transparent) 0%, transparent 62%);
+}
+
+/* ═══════════════ شريط السلاسل ═══════════════ */
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.strip div{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 8px;text-align:center;box-shadow:var(--shadow-sm);
+}
+.strip b{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.32rem;font-weight:800;line-height:1.15;color:var(--ink);
+}
+.strip span{display:block;font-size:.67rem;color:var(--ink-3);margin-top:2px;letter-spacing:.01em;}
+.strip .hot b{color:var(--gold);}
+
+/* ═══════════════ تنبيه التعويض ═══════════════ */
+.debt-card{
+  background:color-mix(in srgb, var(--warn) 9%, var(--surface));
+  border:1px solid color-mix(in srgb, var(--warn) 32%, var(--line));
+  border-radius:var(--r);padding:13px 14px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.debt-card h3{
+  margin:0;font-family:var(--font-display);font-size:.97rem;font-weight:700;
+  color:var(--warn);display:flex;align-items:center;gap:7px;
+}
+.debt-row{
+  display:flex;align-items:center;gap:9px;font-size:.86rem;
+  padding-top:9px;border-top:1px solid color-mix(in srgb,var(--warn) 18%,transparent);
+}
+.debt-row:first-of-type{border-top:0;padding-top:0;}
+.debt-row .nm{flex:1;min-width:0;}
+.debt-row .ct{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-weight:800;color:var(--warn);font-size:.95rem;
+}
+.debt-row button{
+  font-size:.74rem;font-weight:700;padding:6px 11px;border-radius:9px;
+  background:var(--warn);color:#fff;flex:none;transition:transform .15s;
+}
+.debt-row button:active{transform:scale(.93);}
+
+/* ═══════════════ مجموعات المهام ═══════════════ */
+.grp{display:flex;flex-direction:column;gap:8px;}
+.grp-h{
+  display:flex;align-items:center;gap:10px;
+  padding:2px 3px;
+}
+.grp-h span{
+  font-size:.7rem;font-weight:700;letter-spacing:.13em;
+  color:var(--ink-3);white-space:nowrap;
+}
+.grp-h i{flex:1;height:1px;background:var(--line);}
+
+.task{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:12px 13px;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .2s, background .2s, transform .12s;
+  width:100%;text-align:start;
+}
+.task:active{transform:scale(.985);}
+.task.done{
+  border-color:color-mix(in srgb,var(--gold) 42%,var(--line));
+  background:color-mix(in srgb,var(--gold) 6%,var(--surface));
+}
+.tick{
+  width:29px;height:29px;flex:none;border-radius:50%;
+  border:2px solid var(--line);
+  display:grid;place-items:center;
+  transition:border-color .2s, background .2s, transform .2s;
+}
+.tick svg{width:15px;height:15px;stroke:#fff;stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .3s ease .05s;}
+.task.done .tick{background:var(--gold);border-color:var(--gold);transform:scale(1.06);}
+.task.done .tick svg{stroke-dashoffset:0;}
+.t-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.t-name{font-size:.96rem;font-weight:600;line-height:1.4;}
+.task.done .t-name{color:var(--ink-2);}
+.t-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:.7rem;color:var(--ink-3);}
+.pill{
+  font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:20px;
+  background:var(--surface-2);color:var(--ink-3);white-space:nowrap;
+}
+.pill.gold{background:var(--gold-wash);color:var(--gold-2);}
+.pill.warn{background:color-mix(in srgb,var(--warn) 15%,var(--surface));color:var(--warn);}
+
+/* ═══════════════ الملاحظة ═══════════════ */
+.note textarea{
+  width:100%;min-height:74px;resize:vertical;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:10px 12px;
+  font-family:var(--font-body);font-size:.88rem;line-height:1.65;
+  color:var(--ink);direction:rtl;
+}
+.note textarea::placeholder{color:var(--ink-3);}
+.note textarea:focus{outline:none;border-color:var(--lapis);}
+
+/* ═══════════════ شبكة الأسبوع ═══════════════ */
+.wk-head{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:4px;
+  padding:0 2px;
+}
+.wk-head div{text-align:center;line-height:1.25;}
+.wk-head b{display:block;font-size:.68rem;font-weight:700;color:var(--ink-2);}
+.wk-head small{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.63rem;color:var(--ink-3);
+}
+.wk-head .now b,.wk-head .now small{color:var(--gold);}
+
+.wk-row{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:10px 11px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:8px;
+}
+.wk-row-t{display:flex;align-items:baseline;gap:9px;}
+.wk-row-t .nm{flex:1;min-width:0;font-size:.88rem;font-weight:600;}
+.wk-row-t .tl{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.85rem;font-weight:800;white-space:nowrap;
+}
+.dots{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.dot{
+  aspect-ratio:1/1;width:100%;border-radius:8px;
+  background:var(--surface-2);border:1px solid transparent;
+  transition:background .18s, transform .15s;
+  display:grid;place-items:center;
+}
+.dot:active{transform:scale(.86);}
+.dot.on{background:var(--gold);}
+.dot.on::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--surface);opacity:.85;}
+.dot.future{opacity:.32;pointer-events:none;}
+.dot.now{border-color:var(--ink-3);}
+
+/* ═══════════════ أشرطة التقدم ═══════════════ */
+.bar-row{display:flex;flex-direction:column;gap:5px;padding:9px 0;border-top:1px solid var(--line);}
+.bar-row:first-of-type{border-top:0;padding-top:0;}
+.bar-top{display:flex;align-items:baseline;gap:8px;font-size:.85rem;}
+.bar-top .nm{flex:1;min-width:0;font-weight:600;}
+.bar-top .vl{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap;}
+.bar{height:7px;border-radius:20px;background:var(--surface-2);overflow:hidden;}
+.bar i{display:block;height:100%;border-radius:20px;transition:width .5s cubic-bezier(.2,.8,.3,1);}
+.lv-hi{color:var(--good);} .lv-mid{color:var(--gold);} .lv-lo{color:var(--warn);}
+.bg-hi{background:var(--good);} .bg-mid{background:var(--gold);} .bg-lo{background:var(--warn);}
+
+/* ═══════════════ الملخّص الكبير ═══════════════ */
+.sum{display:flex;align-items:center;gap:15px;}
+.sum-ring{position:relative;width:88px;height:88px;flex:none;}
+.sum-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.sum-ring circle{fill:none;stroke-width:8;stroke-linecap:round;}
+.sum-ring .tr{stroke:var(--surface-2);}
+.sum-ring .vl{transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.3,1);}
+.sum-ring b{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.24rem;font-weight:800;
+}
+.sum-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;}
+.sum-txt .kv{display:flex;align-items:baseline;gap:7px;font-size:.82rem;color:var(--ink-2);}
+.sum-txt .kv b{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.95rem;color:var(--ink);font-weight:800;
+}
+
+/* ═══════════════ خريطة الشهر ═══════════════ */
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.heat .cell{
+  aspect-ratio:1/1;border-radius:9px;position:relative;
+  background:var(--surface-2);border:1px solid transparent;
+  display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.72rem;font-weight:700;color:var(--ink-3);
+  transition:transform .15s;
+}
+.heat .cell:active{transform:scale(.9);}
+.heat .cell.pad{background:transparent;pointer-events:none;}
+.heat .cell.f{color:var(--ink);}
+.heat .cell.full{color:#fff;}
+.heat .cell.now{border-color:var(--ink);}
+.heat .cell.fut{opacity:.35;pointer-events:none;}
+.legend{display:flex;align-items:center;gap:6px;justify-content:flex-end;font-size:.68rem;color:var(--ink-3);margin-top:10px;}
+.legend i{width:13px;height:13px;border-radius:4px;display:block;}
+
+/* ═══════════════ المراجعة التلقائية ═══════════════ */
+.review{display:flex;flex-direction:column;gap:10px;}
+.rv{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.85rem;line-height:1.6;color:var(--ink-2);
+}
+.rv i{
+  width:6px;height:6px;border-radius:50%;flex:none;margin-top:.6em;
+  background:var(--lapis);
+}
+.rv.good i{background:var(--good);} .rv.warn i{background:var(--warn);} .rv.gold i{background:var(--gold);}
+.rv b{color:var(--ink);font-weight:700;}
+.verdict{
+  border-radius:var(--r-sm);padding:12px 13px;
+  font-family:var(--font-display);font-size:1rem;line-height:1.6;font-weight:700;
+  text-wrap:balance;
+}
+.verdict.hi{background:color-mix(in srgb,var(--good) 12%,var(--surface));color:var(--good);}
+.verdict.mid{background:var(--gold-wash);color:var(--gold-2);}
+.verdict.lo{background:color-mix(in srgb,var(--warn) 11%,var(--surface));color:var(--warn);}
+
+/* ═══════════════ صفحة المزيد ═══════════════ */
+.rowbtn{
+  display:flex;align-items:center;gap:11px;width:100%;
+  padding:12px 3px;border-top:1px solid var(--line);
+  font-size:.9rem;text-align:start;
+}
+.rowbtn:first-of-type{border-top:0;}
+.rowbtn .nm{flex:1;min-width:0;}
+.rowbtn .ar{color:var(--ink-3);font-size:.9rem;}
+.rowbtn.danger .nm{color:var(--warn);}
+.tk-manage{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:.88rem;}
+.tk-manage:first-of-type{border-top:0;}
+.tk-manage .nm{flex:1;min-width:0;}
+.tk-manage .x{width:30px;height:30px;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;color:var(--warn);flex:none;}
+.toggle{
+  width:46px;height:27px;border-radius:20px;background:var(--surface-3);
+  position:relative;flex:none;transition:background .2s;
+}
+.toggle::after{
+  content:"";position:absolute;top:3px;right:3px;width:21px;height:21px;border-radius:50%;
+  background:var(--surface);box-shadow:var(--shadow-sm);transition:transform .22s cubic-bezier(.2,.8,.3,1);
+}
+.toggle.on{background:var(--gold);}
+.toggle.on::after{transform:translateX(-19px);}
+.addrow{display:flex;gap:8px;margin-top:12px;}
+.addrow input{
+  flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:10px 12px;font-family:var(--font-body);
+  font-size:.88rem;color:var(--ink);direction:rtl;
+}
+.addrow input:focus{outline:none;border-color:var(--lapis);}
+.addrow button{
+  padding:0 16px;border-radius:var(--r-sm);background:var(--lapis);color:#fff;
+  font-weight:700;font-size:.85rem;flex:none;
+}
+
+/* ═══════════════ شريط التبويب ═══════════════ */
+.tabs{
+  position:sticky;bottom:0;z-index:30;
+  background:color-mix(in srgb, var(--ground) 84%, transparent);
+  backdrop-filter:saturate(1.6) blur(14px);
+  -webkit-backdrop-filter:saturate(1.6) blur(14px);
+  border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px 6px calc(env(safe-area-inset-bottom) + 6px);
+}
+.tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 2px;border-radius:12px;color:var(--ink-3);
+  transition:color .18s;
+}
+.tab svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;}
+.tab span{font-size:.66rem;font-weight:600;}
+.tab.on{color:var(--gold);}
+.tab.on svg{stroke-width:2.1;}
+
+/* ═══════════════ الرسالة المنبثقة ═══════════════ */
+.toast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 78px);
+  transform:translate(-50%,14px);
+  background:var(--ink);color:var(--ground);
+  padding:10px 17px;border-radius:22px;font-size:.83rem;font-weight:600;
+  box-shadow:0 8px 30px -8px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;
+  z-index:90;max-width:88vw;text-align:center;
+}
+.toast.on{opacity:1;transform:translate(-50%,0);}
+
+.empty{text-align:center;color:var(--ink-3);font-size:.85rem;padding:22px 10px;line-height:1.7;}
+
+@media (prefers-reduced-motion:reduce){
+  #app *,#app *::before,#app *::after{
+    animation-duration:.01ms !important;transition-duration:.01ms !important;
+  }
+}
+@media (max-width:340px){
+  .mihrab-wrap{width:86px;height:118px;}
+  .strip b{font-size:1.15rem;}
+}
+</style>
+
+<!-- ══════════════════ الترويسة ══════════════════ -->
+<header class="hdr">
+  <div class="brand">
+    <b>أساس</b>
+    <small id="hdrDate">—</small>
+  </div>
+  <button class="hdr-btn" id="themeBtn" aria-label="تبديل المظهر">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+</header>
+
+<main>
+
+<!-- ══════════════════ اليوم ══════════════════ -->
+<section class="view on" id="v-today">
+  <div class="nav-bar">
+    <button class="nav-arrow" id="dPrev" aria-label="اليوم السابق">›</button>
+    <div class="nav-mid"><b id="dName">—</b><span id="dHijri">—</span></div>
+    <button class="today-btn" id="dToday">اليوم</button>
+    <button class="nav-arrow" id="dNext" aria-label="اليوم التالي">‹</button>
+  </div>
+
+  <div class="mihrab-card" id="mihrabCard">
+    <div class="mihrab-wrap">
+      <svg viewBox="0 0 200 260" aria-hidden="true">
+        <defs>
+          <linearGradient id="gFill" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="var(--gold)" stop-opacity=".95"/>
+            <stop offset="100%" stop-color="var(--gold)" stop-opacity=".38"/>
+          </linearGradient>
+          <clipPath id="cArch">
+            <path d="M24 252 L24 128 C24 62 58 24 100 20 C142 24 176 62 176 128 L176 252 Z"/>
+          </clipPath>
+          <pattern id="pGeo" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <path d="M13 0 L13 26 M0 13 L26 13" stroke="var(--ink-3)" stroke-width=".7" opacity=".25"/>
+          </pattern>
+        </defs>
+        <g clip-path="url(#cArch)">
+          <rect x="0" y="0" width="200" height="260" fill="var(--surface-2)"/>
+          <rect x="0" y="0" width="200" height="260" fill="url(#pGeo)"/>
+          <rect id="archFill" x="0" y="260" width="200" height="260" fill="url(#gFill)"
+                style="transition:y .55s cubic-bezier(.2,.8,.3,1)"/>
+        </g>
+        <path d="M24 252 L24 128 C24 62 58 24 100 20 C142 24 176 62 176 128 L176 252 Z"
+              fill="none" stroke="var(--ink-3)" stroke-width="2.5" opacity=".5"/>
+        <path d="M46 250 L46 134 C46 80 70 50 100 46 C130 50 154 80 154 134 L154 250"
+              fill="none" stroke="var(--ink-3)" stroke-width="1" opacity=".28"/>
+      </svg>
+      <div class="mihrab-read">
+        <div class="big" id="mBig">0</div>
+        <div class="sub" id="mSub">من 8</div>
+      </div>
+    </div>
+    <div class="mihrab-side">
+      <h2 id="mTitle">—</h2>
+      <p id="mMsg">—</p>
+      <div class="pct-line"><b id="mPct">0٪</b><small id="mLeft">—</small></div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div id="stStreak"><b>0</b><span>سلسلة الأيام</span></div>
+    <div id="stBest"><b>0</b><span>أطول سلسلة</span></div>
+    <div id="stWeek"><b>0٪</b><span>هذا الأسبوع</span></div>
+  </div>
+
+  <div id="debtBox"></div>
+  <div id="taskList" style="display:flex;flex-direction:column;gap:16px;"></div>
+
+  <div class="card note">
+    <h3 class="card-t">ملاحظة اليوم</h3>
+    <p class="card-s">خاطرة، دعاء، أو ما قرأته اليوم</p>
+    <textarea id="noteBox" placeholder="اكتب هنا…" rows="3"></textarea>
+  </div>
+</section>
+
+<!-- ══════════════════ الأسبوع ══════════════════ -->
+<section class="view" id="v-week">
+  <div class="nav-bar">
+    <button class="nav-arrow" id="wPrev" aria-label="الأسبوع السابق">›</button>
+    <div class="nav-mid"><b id="wRange">—</b><span id="wLabel">—</span></div>
+    <button class="today-btn" id="wNow">الحالي</button>
+    <button class="nav-arrow" id="wNext" aria-label="الأسبوع التالي">‹</button>
+  </div>
+
+  <div class="card">
+    <div class="sum">
+      <div class="sum-ring">
+        <svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="42"/><circle class="vl" id="wRing" cx="50" cy="50" r="42"/></svg>
+        <b id="wRingTxt">0٪</b>
+      </div>
+      <div class="sum-txt">
+        <div class="kv"><span id="wDoneLbl">المُنجز</span><b id="wDone">0</b><span>من</span><b id="wTotal">0</b></div>
+        <div class="kv"><span>أيام كاملة</span><b id="wPerfect">0</b><span>من 7</span></div>
+        <div class="kv"><span>تعويضات سُدّدت</span><b id="wMakeup">0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wk-head" id="wHead"></div>
+  <div id="wRows" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+  <div class="card">
+    <h3 class="card-t">المراجعة الأسبوعية</h3>
+    <p class="card-s">تُعبَّأ تلقائيًا — الأسبوع يبدأ يوم الاثنين</p>
+    <div class="review" id="wReview"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ الشهر ══════════════════ -->
+<section class="view" id="v-month">
+  <div class="nav-bar">
+    <button class="nav-arrow" id="mPrev" aria-label="الشهر السابق">›</button>
+    <div class="nav-mid"><b id="mName">—</b><span id="mHijriName">—</span></div>
+    <button class="today-btn" id="mNow">الحالي</button>
+    <button class="nav-arrow" id="mNext" aria-label="الشهر التالي">‹</button>
+  </div>
+
+  <div class="card">
+    <div class="sum">
+      <div class="sum-ring">
+        <svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="42"/><circle class="vl" id="moRing" cx="50" cy="50" r="42"/></svg>
+        <b id="moRingTxt">0٪</b>
+      </div>
+      <div class="sum-txt">
+        <div class="kv"><span id="moDoneLbl">المُنجز</span><b id="moDone">0</b><span>من</span><b id="moTotal">0</b></div>
+        <div class="kv"><span>أيام كاملة</span><b id="moPerfect">0</b></div>
+        <div class="kv"><span>تعويضات سُدّدت</span><b id="moMakeup">0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">خريطة الشهر</h3>
+    <p class="card-s">كل مربّع يوم — كلّما اشتدّ الذهب زاد الإنجاز</p>
+    <div class="wk-head" id="moHead" style="margin-bottom:6px;"></div>
+    <div class="heat" id="moHeat"></div>
+    <div class="legend">
+      <span>أقل</span>
+      <i style="background:var(--surface-2)"></i>
+      <i style="background:color-mix(in srgb,var(--gold) 30%,var(--surface-2))"></i>
+      <i style="background:color-mix(in srgb,var(--gold) 60%,var(--surface-2))"></i>
+      <i style="background:var(--gold)"></i>
+      <span>أكثر</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">كل مهمة على حدة</h3>
+    <p class="card-s">المُنجز من عدد أيام الشهر المنقضية</p>
+    <div id="moBars"></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">المراجعة الشهرية</h3>
+    <p class="card-s">تُعبَّأ تلقائيًا من سجلّك</p>
+    <div class="review" id="moReview"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ المزيد ══════════════════ -->
+<section class="view" id="v-more">
+  <div class="card">
+    <h3 class="card-t">المهام</h3>
+    <p class="card-s">أطفئ ما لا يلزمك، أو أضف مهمة خاصة بك</p>
+    <div id="tkManage"></div>
+    <div class="addrow">
+      <input id="newTask" placeholder="اسم مهمة جديدة" maxlength="40">
+      <button id="addTask">إضافة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">النسخة الاحتياطية</h3>
+    <p class="card-s">سجلّك محفوظ في هذا المتصفّح فقط — احفظ نسخة بين حين وآخر</p>
+    <button class="rowbtn" id="expBtn"><span class="nm">تصدير نسخة احتياطية</span><span class="ar">↓</span></button>
+    <button class="rowbtn" id="impBtn"><span class="nm">استيراد نسخة</span><span class="ar">↑</span></button>
+    <button class="rowbtn danger" id="resetBtn"><span class="nm">مسح كل البيانات</span><span class="ar">✕</span></button>
+    <input type="file" id="impFile" accept="application/json,.json" hidden>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">عن أساس</h3>
+    <p style="margin:0;font-size:.85rem;line-height:1.75;color:var(--ink-2)">
+      متتبّع يومي بسيط: ثمانِ مهامّ ثابتة، وأسبوعٌ يبدأ من الاثنين، ومراجعةٌ تُكتب عنك.
+      المهامّ الموسومة بـ<span class="pill gold" style="margin:0 3px">تعويض</span>تُحصي ما فاتك وتذكّرك به حتى تسدّده.
+    </p>
+    <p style="margin:12px 0 0;font-size:.78rem;color:var(--ink-3);line-height:1.7">
+      لتثبيته على الشاشة الرئيسية في الآيفون: من سفاري اضغط زر المشاركة ← «إضافة إلى الشاشة الرئيسية».
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════ التبويبات ══════════════════ -->
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-v="today">
+    <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5Z"/><path d="M8 2.5v3M16 2.5v3M4 9.5h16"/><path d="m9 14 2 2 4-4"/></svg>
+    <span>اليوم</span>
+  </button>
+  <button class="tab" data-v="week">
+    <svg viewBox="0 0 24 24"><path d="M4 20V10M9.3 20V4M14.7 20v-7M20 20V7"/></svg>
+    <span>الأسبوع</span>
+  </button>
+  <button class="tab" data-v="month">
+    <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8.5 13h2M13.5 13h2M8.5 16.5h2M13.5 16.5h2"/></svg>
+    <span>الشهر</span>
+  </button>
+  <button class="tab" data-v="more">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="18" r="1.4"/></svg>
+    <span>المزيد</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════════ التخزين ═══════════════ */
+var KEY = "asas.v1";
+var memFallback = null;
+function readStore(){
+  try{ var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; }
+  catch(e){ return memFallback; }
+}
+function writeStore(o){
+  memFallback = o;
+  try{ localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){}
+}
+
+/* ═══════════════ التواريخ ═══════════════ */
+function key(d){
+  return d.getFullYear() + "-" +
+    String(d.getMonth()+1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
+}
+function fromKey(k){ var p = k.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function startOfDay(d){ var x = new Date(d); x.setHours(0,0,0,0); return x; }
+function addDays(d,n){ var x = new Date(d); x.setDate(x.getDate()+n); return x; }
+/* الأسبوع يبدأ يوم الاثنين */
+function weekStart(d){
+  var x = startOfDay(d);
+  var off = (x.getDay() + 6) % 7;   /* الأحد=6 ، الاثنين=0 */
+  return addDays(x, -off);
+}
+function daysBetween(a,b){
+  return Math.round((startOfDay(b) - startOfDay(a)) / 86400000);
+}
+
+var DAY_LONG  = ["الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت","الأحد"];
+var DAY_SHORT = ["إث","ثل","أر","خم","جم","سب","أح"];
+var MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+
+function hijri(d, opts){
+  try{
+    return new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura", opts).format(d);
+  }catch(e){
+    try{ return new Intl.DateTimeFormat("ar-SA-u-ca-islamic", opts).format(d); }
+    catch(e2){ return ""; }
+  }
+}
+function gDate(d){ return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear(); }
+function dowIndex(d){ return (d.getDay() + 6) % 7; }
+
+/* ═══════════════ المهام الافتراضية ═══════════════ */
+var DEFAULTS = [
+  { id:"fajr",    name:"صلاة الفجر على وقتها",     grp:"dawn",  makeup:false },
+  { id:"athkarM", name:"أذكار الصباح",              grp:"dawn",  makeup:false },
+  { id:"wird",    name:"الورد القرآني",             grp:"day",   makeup:true  },
+  { id:"wirdKid", name:"الورد القرآني لمولودنا",    grp:"day",   makeup:true  },
+  { id:"book",    name:"قراءة كتاب",                grp:"day",   makeup:true  },
+  { id:"athkarE", name:"أذكار المساء",              grp:"night", makeup:false },
+  { id:"witr",    name:"الوتر",                     grp:"night", makeup:false },
+  { id:"athkarS", name:"أذكار النوم",               grp:"night", makeup:false }
+];
+var GROUPS = [
+  { id:"dawn",  label:"الفجر والصباح" },
+  { id:"day",   label:"النهار" },
+  { id:"night", label:"المساء والليل" }
+];
+
+/* ═══════════════ الحالة ═══════════════ */
+var S = readStore();
+if(!S || !S.tasks){
+  S = {
+    v:1,
+    start: key(new Date()),
+    tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
+    log:{},        /* "2026-08-03": { fajr:1, wird:1 } */
+    makeups:{},    /* taskId: ["2026-08-03", ...] سجلّ التعويضات المسدّدة */
+    notes:{},
+    theme:null
+  };
+  writeStore(S);
+}
+S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
+if(!S.start) S.start = key(new Date());
+
+function save(){ writeStore(S); }
+function activeTasks(){ return S.tasks.filter(function(t){ return t.on !== false; }); }
+function taskById(id){ for(var i=0;i<S.tasks.length;i++) if(S.tasks[i].id===id) return S.tasks[i]; return null; }
+function isDone(k, id){ return !!(S.log[k] && S.log[k][id]); }
+function setDone(k, id, on){
+  if(!S.log[k]) S.log[k] = {};
+  if(on) S.log[k][id] = 1; else delete S.log[k][id];
+  if(Object.keys(S.log[k]).length === 0) delete S.log[k];
+  save();
+}
+function dayScore(k, tasks){
+  var n = 0;
+  for(var i=0;i<tasks.length;i++) if(isDone(k, tasks[i].id)) n++;
+  return n;
+}
+
+/* ═══════════════ التعويضات ═══════════════ */
+/* الدَّين = عدد الأيام الماضية التي فاتت فيها المهمة − عدد التعويضات المسدَّدة */
+function debtOf(id){
+  var t = taskById(id);
+  if(!t || !t.makeup || t.on === false) return 0;
+  var from = fromKey(t.since || S.start);
+  var today = startOfDay(new Date());
+  var missed = 0;
+  for(var d = new Date(from); d < today; d = addDays(d,1)){
+    if(!isDone(key(d), id)) missed++;
+  }
+  var paid = (S.makeups[id] || []).length;
+  return Math.max(0, missed - paid);
+}
+function payMakeup(id){
+  if(!S.makeups[id]) S.makeups[id] = [];
+  S.makeups[id].push(key(new Date()));
+  save();
+}
+function makeupsInRange(a,b){
+  var n = 0, ka = key(a), kb = key(b);
+  for(var id in S.makeups){
+    var arr = S.makeups[id];
+    for(var i=0;i<arr.length;i++) if(arr[i] >= ka && arr[i] <= kb) n++;
+  }
+  return n;
+}
+
+/* ═══════════════ السلاسل ═══════════════ */
+function overallStreak(){
+  var tasks = activeTasks();
+  if(!tasks.length) return 0;
+  var today = startOfDay(new Date());
+  var n = 0;
+  var d = new Date(today);
+  /* اليوم لا يكسر السلسلة إن لم يكتمل بعد */
+  if(dayScore(key(d), tasks) < tasks.length) d = addDays(d,-1);
+  var guard = 0;
+  while(guard++ < 3000){
+    if(dayScore(key(d), tasks) === tasks.length){ n++; d = addDays(d,-1); }
+    else break;
+  }
+  return n;
+}
+function bestStreak(){
+  var tasks = activeTasks();
+  if(!tasks.length) return 0;
+  var from = fromKey(S.start), today = startOfDay(new Date());
+  var best = 0, cur = 0;
+  for(var d = new Date(from); d <= today; d = addDays(d,1)){
+    if(dayScore(key(d), tasks) === tasks.length){ cur++; if(cur>best) best = cur; }
+    else cur = 0;
+  }
+  return best;
+}
+function taskStreak(id){
+  var today = startOfDay(new Date());
+  var d = new Date(today), n = 0;
+  if(!isDone(key(d), id)) d = addDays(d,-1);
+  var guard = 0;
+  while(guard++ < 3000 && isDone(key(d), id)){ n++; d = addDays(d,-1); }
+  return n;
+}
+
+/* ═══════════════ أدوات ═══════════════ */
+function pct(a,b){ return b>0 ? Math.round(a*100/b) : 0; }
+function ar(n){ return String(n); }
+
+/* صيغ الجمع العربية: مفرد / مثنّى / جمع قلّة (٣–١٠) / تمييز مفرد منصوب (١١+) */
+function days(n){
+  if(n === 1) return "يوم واحد";
+  if(n === 2) return "يومان";
+  if(n >= 3 && n <= 10) return n + " أيام";
+  return n + " يومًا";
+}
+function streakTxt(n){
+  if(n === 2) return "يومان متتاليان";
+  if(n >= 3 && n <= 10) return n + " أيام متتالية";
+  return n + " يومًا متتاليًا";
+}
+function tasksLeft(n){
+  if(n === 1) return "بقيت مهمّة";
+  if(n === 2) return "بقيت مهمّتان";
+  if(n >= 3 && n <= 10) return "بقيت " + n + " مهامّ";
+  return "بقيت " + n + " مهمّة";
+}
+function lvl(p){ return p>=80 ? "hi" : (p>=50 ? "mid" : "lo"); }
+function el(id){ return document.getElementById(id); }
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(e){} }
+var toastT;
+function toast(msg){
+  var t = el("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ t.classList.remove("on"); }, 2100);
+}
+
+/* ═══════════════ مؤشّرات التنقّل ═══════════════ */
+var curDay   = startOfDay(new Date());
+var curWeek  = weekStart(new Date());
+var curMonth = (function(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
+
+/* ═══════════════ عرض: اليوم ═══════════════ */
+var MSG_FULL = ["اكتمل يومك. تمّت المهامّ كلّها.","يومٌ تامّ — أحسنتَ الحفاظ عليه.","كلّ ما نويتَه أُنجز اليوم."];
+var MSG_HIGH = ["بقي القليل، أتمِمه.","أنت على وشك إتمام اليوم.","خطوة أخرى ويكتمل."];
+var MSG_MID  = ["نصف الطريق — واصِل.","السجلّ يتقدّم، لا تقف.","ما تبقّى أقرب ممّا تظنّ."];
+var MSG_LOW  = ["ابدأ بواحدة، والبقيّة تتبع.","أوّل خطوة اليوم تصنع الفرق.","لم يفت الوقت بعد."];
+function pick(arr, seed){ return arr[seed % arr.length]; }
+
+function renderToday(){
+  var tasks = activeTasks();
+  var k = key(curDay);
+  var today = startOfDay(new Date());
+  var isToday = k === key(today);
+  var isFuture = curDay > today;
+
+  el("dName").textContent = isToday ? "اليوم · " + DAY_LONG[dowIndex(curDay)]
+    : DAY_LONG[dowIndex(curDay)] + " · " + gDate(curDay);
+  var h = hijri(curDay, { day:"numeric", month:"long", year:"numeric" });
+  el("dHijri").textContent = h ? h : gDate(curDay);
+  el("dToday").style.visibility = isToday ? "hidden" : "visible";
+  el("dNext").disabled = isFuture || isToday;
+
+  var done = dayScore(k, tasks), total = tasks.length;
+  var p = pct(done, total);
+
+  el("mBig").textContent = ar(done);
+  el("mSub").textContent = "من " + ar(total);
+  el("mPct").textContent = ar(p) + "٪";
+  el("mLeft").textContent = done === total && total>0 ? "مكتمل" : tasksLeft(total-done);
+  el("archFill").setAttribute("y", String(260 - (260 * p / 100)));
+  el("mihrabCard").classList.toggle("full", total>0 && done === total);
+
+  var seed = curDay.getDate();
+  if(total === 0){ el("mTitle").textContent = "لا مهامّ مفعّلة"; el("mMsg").textContent = "فعّل مهامّك من صفحة المزيد."; }
+  else if(done === total){ el("mTitle").textContent = "تمّ اليوم"; el("mMsg").textContent = pick(MSG_FULL, seed); }
+  else if(p >= 70){ el("mTitle").textContent = "قاربتَ الإتمام"; el("mMsg").textContent = pick(MSG_HIGH, seed); }
+  else if(p >= 40){ el("mTitle").textContent = "في منتصف اليوم"; el("mMsg").textContent = pick(MSG_MID, seed); }
+  else { el("mTitle").textContent = "بداية اليوم"; el("mMsg").textContent = pick(MSG_LOW, seed); }
+
+  /* شريط السلاسل */
+  var st = overallStreak(), bs = bestStreak();
+  el("stStreak").querySelector("b").textContent = ar(st);
+  el("stStreak").classList.toggle("hot", st > 0);
+  el("stBest").querySelector("b").textContent = ar(bs);
+  var ws = weekStats(weekStart(new Date()));
+  el("stWeek").querySelector("b").textContent = ar(ws.pct) + "٪";
+
+  /* تنبيه التعويض */
+  var debts = [];
+  tasks.forEach(function(t){
+    if(t.makeup){ var d = debtOf(t.id); if(d>0) debts.push({ t:t, n:d }); }
+  });
+  var box = el("debtBox");
+  if(debts.length){
+    var html = '<div class="debt-card"><h3>تذكير بالتعويض</h3>';
+    debts.forEach(function(x){
+      html += '<div class="debt-row"><span class="nm">'+esc(x.t.name)+'</span>'+
+              '<span class="ct">'+days(x.n)+'</span>'+
+              '<button data-pay="'+esc(x.t.id)+'">سدّدت واحدة</button></div>';
+    });
+    html += '</div>';
+    box.innerHTML = html;
+  } else box.innerHTML = "";
+
+  /* قائمة المهام */
+  var list = el("taskList");
+  list.innerHTML = "";
+  if(!tasks.length){
+    list.innerHTML = '<div class="empty">لا توجد مهامّ مفعّلة.<br>أضف أو فعّل مهامّك من صفحة «المزيد».</div>';
+  }
+  GROUPS.forEach(function(g){
+    var inG = tasks.filter(function(t){ return (t.grp||"day") === g.id; });
+    if(!inG.length) return;
+    var wrap = document.createElement("div");
+    wrap.className = "grp";
+    var head = document.createElement("div");
+    head.className = "grp-h";
+    head.innerHTML = '<span>'+esc(g.label)+'</span><i></i>';
+    wrap.appendChild(head);
+    inG.forEach(function(t){
+      var on = isDone(k, t.id);
+      var b = document.createElement("button");
+      b.className = "task" + (on ? " done" : "");
+      b.setAttribute("data-toggle", t.id);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      var strk = taskStreak(t.id);
+      var meta = "";
+      if(strk > 1) meta += '<span class="pill gold">'+streakTxt(strk)+'</span>';
+      if(t.makeup){
+        var d = debtOf(t.id);
+        meta += d > 0
+          ? '<span class="pill warn">تعويض '+ar(d)+'</span>'
+          : '<span class="pill">تعويض</span>';
+      }
+      b.innerHTML =
+        '<span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4.5 4.5L19 7"/></svg></span>'+
+        '<span class="t-body"><span class="t-name">'+esc(t.name)+'</span>'+
+        (meta ? '<span class="t-meta">'+meta+'</span>' : '')+'</span>';
+      wrap.appendChild(b);
+    });
+    list.appendChild(wrap);
+  });
+
+  el("noteBox").value = S.notes[k] || "";
+  el("hdrDate").textContent = DAY_LONG[dowIndex(today)] + " · " + gDate(today);
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[c];
+  });
+}
+
+/* ═══════════════ حساب الأسبوع ═══════════════ */
+function weekStats(ws){
+  var tasks = activeTasks();
+  var today = startOfDay(new Date());
+  var start = fromKey(S.start);
+  var days = [], done = 0, total = 0, perfect = 0, counted = 0;
+  var per = {};
+  tasks.forEach(function(t){ per[t.id] = 0; });
+
+  for(var i=0;i<7;i++){
+    var d = addDays(ws, i), k = key(d);
+    var future = d > today, before = d < start;
+    var sc = dayScore(k, tasks);
+    days.push({ d:d, k:k, score:sc, future:future });
+    if(!future && !before){
+      counted++;
+      done += sc; total += tasks.length;
+      if(tasks.length && sc === tasks.length) perfect++;
+    }
+    if(!future){ tasks.forEach(function(t){ if(isDone(k, t.id)) per[t.id]++; }); }
+  }
+  return {
+    ws:ws, days:days, done:done, total:total, perfect:perfect,
+    counted:counted, per:per, pct:pct(done,total),
+    ended: addDays(ws,6) < today,
+    makeups: makeupsInRange(ws, addDays(ws,6))
+  };
+}
+
+function renderWeek(){
+  var tasks = activeTasks();
+  var st = weekStats(curWeek);
+  var today = startOfDay(new Date());
+  var isNow = key(curWeek) === key(weekStart(today));
+  var end = addDays(curWeek, 6);
+
+  el("wRange").textContent = curWeek.getDate() + " " + MONTHS[curWeek.getMonth()] +
+    " – " + end.getDate() + " " + MONTHS[end.getMonth()];
+  el("wLabel").textContent = isNow ? "الأسبوع الحالي" : (st.ended ? "أسبوع منتهٍ" : "أسبوع قادم");
+  el("wNow").style.visibility = isNow ? "hidden" : "visible";
+  el("wNext").disabled = isNow;
+
+  ring("wRing","wRingTxt", st.pct);
+  el("wDoneLbl").textContent = st.ended ? "المُنجز" : "المُنجز حتى الآن";
+  el("wDone").textContent = ar(st.done);
+  el("wTotal").textContent = ar(st.total);
+  el("wPerfect").textContent = ar(st.perfect);
+  el("wMakeup").textContent = ar(st.makeups);
+
+  /* رأس الأيام السبعة — يظهر كاملاً دائمًا */
+  var head = el("wHead"); head.innerHTML = "";
+  st.days.forEach(function(x, i){
+    var c = document.createElement("div");
+    if(key(x.d) === key(today)) c.className = "now";
+    c.innerHTML = '<b>'+DAY_SHORT[i]+'</b><small>'+x.d.getDate()+'</small>';
+    head.appendChild(c);
+  });
+
+  var rows = el("wRows"); rows.innerHTML = "";
+  if(!tasks.length){ rows.innerHTML = '<div class="empty">لا مهامّ مفعّلة.</div>'; }
+  tasks.forEach(function(t){
+    var n = st.per[t.id];
+    var p = pct(n, 7);
+    var row = document.createElement("div");
+    row.className = "wk-row";
+    var dots = "";
+    st.days.forEach(function(x){
+      var on = isDone(x.k, t.id);
+      dots += '<button class="dot'+(on?" on":"")+(x.future?" future":"")+
+              (key(x.d)===key(today)?" now":"")+'" data-wd="'+x.k+'" data-wt="'+esc(t.id)+'"'+
+              ' aria-label="'+esc(t.name)+'"></button>';
+    });
+    row.innerHTML =
+      '<div class="wk-row-t"><span class="nm">'+esc(t.name)+'</span>'+
+      '<span class="tl lv-'+lvl(p)+'">'+ar(n)+' / 7</span></div>'+
+      '<div class="dots">'+dots+'</div>';
+    rows.appendChild(row);
+  });
+
+  renderReview(el("wReview"), st, tasks, "week");
+}
+
+/* ═══════════════ حساب الشهر ═══════════════ */
+function monthStats(m0){
+  var tasks = activeTasks();
+  var today = startOfDay(new Date());
+  var start = fromKey(S.start);
+  var y = m0.getFullYear(), mo = m0.getMonth();
+  var len = new Date(y, mo+1, 0).getDate();
+  var per = {}; tasks.forEach(function(t){ per[t.id] = 0; });
+  var days = [], done = 0, total = 0, perfect = 0, counted = 0, bestDay = null;
+
+  for(var i=1;i<=len;i++){
+    var d = new Date(y, mo, i), k = key(d);
+    var future = d > today, before = d < start;
+    var sc = dayScore(k, tasks);
+    days.push({ d:d, k:k, score:sc, future:future });
+    if(!future){
+      tasks.forEach(function(t){ if(isDone(k, t.id)) per[t.id]++; });
+      if(!before){
+        counted++; done += sc; total += tasks.length;
+        if(tasks.length && sc === tasks.length) perfect++;
+        if(!bestDay || sc > bestDay.score) bestDay = { d:d, score:sc };
+      }
+    }
+  }
+  return {
+    m0:m0, len:len, days:days, done:done, total:total, perfect:perfect,
+    counted:counted, per:per, pct:pct(done,total), bestDay:bestDay,
+    ended: new Date(y, mo+1, 0) < today,
+    makeups: makeupsInRange(new Date(y,mo,1), new Date(y,mo,len))
+  };
+}
+
+function renderMonth(){
+  var tasks = activeTasks();
+  var st = monthStats(curMonth);
+  var today = startOfDay(new Date());
+  var isNow = curMonth.getFullYear() === today.getFullYear() && curMonth.getMonth() === today.getMonth();
+
+  el("mName").textContent = MONTHS[curMonth.getMonth()] + " " + curMonth.getFullYear();
+  var hm = hijri(new Date(curMonth.getFullYear(), curMonth.getMonth(), 15), { month:"long", year:"numeric" });
+  el("mHijriName").textContent = hm || (isNow ? "الشهر الحالي" : "");
+  el("mNow").style.visibility = isNow ? "hidden" : "visible";
+  el("mNext").disabled = isNow;
+
+  ring("moRing","moRingTxt", st.pct);
+  el("moDoneLbl").textContent = st.ended ? "المُنجز" : "المُنجز حتى الآن";
+  el("moDone").textContent = ar(st.done);
+  el("moTotal").textContent = ar(st.total);
+  el("moPerfect").textContent = ar(st.perfect);
+  el("moMakeup").textContent = ar(st.makeups);
+
+  /* رأس الأيام */
+  var head = el("moHead"); head.innerHTML = "";
+  DAY_SHORT.forEach(function(s){
+    var c = document.createElement("div");
+    c.innerHTML = '<b>'+s+'</b>';
+    head.appendChild(c);
+  });
+
+  /* الخريطة الحرارية — تبدأ من الاثنين */
+  var heat = el("moHeat"); heat.innerHTML = "";
+  var pad = dowIndex(st.days[0].d);
+  for(var i=0;i<pad;i++){
+    var e = document.createElement("div"); e.className = "cell pad"; heat.appendChild(e);
+  }
+  st.days.forEach(function(x){
+    var b = document.createElement("button");
+    var r = tasks.length ? x.score / tasks.length : 0;
+    var cls = "cell";
+    if(x.future) cls += " fut";
+    if(r > 0) cls += " f";
+    if(r >= 1) cls += " full";
+    if(key(x.d) === key(today)) cls += " now";
+    b.className = cls;
+    b.textContent = x.d.getDate();
+    if(r > 0 && !x.future){
+      b.style.background = r >= 1 ? "var(--gold)"
+        : "color-mix(in srgb, var(--gold) " + Math.round(18 + r*58) + "%, var(--surface-2))";
+    }
+    b.setAttribute("data-goday", x.k);
+    heat.appendChild(b);
+  });
+
+  /* أشرطة المهام */
+  var bars = el("moBars"); bars.innerHTML = "";
+  var elapsed = Math.max(st.counted, 1);
+  if(!tasks.length){ bars.innerHTML = '<div class="empty">لا مهامّ مفعّلة.</div>'; }
+  tasks.forEach(function(t){
+    var n = st.per[t.id], p = pct(n, elapsed);
+    var row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML =
+      '<div class="bar-top"><span class="nm">'+esc(t.name)+'</span>'+
+      '<span class="vl lv-'+lvl(p)+'">'+ar(n)+' / '+ar(elapsed)+' · '+ar(p)+'٪</span></div>'+
+      '<div class="bar"><i class="bg-'+lvl(p)+'" style="width:'+p+'%"></i></div>';
+    bars.appendChild(row);
+  });
+
+  renderReview(el("moReview"), st, tasks, "month");
+}
+
+/* ═══════════════ المراجعة التلقائية ═══════════════ */
+function renderReview(node, st, tasks, mode){
+  node.innerHTML = "";
+  if(!tasks.length || st.counted === 0){
+    node.innerHTML = '<div class="empty">لا بيانات كافية بعد لهذه الفترة.</div>';
+    return;
+  }
+  var unit = mode === "week" ? "الأسبوع" : "الشهر";
+
+  /* ترتيب المهام */
+  var arr = tasks.map(function(t){
+    var d = mode === "week" ? 7 : st.counted;
+    return { t:t, n:st.per[t.id], p:pct(st.per[t.id], d), d:d };
+  }).sort(function(a,b){ return b.p - a.p; });
+
+  var out = [];
+  var v = document.createElement("div");
+  var p = st.pct;
+  v.className = "verdict " + lvl(p);
+  v.textContent = p >= 85 ? "التزامٌ عالٍ هذا " + unit + " — حافِظ على هذا الإيقاع."
+    : p >= 60 ? unit + " جيّد، وفيه مساحة تُستدرَك."
+    : p >= 35 ? unit + " متذبذب — ركّز على المهامّ الثابتة أوّلًا."
+    : unit + " ضعيف — ابدأ بمهمّة واحدة تثبّتها كل يوم.";
+  node.appendChild(v);
+
+  out.push({ c:"", h:"أنجزتَ <b>"+ar(st.done)+"</b> من أصل <b>"+ar(st.total)+"</b> فرصة "+
+    (st.ended ? "" : "حتى الآن ")+"— بنسبة <b>"+ar(p)+"٪</b>." });
+
+  if(mode === "week"){
+    out.push({ c: st.perfect >= 4 ? "good" : (st.perfect > 0 ? "gold" : "warn"),
+      h:"أيامٌ اكتملت فيها المهامّ كلّها: <b>"+ar(st.perfect)+"</b> من 7." });
+  } else {
+    out.push({ c: st.perfect > 0 ? "good" : "warn",
+      h:"أيامٌ كاملة خلال الشهر: <b>"+ar(st.perfect)+"</b> من "+ar(st.counted)+"." });
+    if(st.bestDay && st.bestDay.score > 0){
+      out.push({ c:"gold", h:"أفضل يوم: <b>"+DAY_LONG[dowIndex(st.bestDay.d)]+" "+st.bestDay.d.getDate()+"</b> بـ<b>"+ar(st.bestDay.score)+"</b> من "+ar(tasks.length)+"." });
+    }
+  }
+
+  var top = arr[0], low = arr[arr.length-1];
+  if(top && top.p > 0)
+    out.push({ c:"good", h:"أكثر ما ثبّتّه: <b>"+esc(top.t.name)+"</b> — "+ar(top.n)+" من "+ar(top.d)+"." });
+  if(low && low !== top)
+    out.push({ c: low.p < 50 ? "warn" : "", h:"أضعف ما لديك: <b>"+esc(low.t.name)+"</b> — "+ar(low.n)+" من "+ar(low.d)+"." });
+
+  /* تفصيل كل مهمة على حدة في العرض الأسبوعي */
+  if(mode === "week"){
+    arr.forEach(function(x){
+      var miss = x.d - x.n;
+      if(miss <= 0) return;
+      var txt = "<b>"+esc(x.t.name)+"</b>: فاتك "+days(miss);
+      if(x.t.makeup) txt += " — تحتاج تعويضًا";
+      out.push({ c: x.p < 50 ? "warn" : "", h: txt + "." });
+    });
+  }
+
+  /* التعويضات */
+  var pend = tasks.filter(function(t){ return t.makeup; })
+    .map(function(t){ return { t:t, n:debtOf(t.id) }; })
+    .filter(function(x){ return x.n > 0; });
+  if(st.makeups > 0)
+    out.push({ c:"good", h:"سدّدتَ <b>"+ar(st.makeups)+"</b> تعويضًا في هذه الفترة." });
+  if(pend.length){
+    var s = pend.map(function(x){ return esc(x.t.name)+" ("+ar(x.n)+")"; }).join("، ");
+    out.push({ c:"warn", h:"تعويضاتٌ ما زالت في ذمّتك: <b>"+s+"</b>." });
+  } else {
+    out.push({ c:"good", h:"لا تعويضات معلّقة — ذمّتك بيضاء." });
+  }
+
+  if(mode === "week" && !st.ended)
+    out.push({ c:"", h:"الأسبوع لم ينتهِ بعد — الأرقام تتحدّث حتى مساء الأحد." });
+
+  out.forEach(function(o){
+    var d = document.createElement("div");
+    d.className = "rv " + (o.c || "");
+    d.innerHTML = '<i></i><span>'+o.h+'</span>';
+    node.appendChild(d);
+  });
+}
+
+function ring(circleId, txtId, p){
+  var c = el(circleId);
+  var R = 42, C = 2 * Math.PI * R;
+  c.style.strokeDasharray = C;
+  c.style.strokeDashoffset = C * (1 - p/100);
+  c.style.stroke = p>=80 ? "var(--good)" : (p>=50 ? "var(--gold)" : "var(--warn)");
+  el(txtId).textContent = ar(p) + "٪";
+}
+
+/* ═══════════════ صفحة المزيد ═══════════════ */
+function renderMore(){
+  var box = el("tkManage"); box.innerHTML = "";
+  S.tasks.forEach(function(t){
+    var row = document.createElement("div");
+    row.className = "tk-manage";
+    var badge = t.makeup ? '<span class="pill gold">تعويض</span>' : "";
+    row.innerHTML =
+      '<span class="nm">'+esc(t.name)+' '+badge+'</span>'+
+      '<button class="toggle'+(t.on!==false?" on":"")+'" data-tog="'+esc(t.id)+'" role="switch" aria-checked="'+(t.on!==false)+'" aria-label="تفعيل '+esc(t.name)+'"></button>'+
+      (t.custom ? '<button class="x" data-del="'+esc(t.id)+'" aria-label="حذف">✕</button>' : "");
+    box.appendChild(row);
+  });
+}
+
+/* ═══════════════ التحديث الشامل ═══════════════ */
+function renderAll(){
+  renderToday(); renderWeek(); renderMonth(); renderMore();
+}
+
+/* ═══════════════ الأحداث ═══════════════ */
+document.addEventListener("click", function(e){
+  var t;
+
+  /* تبديل مهمة اليوم */
+  t = e.target.closest("[data-toggle]");
+  if(t){
+    var id = t.getAttribute("data-toggle"), k = key(curDay);
+    var now = !isDone(k, id);
+    setDone(k, id, now);
+    buzz(now ? 14 : 8);
+    renderAll();
+    var tasks = activeTasks();
+    if(now && tasks.length && dayScore(k, tasks) === tasks.length) toast("اكتمل اليوم — تمّت المهامّ كلّها");
+    return;
+  }
+
+  /* سداد تعويض */
+  t = e.target.closest("[data-pay]");
+  if(t){
+    var pid = t.getAttribute("data-pay");
+    payMakeup(pid); buzz(16); renderAll();
+    var left = debtOf(pid);
+    toast(left > 0 ? "سُجّل التعويض — بقي " + days(left) : "سُجّل التعويض — لا شيء في ذمّتك");
+    return;
+  }
+
+  /* نقطة في شبكة الأسبوع */
+  t = e.target.closest("[data-wd]");
+  if(t){
+    var dk = t.getAttribute("data-wd"), tid = t.getAttribute("data-wt");
+    setDone(dk, tid, !isDone(dk, tid));
+    buzz(10); renderAll();
+    return;
+  }
+
+  /* الانتقال إلى يوم من خريطة الشهر */
+  t = e.target.closest("[data-goday]");
+  if(t){
+    curDay = fromKey(t.getAttribute("data-goday"));
+    curWeek = weekStart(curDay);
+    show("today"); renderAll();
+    return;
+  }
+
+  /* تفعيل/تعطيل مهمة */
+  t = e.target.closest("[data-tog]");
+  if(t){
+    var tg = taskById(t.getAttribute("data-tog"));
+    if(tg){ tg.on = tg.on === false; save(); buzz(10); renderAll(); }
+    return;
+  }
+
+  /* حذف مهمة مخصّصة */
+  t = e.target.closest("[data-del]");
+  if(t){
+    var did = t.getAttribute("data-del");
+    var tk = taskById(did);
+    if(tk && confirm("حذف «" + tk.name + "» وكل سجلّها؟")){
+      S.tasks = S.tasks.filter(function(x){ return x.id !== did; });
+      for(var d in S.log){ delete S.log[d][did]; if(!Object.keys(S.log[d]).length) delete S.log[d]; }
+      delete S.makeups[did];
+      save(); renderAll(); toast("حُذفت المهمّة");
+    }
+    return;
+  }
+
+  /* التبويبات */
+  t = e.target.closest(".tab");
+  if(t){ show(t.getAttribute("data-v")); return; }
+});
+
+/* التنقّل بين الأيام والأسابيع والشهور */
+el("dPrev").onclick  = function(){ curDay = addDays(curDay,-1); renderToday(); };
+el("dNext").onclick  = function(){ if(curDay < startOfDay(new Date())){ curDay = addDays(curDay,1); renderToday(); } };
+el("dToday").onclick = function(){ curDay = startOfDay(new Date()); renderToday(); };
+
+el("wPrev").onclick = function(){ curWeek = addDays(curWeek,-7); renderWeek(); };
+el("wNext").onclick = function(){ if(curWeek < weekStart(new Date())){ curWeek = addDays(curWeek,7); renderWeek(); } };
+el("wNow").onclick  = function(){ curWeek = weekStart(new Date()); renderWeek(); };
+
+el("mPrev").onclick = function(){ curMonth = new Date(curMonth.getFullYear(), curMonth.getMonth()-1, 1); renderMonth(); };
+el("mNext").onclick = function(){
+  var n = new Date(curMonth.getFullYear(), curMonth.getMonth()+1, 1);
+  if(n <= new Date()){ curMonth = n; renderMonth(); }
+};
+el("mNow").onclick  = function(){ var d = new Date(); curMonth = new Date(d.getFullYear(), d.getMonth(), 1); renderMonth(); };
+
+/* الملاحظة */
+var noteT;
+el("noteBox").addEventListener("input", function(){
+  var k = key(curDay), val = this.value;
+  clearTimeout(noteT);
+  noteT = setTimeout(function(){
+    if(val.trim()) S.notes[k] = val; else delete S.notes[k];
+    save();
+  }, 400);
+});
+
+/* إضافة مهمة */
+function addNew(){
+  var inp = el("newTask");
+  var nm = inp.value.trim();
+  if(!nm) return;
+  var id = "c" + Date.now().toString(36);
+  S.tasks.push({ id:id, name:nm, grp:"day", makeup:false, on:true, custom:true, since:key(new Date()) });
+  inp.value = "";
+  save(); renderAll(); toast("أُضيفت المهمّة");
+}
+el("addTask").onclick = addNew;
+el("newTask").addEventListener("keydown", function(e){ if(e.key === "Enter") addNew(); });
+
+/* النسخ الاحتياطي */
+el("expBtn").onclick = function(){
+  try{
+    var blob = new Blob([JSON.stringify(S, null, 2)], { type:"application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "asas-" + key(new Date()) + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    toast("تمّ تصدير النسخة");
+  }catch(err){ toast("تعذّر التصدير في هذا المتصفّح"); }
+};
+el("impBtn").onclick = function(){ el("impFile").click(); };
+el("impFile").onchange = function(){
+  var f = this.files && this.files[0];
+  if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var o = JSON.parse(r.result);
+      if(!o || !o.tasks) throw new Error("bad");
+      S = o;
+      S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
+      if(!S.start) S.start = key(new Date());
+      save(); renderAll(); toast("استُوردت النسخة بنجاح");
+    }catch(err){ toast("الملف غير صالح"); }
+  };
+  r.readAsText(f);
+  this.value = "";
+};
+el("resetBtn").onclick = function(){
+  if(!confirm("سيُمسح كل سجلّك نهائيًا. متأكّد؟")) return;
+  if(!confirm("تأكيد أخير — لا يمكن التراجع.")) return;
+  S = {
+    v:1, start:key(new Date()),
+    tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
+    log:{}, makeups:{}, notes:{}, theme:S.theme
+  };
+  save(); renderAll(); toast("مُسحت البيانات");
+};
+
+/* المظهر */
+function applyTheme(){
+  var r = document.documentElement;
+  if(S.theme === "dark" || S.theme === "light") r.setAttribute("data-theme", S.theme);
+  else r.removeAttribute("data-theme");
+}
+el("themeBtn").onclick = function(){
+  var cur = document.documentElement.getAttribute("data-theme");
+  if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  S.theme = cur === "dark" ? "light" : "dark";
+  applyTheme(); save();
+};
+
+/* التبويبات */
+function show(v){
+  var views = { today:"v-today", week:"v-week", month:"v-month", more:"v-more" };
+  Object.keys(views).forEach(function(k){
+    el(views[k]).classList.toggle("on", k === v);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
+    b.classList.toggle("on", b.getAttribute("data-v") === v);
+  });
+  window.scrollTo({ top:0, behavior:"instant" });
+  if(v === "week") renderWeek();
+  if(v === "month") renderMonth();
+  if(v === "more") renderMore();
+}
+
+/* الاتجاه واللغة (لبيئة الـ Artifact التي لا تملك وسم html خاصّتنا) */
+document.documentElement.setAttribute("dir","rtl");
+document.documentElement.setAttribute("lang","ar");
+
+/* تحديث تلقائي عند تغيّر اليوم أثناء فتح التطبيق */
+var lastKey = key(new Date());
+setInterval(function(){
+  var nk = key(new Date());
+  if(nk !== lastKey){
+    lastKey = nk;
+    curDay = startOfDay(new Date());
+    curWeek = weekStart(new Date());
+    renderAll();
+  }
+}, 60000);
+document.addEventListener("visibilitychange", function(){
+  if(!document.hidden){
+    var nk = key(new Date());
+    if(nk !== lastKey){ lastKey = nk; curDay = startOfDay(new Date()); curWeek = weekStart(new Date()); }
+    renderAll();
+  }
+});
+
+applyTheme();
+renderAll();
+
+})();
+</script>
+
+</div>
