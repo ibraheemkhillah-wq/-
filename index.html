@@ -641,6 +641,73 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   .rpt-head, .rpt-sec > h3{ break-after:avoid; page-break-after:avoid; }
 }
 
+
+/* ═══════════════ التقرير المرئيّ ═══════════════ */
+.vid-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:linear-gradient(135deg, var(--lapis), color-mix(in srgb, var(--lapis) 62%, #000));
+  border-radius:var(--r);padding:13px;font-size:.88rem;font-weight:700;color:#fff;
+  box-shadow:var(--shadow-sm);transition:transform .12s, filter .2s;
+}
+.vid-btn:active{transform:scale(.985);}
+.vid-btn .ic{font-size:1.05rem;}
+
+.vid-overlay{
+  position:fixed;inset:0;z-index:110;background:#0b0f19;
+  display:flex;flex-direction:column;
+}
+.vid-overlay[hidden]{display:none;}
+.vid-bar{
+  display:flex;align-items:center;gap:10px;flex:none;
+  padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.vid-bar span{flex:1;text-align:center;font-size:.86rem;font-weight:700;color:#c8cfe0;}
+.vid-bar button{font-size:.82rem;font-weight:700;padding:8px 13px;border-radius:10px;flex:none;}
+.vid-bar .x{background:rgba(255,255,255,.1);color:#e8ebf2;}
+
+.vid-stage{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:12px;min-height:0;position:relative;
+}
+.vid-stage canvas, .vid-stage video{
+  max-width:100%;max-height:100%;width:auto;height:auto;
+  border-radius:14px;box-shadow:0 12px 44px -12px rgba(0,0,0,.8);
+  display:block;background:#0b0f19;
+}
+.vid-stage video{display:none;}
+.vid-overlay.done .vid-stage canvas{display:none;}
+.vid-overlay.done .vid-stage video{display:block;}
+
+.vid-foot{
+  flex:none;padding:12px 14px calc(env(safe-area-inset-bottom) + 14px);
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;gap:10px;
+}
+.vid-prog{height:5px;border-radius:20px;background:rgba(255,255,255,.13);overflow:hidden;}
+.vid-prog i{display:block;height:100%;width:0;border-radius:20px;background:var(--gold);transition:width .12s linear;}
+.vid-status{font-size:.78rem;color:#a3abbf;text-align:center;line-height:1.6;min-height:1.4em;}
+.vid-status b{color:var(--gold);}
+.vid-acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.vid-acts button{
+  padding:13px 10px;border-radius:12px;font-size:.85rem;font-weight:700;
+  transition:transform .12s, opacity .2s;
+}
+.vid-acts button:active{transform:scale(.97);}
+.vid-acts button:disabled{opacity:.4;pointer-events:none;}
+.vid-acts .replay{background:rgba(255,255,255,.11);color:#e8ebf2;}
+.vid-acts .save{background:var(--gold);color:#1a1206;}
+.vid-acts .full{grid-column:1 / -1;}
+.vid-note{
+  font-size:.73rem;color:#8b93a6;text-align:center;line-height:1.7;
+}
+.vid-mute{
+  position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:50%;
+  background:rgba(0,0,0,.45);color:#e8ebf2;display:grid;place-items:center;
+  font-size:1.05rem;backdrop-filter:blur(6px);z-index:2;
+}
+@media print{ .vid-overlay{ display:none !important; } }
+
 /* ═══════════════ الرسالة المنبثقة ═══════════════ */
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:80;}
 @keyframes bumpk{0%{transform:scale(1);}38%{transform:scale(1.3);}100%{transform:scale(1);}}
@@ -907,6 +974,31 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       «حفظ في الملفات» أو أرسله مباشرة عبر واتساب أو البريد.
     </div>
     <div class="rpt-doc" id="rptDoc"></div>
+    <button class="vid-btn" id="vidOpen" style="margin-top:14px">
+      <span class="ic">🎬</span> تقرير مرئيّ — فيديو
+    </button>
+  </div>
+</div>
+
+<div class="vid-overlay" id="vidOverlay" hidden>
+  <div class="vid-bar">
+    <button class="x" id="vidClose">إغلاق</button>
+    <span id="vidTitle">تقرير مرئيّ</span>
+    <button class="x" id="vidMute" aria-label="كتم الصوت">🔊</button>
+  </div>
+  <div class="vid-stage">
+    <canvas id="vidCanvas" width="1080" height="1920"></canvas>
+    <video id="vidPlayer" playsinline controls></video>
+  </div>
+  <div class="vid-foot">
+    <div class="vid-prog"><i id="vidProg"></i></div>
+    <div class="vid-status" id="vidStatus">—</div>
+    <div class="vid-acts">
+      <button class="replay" id="vidReplay">▶︎ إعادة</button>
+      <button class="save" id="vidSave">حفظ ومشاركة</button>
+      <button class="full" id="vidShare" style="display:none">📤 مشاركة الفيديو</button>
+    </div>
+    <div class="vid-note" id="vidNote"></div>
   </div>
 </div>
 
@@ -2000,7 +2092,9 @@ function buildMonthReport(){
 }
 
 /* ═══ فتح / إغلاق ═══ */
+var rptMode = "day";
 function openReport(mode){
+  rptMode = mode;
   var doc = el("rptDoc"), ttl = el("rptTitle");
   if(mode === "day"){       doc.innerHTML = buildDayReport();   ttl.textContent = "تقرير يوميّ"; }
   else if(mode === "week"){ doc.innerHTML = buildWeekReport();  ttl.textContent = "تقرير أسبوعيّ"; }
@@ -2013,6 +2107,542 @@ function openReport(mode){
 function closeReport(){
   el("rptOverlay").hidden = true;
   document.body.style.overflow = "";
+}
+
+
+/* ═══════════════════════════════════════════════════
+   التقرير المرئيّ — موشن جرافيك على كانفس + موسيقى مولَّدة
+   ═══════════════════════════════════════════════════ */
+
+var VID = { W:1080, H:1920, FPS:30, DUR:18.5 };
+var VC = {
+  bg1:"#28345c", bg2:"#171f38", bg3:"#0b0f19",
+  gold:"#e0b054", gold2:"#f7d98c", gold3:"#a8762a",
+  ink:"#eef1f8", mute:"#9aa3ba", line:"rgba(233,238,250,.14)",
+  good:"#5cb08a", warn:"#e08a58"
+};
+
+/* ── تيسير ── */
+function ease(t){ return 1 - Math.pow(1 - t, 3); }
+function easeIO(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+function pop(t){
+  var c = 1.70158 + 1;
+  return 1 + c*Math.pow(t-1,3) + 1.70158*Math.pow(t-1,2);
+}
+function seg(t, a, b){ return Math.max(0, Math.min(1, (t - a) / (b - a))); }
+
+/* ── بيانات الفيديو ── */
+function vidData(mode){
+  var tasks = activeTasks(), today = startOfDay(new Date());
+  var D = { mode:mode, streak:overallStreak() };
+
+  if(mode === "day"){
+    var k = key(curDay), done = dayScore(k, tasks), total = tasks.length, p = pct(done, total);
+    D.kind = "تقرير يوميّ";
+    D.period = DAY_LONG[dowIndex(curDay)] + " " + gDate(curDay);
+    D.hij = hijri(curDay, { day:"numeric", month:"long", year:"numeric" });
+    D.pct = p;
+    D.kpis = [
+      { v:ar(done) + "/" + ar(total), l:"مهامّ اليوم" },
+      { v:ar(p) + "٪", l:"نسبة الإتمام" },
+      { v:ar(D.streak), l:"سلسلة الأيام" },
+      { v:ar(total - done), l:"بقي" }
+    ];
+    var ws = weekStart(curDay);
+    D.bars = []; D.barMax = total;
+    for(var i = 0; i < 7; i++){
+      var bd = addDays(ws, i);
+      D.bars.push({ v:dayScore(key(bd), tasks), l:DAY_SHORT[i], off: bd > today });
+    }
+    D.barTitle = "أيام هذا الأسبوع";
+    D.verdict = p === 100 ? "يومٌ تامّ — أُنجزت المهامّ كلّها"
+      : p >= 70 ? "يومٌ قويّ — بقي القليل"
+      : p >= 40 ? "نصف الطريق — واصِل"
+      : done > 0 ? "بداية موجودة — ابنِ عليها" : "غدًا بداية جديدة";
+  }
+  else if(mode === "week"){
+    var st = weekStats(curWeek), end = addDays(curWeek, 6);
+    D.kind = "تقرير أسبوعيّ";
+    D.period = curWeek.getDate() + " " + MONTHS[curWeek.getMonth()] + " – " +
+               end.getDate() + " " + MONTHS[end.getMonth()];
+    D.hij = "الأسبوع يبدأ الاثنين";
+    D.pct = st.pct;
+    D.kpis = [
+      { v:ar(st.done) + "/" + ar(st.total), l:"مهامّ مُنجزة" },
+      { v:ar(st.pct) + "٪", l:"نسبة الالتزام" },
+      { v:ar(st.perfect) + "/7", l:"أيام كاملة" },
+      { v:ar(st.makeups), l:"تعويضات سُدّدت" }
+    ];
+    D.bars = st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], off:x.future }; });
+    D.barMax = tasks.length;
+    D.barTitle = "الإنجاز عبر الأسبوع";
+    D.verdict = st.pct >= 85 ? "أسبوعٌ عالي الالتزام"
+      : st.pct >= 60 ? "أسبوعٌ جيّد وفيه فسحة"
+      : st.pct >= 35 ? "أسبوعٌ متذبذب — ثبّته" : "ابدأ بمهمّة واحدة تثبتها";
+    var wd = st.ended ? 7 : Math.max(st.counted, 1);
+    D.rows = tasks.map(function(t){
+      return { name:t.name, em:t.em, n:st.per[t.id], d:wd, p:pct(st.per[t.id], wd) };
+    }).sort(function(a, b){ return b.p - a.p; });
+  }
+  else{
+    var ms = monthStats(curMonth), el2 = Math.max(ms.counted, 1);
+    D.kind = "تقرير شهريّ";
+    D.period = MONTHS[curMonth.getMonth()] + " " + curMonth.getFullYear();
+    D.hij = hijri(new Date(curMonth.getFullYear(), curMonth.getMonth(), 15), { month:"long", year:"numeric" });
+    D.pct = ms.pct;
+    D.kpis = [
+      { v:ar(ms.done) + "/" + ar(ms.total), l:"مهامّ مُنجزة" },
+      { v:ar(ms.pct) + "٪", l:"نسبة الالتزام" },
+      { v:ar(ms.perfect), l:"أيام كاملة" },
+      { v:ar(ms.counted), l:"أيام مسجّلة" }
+    ];
+    var seen = {};
+    ms.days.forEach(function(x){
+      if(x.off || x.future) return;
+      var wk = key(weekStart(x.d));
+      if(!seen[wk]) seen[wk] = { s:0, n:0 };
+      seen[wk].s += x.score; seen[wk].n++;
+    });
+    D.bars = []; D.barMax = 100;
+    Object.keys(seen).sort().forEach(function(wk, i){
+      var o = seen[wk];
+      D.bars.push({ v:pct(o.s, o.n * (tasks.length || 1)), l:String(i + 1), off:false });
+    });
+    D.barTitle = "اتّجاه الأسابيع";
+    D.verdict = ms.pct >= 85 ? "شهرٌ عالي الالتزام"
+      : ms.pct >= 60 ? "شهرٌ جيّد ومستقرّ"
+      : ms.pct >= 35 ? "شهرٌ متفاوت — الثبات مطلوب" : "ابنِ عادةً واحدة تثبت";
+    D.rows = tasks.map(function(t){
+      return { name:t.name, em:t.em, n:ms.per[t.id], d:el2, p:pct(ms.per[t.id], el2) };
+    }).sort(function(a, b){ return b.p - a.p; });
+  }
+  if(D.rows) D.rows = D.rows.slice();
+  if(!D.rows){
+    D.rows = tasks.map(function(t){
+      var n = 0, dd = 0, from = fromKey(S.start), lo = addDays(curDay, -13);
+      for(var dc = new Date(lo > from ? lo : from); dc <= curDay; dc = addDays(dc, 1)){
+        dd++; if(isDone(key(dc), t.id)) n++;
+      }
+      return { name:t.name, em:t.em, n:n, d:dd, p:pct(n, dd) };
+    }).sort(function(a, b){ return b.p - a.p; });
+  }
+  D.rowsTitle = "أبرز المهامّ";
+  return D;
+}
+
+/* ── رسم اللوجو ── */
+function vidArch(x, cx, cy, sc, alpha){
+  function P(px, py){ return [cx + (px - 256) * sc, cy + (py - 256) * sc]; }
+  x.save();
+  x.globalAlpha = alpha;
+  var g = x.createLinearGradient(0, cy + 145 * sc, 0, cy - 170 * sc);
+  g.addColorStop(0, VC.gold2); g.addColorStop(.45, VC.gold); g.addColorStop(1, VC.gold3);
+  x.beginPath();
+  var a = P(150,400); x.moveTo(a[0], a[1]);
+  var b = P(150,250); x.lineTo(b[0], b[1]);
+  var c1 = P(150,168), c2 = P(236,150), c3 = P(256,88);
+  x.bezierCurveTo(c1[0],c1[1], c2[0],c2[1], c3[0],c3[1]);
+  var d1 = P(276,150), d2 = P(362,168), d3 = P(362,250);
+  x.bezierCurveTo(d1[0],d1[1], d2[0],d2[1], d3[0],d3[1]);
+  var e = P(362,400); x.lineTo(e[0], e[1]);
+  x.closePath();
+  x.fillStyle = g; x.fill();
+  /* قوس داخليّ */
+  x.beginPath();
+  var f = P(194,400); x.moveTo(f[0], f[1]);
+  var f2 = P(194,254); x.lineTo(f2[0], f2[1]);
+  var g1 = P(194,196), g2 = P(244,184), g3 = P(256,142);
+  x.bezierCurveTo(g1[0],g1[1], g2[0],g2[1], g3[0],g3[1]);
+  var h1 = P(268,184), h2 = P(318,196), h3 = P(318,254);
+  x.bezierCurveTo(h1[0],h1[1], h2[0],h2[1], h3[0],h3[1]);
+  var h4 = P(318,400); x.lineTo(h4[0], h4[1]);
+  x.strokeStyle = "rgba(125,85,26,.4)"; x.lineWidth = 5 * sc; x.lineCap = "round"; x.stroke();
+  /* الخاتم الثمانيّ */
+  var st = P(256,46), r = 19 * sc;
+  x.fillStyle = "#e8bc60";
+  [0, Math.PI/4].forEach(function(rot){
+    x.save(); x.translate(st[0], st[1]); x.rotate(rot);
+    x.beginPath(); x.rect(-r, -r, r*2, r*2); x.fill(); x.restore();
+  });
+  /* القاعدة */
+  var bs = P(122,400), be = P(390,422);
+  x.fillStyle = "#c9963c";
+  x.beginPath();
+  if(x.roundRect) x.roundRect(bs[0], bs[1], be[0]-bs[0], be[1]-bs[1], 7*sc);
+  else x.rect(bs[0], bs[1], be[0]-bs[0], be[1]-bs[1]);
+  x.fill();
+  x.restore();
+}
+
+/* ── الخلفية ── */
+function vidBg(x, t){
+  var g = x.createLinearGradient(0, 0, VID.W * .4, VID.H);
+  g.addColorStop(0, VC.bg1); g.addColorStop(.55, VC.bg2); g.addColorStop(1, VC.bg3);
+  x.fillStyle = g; x.fillRect(0, 0, VID.W, VID.H);
+  /* شبكيّة هندسيّة تنزلق ببطء */
+  x.save();
+  x.globalAlpha = .07;
+  x.strokeStyle = "#b9c7ea"; x.lineWidth = 2;
+  x.translate(VID.W/2, VID.H/2); x.rotate(Math.PI/4); x.translate(-VID.W/2, -VID.H/2);
+  var step = 120, off = (t * 9) % step;
+  for(var i = -VID.H; i < VID.W + VID.H; i += step){
+    x.beginPath(); x.moveTo(i + off, -VID.H); x.lineTo(i + off, VID.H * 2); x.stroke();
+    x.beginPath(); x.moveTo(-VID.H, i + off); x.lineTo(VID.W * 2, i + off); x.stroke();
+  }
+  x.restore();
+  /* وهج ذهبيّ سفليّ */
+  var rg = x.createRadialGradient(VID.W/2, VID.H*.82, 0, VID.W/2, VID.H*.82, VID.W*.85);
+  rg.addColorStop(0, "rgba(224,176,84,.13)"); rg.addColorStop(1, "rgba(224,176,84,0)");
+  x.fillStyle = rg; x.fillRect(0, 0, VID.W, VID.H);
+}
+
+function vidText(x, txt, cx, cy, size, color, weight, align){
+  x.save();
+  x.direction = "rtl";
+  x.font = (weight || 700) + " " + size + 'px "SF Arabic","Geeza Pro",system-ui,sans-serif';
+  x.fillStyle = color; x.textAlign = align || "center"; x.textBaseline = "middle";
+  x.fillText(txt, cx, cy);
+  x.restore();
+}
+function vidNum(x, txt, cx, cy, size, color, align){
+  x.save();
+  x.font = "800 " + size + 'px ui-rounded,"SF Pro Rounded",system-ui,sans-serif';
+  x.fillStyle = color; x.textAlign = align || "center"; x.textBaseline = "middle";
+  x.fillText(txt, cx, cy);
+  x.restore();
+}
+function vidCard(x, cx, cy, w, h, r, a){
+  x.save(); x.globalAlpha = a;
+  x.fillStyle = "rgba(255,255,255,.06)";
+  x.strokeStyle = "rgba(255,255,255,.12)"; x.lineWidth = 2;
+  x.beginPath();
+  if(x.roundRect) x.roundRect(cx - w/2, cy - h/2, w, h, r);
+  else x.rect(cx - w/2, cy - h/2, w, h);
+  x.fill(); x.stroke(); x.restore();
+}
+
+/* ── رسم إطار واحد ── */
+function vidFrame(x, t, D){
+  vidBg(x, t);
+  var W = VID.W, cx = W / 2;
+
+  /* ١) الافتتاح 0–3 */
+  var s1 = seg(t, .2, 1.4), s1b = seg(t, .9, 2.0), s1c = seg(t, 1.4, 2.4);
+  var out1 = 1 - seg(t, 3.0, 3.6);
+  if(out1 > 0){
+    var ly = 690 - (1 - ease(s1)) * 40;
+    vidArch(x, cx, ly, .62 * (0.9 + 0.1 * pop(Math.min(s1, 1))), ease(s1) * out1);
+    x.globalAlpha = ease(s1b) * out1;
+    vidText(x, "أساس", cx, 925, 120, VC.ink, 700);
+    x.globalAlpha = ease(s1c) * out1;
+    vidText(x, D.kind, cx, 1030, 46, VC.gold, 700);
+    vidText(x, D.period, cx, 1104, 38, VC.mute, 600);
+    if(D.hij) vidText(x, D.hij, cx, 1168, 32, VC.mute, 500);
+    x.globalAlpha = 1;
+  }
+
+  /* ٢) الحلقة 3.4–7.4 */
+  var s2 = seg(t, 3.6, 6.0), in2 = seg(t, 3.4, 4.0), out2 = 1 - seg(t, 7.0, 7.5);
+  if(in2 > 0 && out2 > 0){
+    x.save(); x.globalAlpha = in2 * out2;
+    var R = 300, ry = 880;
+    x.lineWidth = 44; x.lineCap = "round";
+    x.strokeStyle = "rgba(255,255,255,.09)";
+    x.beginPath(); x.arc(cx, ry, R, 0, Math.PI*2); x.stroke();
+    var pv = D.pct * ease(s2);
+    var col = D.pct >= 80 ? VC.good : (D.pct >= 50 ? VC.gold : VC.warn);
+    x.strokeStyle = col;
+    x.shadowColor = col; x.shadowBlur = 34;
+    x.beginPath(); x.arc(cx, ry, R, -Math.PI/2, -Math.PI/2 + Math.PI*2*(pv/100)); x.stroke();
+    x.shadowBlur = 0;
+    vidNum(x, Math.round(pv) + "٪", cx, ry - 10, 190, VC.ink);
+    vidText(x, "نسبة الالتزام", cx, ry + 130, 44, VC.mute, 600);
+    vidText(x, D.kind + " · " + D.period, cx, 1380, 40, VC.mute, 600);
+    x.restore();
+  }
+
+  /* ٣) الأرقام 7.4–11.2 */
+  var in3 = seg(t, 7.4, 7.8), out3 = 1 - seg(t, 10.8, 11.3);
+  if(in3 > 0 && out3 > 0){
+    x.save(); x.globalAlpha = out3;
+    vidText(x, "الأرقام", cx, 640, 54, VC.gold, 700);
+    var cw = 430, ch = 250, gap = 34;
+    D.kpis.forEach(function(kp, i){
+      var col = i % 2, row = (i / 2) | 0;
+      var kx = cx + (col === 0 ? (cw + gap)/2 : -(cw + gap)/2);
+      var ky = 900 + row * (ch + gap);
+      var a = seg(t, 7.6 + i * .22, 8.2 + i * .22);
+      if(a <= 0) return;
+      x.save();
+      x.translate(kx, ky); x.scale(.86 + .14 * pop(a), .86 + .14 * pop(a)); x.translate(-kx, -ky);
+      vidCard(x, kx, ky, cw, ch, 34, ease(a));
+      x.globalAlpha = ease(a) * out3;
+      vidNum(x, kp.v, kx, ky - 26, 82, VC.gold2);
+      vidText(x, kp.l, kx, ky + 66, 36, VC.mute, 600);
+      x.restore();
+    });
+    x.restore();
+  }
+
+  /* ٤) الرسم البيانيّ 11.2–14.6 */
+  var in4 = seg(t, 11.2, 11.6), out4 = 1 - seg(t, 14.2, 14.7);
+  if(in4 > 0 && out4 > 0){
+    x.save(); x.globalAlpha = out4;
+    vidText(x, D.barTitle, cx, 620, 54, VC.gold, 700);
+    var n = D.bars.length || 1;
+    var bw = Math.min(112, (W - 180) / n - 18), gp = (W - 180 - bw * n) / Math.max(n - 1, 1);
+    var baseY = 1360, maxH = 540;
+    D.bars.forEach(function(bar, i){
+      /* من اليمين لليسار */
+      var bx = W - 90 - bw/2 - i * (bw + gp);
+      var a = seg(t, 11.5 + i * .1, 12.2 + i * .1);
+      var hv = D.barMax > 0 ? (bar.v / D.barMax) : 0;
+      var hh = maxH * hv * ease(a);
+      var pctv = Math.round(hv * 100);
+      var col = bar.off ? "rgba(255,255,255,.12)"
+        : pctv >= 80 ? VC.good : (pctv >= 50 ? VC.gold : VC.warn);
+      x.fillStyle = "rgba(255,255,255,.07)";
+      x.beginPath();
+      if(x.roundRect) x.roundRect(bx - bw/2, baseY - maxH, bw, maxH, 16); else x.rect(bx - bw/2, baseY - maxH, bw, maxH);
+      x.fill();
+      if(hh > 2){
+        x.fillStyle = col;
+        x.beginPath();
+        if(x.roundRect) x.roundRect(bx - bw/2, baseY - hh, bw, hh, 16); else x.rect(bx - bw/2, baseY - hh, bw, hh);
+        x.fill();
+      }
+      if(a > .55 && !bar.off)
+        vidNum(x, ar(bar.v), bx, baseY - hh - 44, 40, VC.ink);
+      vidText(x, bar.l, bx, baseY + 56, 36, VC.mute, 700);
+    });
+    x.restore();
+  }
+
+  /* ٥) المهامّ 14.6–16.8 */
+  var in5 = seg(t, 14.6, 15.0), out5 = 1 - seg(t, 16.4, 16.9);
+  if(in5 > 0 && out5 > 0 && D.rows && D.rows.length){
+    x.save(); x.globalAlpha = out5;
+    vidText(x, D.rowsTitle || "أبرز المهامّ", cx, 700, 54, VC.gold, 700);
+    var show = D.rows.slice(0, 3);
+    show.forEach(function(r, i){
+      var ry = 950 + i * 200;
+      var a = seg(t, 14.8 + i * .18, 15.5 + i * .18);
+      if(a <= 0) return;
+      x.globalAlpha = ease(a) * out5;
+      var pad = 90, barW = W - pad * 2;
+      vidText(x, (r.em || "⭐") + " " + r.name, W - pad, ry - 46, 42, VC.ink, 600, "right");
+      vidNum(x, ar(r.n) + " / " + ar(r.d), pad, ry - 46, 40, VC.gold2, "left");
+      x.fillStyle = "rgba(255,255,255,.1)";
+      x.beginPath();
+      if(x.roundRect) x.roundRect(pad, ry + 6, barW, 26, 13); else x.rect(pad, ry + 6, barW, 26);
+      x.fill();
+      var w2 = barW * (r.p / 100) * ease(a);
+      x.fillStyle = r.p >= 80 ? VC.good : (r.p >= 50 ? VC.gold : VC.warn);
+      x.beginPath();
+      if(x.roundRect) x.roundRect(W - pad - w2, ry + 6, w2, 26, 13); else x.rect(W - pad - w2, ry + 6, w2, 26);
+      x.fill();
+    });
+    x.restore();
+  }
+
+  /* ٦) الخاتمة 16.8–18.5 */
+  var in6 = seg(t, 16.8, 17.4);
+  if(in6 > 0){
+    x.save(); x.globalAlpha = ease(in6);
+    vidArch(x, cx, 760, .46, ease(in6));
+    vidText(x, D.verdict, cx, 1120, 58, VC.ink, 700);
+    if(D.streak > 0)
+      vidText(x, "🔥 سلسلة " + days(D.streak), cx, 1232, 42, VC.gold, 600);
+    vidText(x, "أساس", cx, 1420, 66, VC.gold, 700);
+    vidText(x, "متتبّع المهامّ اليوميّة", cx, 1496, 34, VC.mute, 500);
+    x.restore();
+  }
+}
+
+/* ── الموسيقى ── */
+var vidAudio = null, vidMuted = false;
+function vidMusicBuild(){
+  var AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  var ac = new AC();
+  var dest = ac.createMediaStreamDestination();
+  var master = ac.createGain(); master.gain.value = 0;
+  var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2400; lp.Q.value = .6;
+  master.connect(lp); lp.connect(dest); lp.connect(ac.destination);
+
+  var t0 = ac.currentTime + .05, DU = VID.DUR;
+  /* تصاعد وتلاشٍ */
+  master.gain.setValueAtTime(0, t0);
+  master.gain.linearRampToValueAtTime(.22, t0 + 1.6);
+  master.gain.setValueAtTime(.22, t0 + DU - 2.2);
+  master.gain.linearRampToValueAtTime(0, t0 + DU - .1);
+
+  /* طبقة ممتدّة */
+  [146.83, 220.00, 293.66].forEach(function(f, i){
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = i === 2 ? "sine" : "triangle";
+    o.frequency.value = f;
+    o.detune.value = (i - 1) * 6;
+    g.gain.value = i === 2 ? .05 : .09;
+    o.connect(g); g.connect(master);
+    o.start(t0); o.stop(t0 + DU);
+  });
+
+  /* أربيدج لطيف */
+  var scale = [293.66, 349.23, 392.00, 440.00, 523.25, 587.33];
+  var step = .42, k = 0;
+  for(var tt = .6; tt < DU - 1.2; tt += step){
+    var f2 = scale[k % scale.length];
+    if(k % 12 === 11) f2 = scale[5];
+    var o2 = ac.createOscillator(), g2 = ac.createGain();
+    o2.type = "sine"; o2.frequency.value = f2 * (k % 8 >= 4 ? 2 : 1);
+    var st = t0 + tt;
+    g2.gain.setValueAtTime(0, st);
+    g2.gain.linearRampToValueAtTime(.075, st + .02);
+    g2.gain.exponentialRampToValueAtTime(.0008, st + .85);
+    o2.connect(g2); g2.connect(master);
+    o2.start(st); o2.stop(st + .9);
+    k++;
+  }
+
+  /* نغمة عند كل مشهد */
+  [3.5, 7.4, 11.2, 14.6, 16.8].forEach(function(tt){
+    var o3 = ac.createOscillator(), g3 = ac.createGain();
+    o3.type = "sine"; o3.frequency.value = 880;
+    var st = t0 + tt;
+    g3.gain.setValueAtTime(0, st);
+    g3.gain.linearRampToValueAtTime(.05, st + .015);
+    g3.gain.exponentialRampToValueAtTime(.0006, st + 1.1);
+    o3.connect(g3); g3.connect(master);
+    o3.start(st); o3.stop(st + 1.2);
+  });
+
+  return { ac:ac, dest:dest, master:master,
+    stop:function(){ try{ master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.linearRampToValueAtTime(0, ac.currentTime + .12);
+      setTimeout(function(){ try{ ac.close(); }catch(e){} }, 300); }catch(e){} } };
+}
+
+/* ── التشغيل والتسجيل ── */
+var vidMode = "day", vidRunning = false, vidBlob = null, vidRAF = 0;
+
+function vidPickMime(){
+  var opts = ["video/mp4;codecs=avc1", "video/mp4",
+              "video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"];
+  for(var i = 0; i < opts.length; i++){
+    try{ if(window.MediaRecorder && MediaRecorder.isTypeSupported(opts[i])) return opts[i]; }catch(e){}
+  }
+  return "";
+}
+
+function vidRun(record){
+  if(vidRunning) return;
+  vidRunning = true;
+  vidBlob = null;
+  var ov = el("vidOverlay");
+  ov.classList.remove("done");
+  el("vidShare").style.display = "none";
+  el("vidSave").disabled = true;
+  el("vidReplay").disabled = true;
+
+  var D = vidData(vidMode);
+  var cv = el("vidCanvas"), x = cv.getContext("2d");
+  var rec = null, chunks = [], mime = "";
+
+  vidAudio = vidMuted ? null : vidMusicBuild();
+  if(vidAudio && vidAudio.ac.state === "suspended"){ try{ vidAudio.ac.resume(); }catch(e){} }
+
+  if(record){
+    mime = vidPickMime();
+    try{
+      var stream = cv.captureStream(VID.FPS);
+      if(vidAudio) vidAudio.dest.stream.getAudioTracks().forEach(function(tr){ stream.addTrack(tr); });
+      rec = new MediaRecorder(stream, mime ? { mimeType:mime, videoBitsPerSecond:5000000 } : undefined);
+      rec.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = function(){
+        vidBlob = new Blob(chunks, { type: mime || "video/webm" });
+        var url = URL.createObjectURL(vidBlob);
+        var pl = el("vidPlayer");
+        pl.src = url; pl.load();
+        ov.classList.add("done");
+        el("vidShare").style.display = "";
+        el("vidStatus").innerHTML = "جاهز — <b>" + (vidBlob.size / 1048576).toFixed(1) + " ميغابايت</b>";
+        el("vidNote").textContent = "اضغط «مشاركة الفيديو» لإرساله عبر واتساب أو حفظه في الصور.";
+      };
+      rec.start(200);
+    }catch(err){
+      rec = null;
+      el("vidNote").textContent = "تعذّر التسجيل في هذا المتصفّح — يمكنك تسجيل الشاشة بدلًا من ذلك.";
+    }
+  }
+
+  var t0 = performance.now();
+  el("vidStatus").textContent = record ? "جارٍ التسجيل… أبقِ الشاشة مفتوحة" : "المعاينة تعمل…";
+
+  function frame(now){
+    var t = (now - t0) / 1000;
+    if(t > VID.DUR) t = VID.DUR;
+    x.clearRect(0, 0, VID.W, VID.H);
+    vidFrame(x, t, D);
+    el("vidProg").style.width = (t / VID.DUR * 100).toFixed(1) + "%";
+    if(t < VID.DUR){ vidRAF = requestAnimationFrame(frame); return; }
+    vidRunning = false;
+    el("vidReplay").disabled = false;
+    el("vidSave").disabled = false;
+    if(vidAudio){ vidAudio.stop(); vidAudio = null; }
+    if(rec && rec.state !== "inactive"){ setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 260); }
+    else if(!record) el("vidStatus").textContent = "انتهت المعاينة — اضغط «حفظ ومشاركة» لإنتاج ملف الفيديو.";
+  }
+  vidRAF = requestAnimationFrame(frame);
+}
+
+function vidStop(){
+  cancelAnimationFrame(vidRAF);
+  vidRunning = false;
+  if(vidAudio){ vidAudio.stop(); vidAudio = null; }
+}
+
+function openVideo(mode){
+  vidMode = mode;
+  var ov = el("vidOverlay");
+  ov.hidden = false;
+  ov.classList.remove("done");
+  document.body.style.overflow = "hidden";
+  el("vidTitle").textContent = "تقرير مرئيّ — " +
+    (mode === "day" ? "اليوم" : mode === "week" ? "الأسبوع" : "الشهر");
+  el("vidNote").textContent = window.MediaRecorder ? "" :
+    "متصفّحك لا يدعم إنتاج ملف فيديو — يمكنك تسجيل الشاشة أثناء العرض.";
+  el("vidSave").style.display = window.MediaRecorder ? "" : "none";
+  buzz(12);
+  setTimeout(function(){ vidRun(false); }, 220);
+}
+function closeVideo(){
+  vidStop();
+  var ov = el("vidOverlay");
+  ov.hidden = true;
+  ov.classList.remove("done");
+  var pl = el("vidPlayer");
+  try{ pl.pause(); if(pl.src) URL.revokeObjectURL(pl.src); pl.removeAttribute("src"); }catch(e){}
+  document.body.style.overflow = "";
+}
+
+async function vidShareFile(){
+  if(!vidBlob) return;
+  var ext = /mp4/.test(vidBlob.type) ? "mp4" : "webm";
+  var name = "asas-" + vidMode + "-" + key(new Date()) + "." + ext;
+  var file = null;
+  try{ file = new File([vidBlob], name, { type: vidBlob.type }); }catch(e){}
+  if(file && navigator.canShare && navigator.canShare({ files:[file] })){
+    try{
+      await navigator.share({ files:[file], title:"تقرير أساس المرئيّ" });
+      return;
+    }catch(e){ if(e && e.name === "AbortError") return; }
+  }
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(vidBlob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  toast("💾 حُفظ الفيديو");
 }
 
 /* ═══════════════ التحديث الشامل ═══════════════ */
@@ -2192,11 +2822,25 @@ el("resetBtn").onclick = function(){
   save(); renderAll(); toast("🧹 مُسحت البيانات");
 };
 
+/* التقرير المرئيّ */
+el("vidOpen").onclick   = function(){ openVideo(rptMode); };
+el("vidClose").onclick  = closeVideo;
+el("vidReplay").onclick = function(){ vidStop(); vidRun(false); };
+el("vidSave").onclick   = function(){ vidStop(); vidRun(true); };
+el("vidShare").onclick  = vidShareFile;
+el("vidMute").onclick   = function(){
+  vidMuted = !vidMuted;
+  this.textContent = vidMuted ? "🔇" : "🔊";
+  if(vidMuted && vidAudio){ vidAudio.stop(); vidAudio = null; }
+};
+
 /* التقارير */
 el("rptClose").onclick = closeReport;
 el("rptPrint").onclick = function(){ buzz(12); setTimeout(function(){ window.print(); }, 60); };
 document.addEventListener("keydown", function(e){
-  if(e.key === "Escape" && !el("rptOverlay").hidden) closeReport();
+  if(e.key !== "Escape") return;
+  if(!el("vidOverlay").hidden){ closeVideo(); return; }
+  if(!el("rptOverlay").hidden) closeReport();
 });
 
 /* المظهر */
