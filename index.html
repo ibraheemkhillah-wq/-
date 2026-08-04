@@ -710,10 +710,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   padding:16px 12px;font-size:.95rem;
   box-shadow:0 8px 22px -9px rgba(224,176,84,.7);
 }
-/* حين يصير الإنشاء إجراءً ثانويًّا */
-.vid-acts .save.alt{
-  background:rgba(255,255,255,.11);color:#e8ebf2;box-shadow:none;
-}
+
 .vid-note{
   font-size:.73rem;color:#8b93a6;text-align:center;line-height:1.7;
 }
@@ -1017,10 +1014,10 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     </div>
     <div class="vid-status" id="vidStatus">—</div>
     <div class="vid-acts">
-      <button class="full" id="vidShare" style="display:none">📤 مشاركة أو حفظ في الاستوديو</button>
+      <button class="replay" id="vidReplay">▶︎ إعادة</button>
+      <button class="save" id="vidSave">حفظ ومشاركة</button>
+      <button class="full" id="vidShare" style="display:none">📤 حفظ في الاستوديو أو مشاركة</button>
       <button class="full" id="vidDownload" style="display:none">⬇︎ تنزيل الملف</button>
-      <button class="save" id="vidSave">🎬 إنشاء الفيديو</button>
-      <button class="replay" id="vidReplay">▶︎ إعادة العرض</button>
     </div>
     <div class="vid-note" id="vidNote"></div>
   </div>
@@ -2600,18 +2597,39 @@ function vidVoiceInit(){
   if(!("speechSynthesis" in window)) return;
   vidVoice = vidPickVoice();
   vidVoiceReady = !!vidVoice;
-  if(!vidVoiceReady){
-    try{ speechSynthesis.onvoiceschanged = function(){
+  if(vidVoiceReady) return;
+  /* iOS يملأ قائمة الأصوات متأخّرًا — نتابع حتى تظهر */
+  try{
+    speechSynthesis.onvoiceschanged = function(){
       vidVoice = vidPickVoice(); vidVoiceReady = !!vidVoice;
-    }; }catch(e){}
-  }
+    };
+  }catch(e){}
+  var tries = 0;
+  var iv = setInterval(function(){
+    vidVoice = vidPickVoice();
+    if(vidVoice || ++tries > 12){ vidVoiceReady = !!vidVoice; clearInterval(iv); }
+  }, 250);
 }
+/* iOS لا يسمح ببدء النُّطق خارج إيماءة المستخدم — نفكّ القفل بنطقٍ صامت
+   داخل معالج الضغط نفسه، فتُقبل الجمل اللاحقة */
+function vidUnlockSpeech(){
+  if(!("speechSynthesis" in window)) return;
+  try{
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance("\u200B");
+    u.volume = 0; u.rate = 10; u.lang = "ar-SA";
+    speechSynthesis.speak(u);
+    speechSynthesis.resume();
+  }catch(e){}
+}
+
 function vidSay(text){
-  if(!vidVoice || vidMuted || !text) return;
+  if(vidMuted || !text) return;
+  if(!("speechSynthesis" in window)) return;
   try{
     var u = new SpeechSynthesisUtterance(text);
-    /* إسناد الصوت قد يرفض في بعض المتصفّحات — لا يمنع ذلك النُّطق باللغة وحدها */
-    try{ u.voice = vidVoice; }catch(e){}
+    /* إسناد الصوت قد يرفض — والنُّطق باللغة وحدها أولى من الصمت */
+    if(vidVoice){ try{ u.voice = vidVoice; }catch(e){} }
     try{ u.lang = (vidVoice && vidVoice.lang) || "ar-SA"; }catch(e){}
     u.rate = 0.94;    /* متمهّل ليواكب المشاهد */
     u.pitch = 0.92;   /* أخفض قليلًا — نبرة أوقر */
@@ -2621,6 +2639,8 @@ function vidSay(text){
     u.onend   = function(){ vidDuck(false); };
     u.onerror = function(){ vidDuck(false); };
     speechSynthesis.speak(u);
+    /* سفاري يعلّق الطابور أحيانًا بعد فترة صمت */
+    try{ speechSynthesis.resume(); }catch(e){}
   }catch(e){}
 }
 function vidShutUp(){
@@ -2705,10 +2725,7 @@ function vidRun(record){
   ov.classList.remove("done");
   el("vidShare").style.display = "none";
   el("vidDownload").style.display = "none";
-  var sv0 = el("vidSave");
-  sv0.classList.remove("alt");
-  sv0.textContent = "🎬 إنشاء الفيديو";
-  sv0.disabled = true;
+  el("vidSave").disabled = true;
   el("vidReplay").disabled = true;
 
   var D = vidData(vidMode);
@@ -2738,9 +2755,6 @@ function vidRun(record){
         }catch(e){}
         el("vidShare").style.display = canShare ? "" : "none";
         el("vidDownload").style.display = canShare ? "none" : "";
-        var sv = el("vidSave");
-        sv.classList.add("alt");
-        sv.textContent = "🎬 إنشاء من جديد";
         el("vidStatus").innerHTML = "جاهز — <b>" + vidTime(VID.DUR) + "</b> · " +
           (vidBlob.size / 1048576).toFixed(1) + " ميغابايت";
         var vNote = vidVoice ? "<br><b>الملفّ يحوي الموسيقى دون التعليق الصوتيّ</b> — المتصفّح لا يتيح تسجيل النُّطق داخل الفيديو." : "";
@@ -2941,7 +2955,7 @@ document.addEventListener("click", function(e){
 
   /* فتح التقرير المرئيّ من الصفحة مباشرةً */
   t = e.target.closest("[data-vid]");
-  if(t){ openVideo(t.getAttribute("data-vid")); return; }
+  if(t){ vidUnlockSpeech(); openVideo(t.getAttribute("data-vid")); return; }
 
   /* فتح تقرير */
   t = e.target.closest("[data-rpt]");
@@ -3034,10 +3048,10 @@ el("resetBtn").onclick = function(){
 };
 
 /* التقرير المرئيّ */
-el("vidOpen").onclick   = function(){ openVideo(rptMode); };
+el("vidOpen").onclick   = function(){ vidUnlockSpeech(); openVideo(rptMode); };
 el("vidClose").onclick  = closeVideo;
-el("vidReplay").onclick = function(){ vidStop(); vidRun(false); };
-el("vidSave").onclick   = function(){ vidStop(); vidRun(true); };
+el("vidReplay").onclick = function(){ vidUnlockSpeech(); vidStop(); vidRun(false); };
+el("vidSave").onclick   = function(){ vidUnlockSpeech(); vidStop(); vidRun(true); };
 el("vidShare").onclick    = vidShareFile;
 el("vidDownload").onclick = vidDownloadFile;
 el("vidMute").onclick   = function(){
