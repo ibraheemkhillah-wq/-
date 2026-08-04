@@ -2600,8 +2600,9 @@ function vidSay(text){
   if(!vidVoice || vidMuted || !text) return;
   try{
     var u = new SpeechSynthesisUtterance(text);
-    u.voice = vidVoice;
-    u.lang = vidVoice.lang || "ar-SA";
+    /* إسناد الصوت قد يرفض في بعض المتصفّحات — لا يمنع ذلك النُّطق باللغة وحدها */
+    try{ u.voice = vidVoice; }catch(e){}
+    try{ u.lang = (vidVoice && vidVoice.lang) || "ar-SA"; }catch(e){}
     u.rate = 0.94;    /* متمهّل ليواكب المشاهد */
     u.pitch = 0.92;   /* أخفض قليلًا — نبرة أوقر */
     u.volume = 1;
@@ -2634,15 +2635,20 @@ function vidNarration(D){
   L.push({ t:1.3, s:"تقرير أساس " + kind + "، " + D.period });
   L.push({ t:5.6, s:"نسبة التزامك " + D.pct + " بالمئة" });
 
+  /* صيغة الجمع العربيّة تُنطق كما تُكتب — «واكتملت ١ أيام» لحنٌ ظاهر */
+  function full(n, of){
+    if(n === 0) return "ولم يكتمل يومٌ واحد" + (of ? " من " + of : "");
+    return "وعدد الأيام الكاملة " + days(n) + (of ? " من " + of : "");
+  }
   if(D.mode === "day"){
     L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " مهمّة" +
-      (D.streak > 0 ? "، وسلسلتك " + D.streak + " يوم" : "") });
+      (D.streak > 0 ? "، وسلسلتك " + days(D.streak) : "") });
   } else if(D.mode === "week"){
-    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة، واكتملت " +
-      D.nPerfect + " أيام من سبعة" });
+    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة، " +
+      full(D.nPerfect, "سبعة") });
   } else {
     L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة عبر " +
-      D.nCounted + " يوم، واكتملت " + D.nPerfect + " أيام" });
+      days(D.nCounted) + "، " + full(D.nPerfect, "") });
   }
 
   L.push({ t:16.3, s:D.barTitle });
