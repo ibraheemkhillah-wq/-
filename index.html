@@ -703,7 +703,17 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 .vid-acts button:disabled{opacity:.4;pointer-events:none;}
 .vid-acts .replay{background:rgba(255,255,255,.11);color:#e8ebf2;}
 .vid-acts .save{background:var(--gold);color:#1a1206;}
-.vid-acts .full{grid-column:1 / -1;}
+/* الإجراء الرئيسيّ بعد جاهزيّة الملف — عريض وبارز */
+.vid-acts .full{
+  grid-column:1 / -1;
+  background:var(--gold);color:#1a1206;
+  padding:16px 12px;font-size:.95rem;
+  box-shadow:0 8px 22px -9px rgba(224,176,84,.7);
+}
+/* حين يصير الإنشاء إجراءً ثانويًّا */
+.vid-acts .save.alt{
+  background:rgba(255,255,255,.11);color:#e8ebf2;box-shadow:none;
+}
 .vid-note{
   font-size:.73rem;color:#8b93a6;text-align:center;line-height:1.7;
 }
@@ -1007,10 +1017,10 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     </div>
     <div class="vid-status" id="vidStatus">—</div>
     <div class="vid-acts">
-      <button class="replay" id="vidReplay">▶︎ إعادة</button>
-      <button class="save" id="vidSave">حفظ ومشاركة</button>
       <button class="full" id="vidShare" style="display:none">📤 مشاركة أو حفظ في الاستوديو</button>
       <button class="full" id="vidDownload" style="display:none">⬇︎ تنزيل الملف</button>
+      <button class="save" id="vidSave">🎬 إنشاء الفيديو</button>
+      <button class="replay" id="vidReplay">▶︎ إعادة العرض</button>
     </div>
     <div class="vid-note" id="vidNote"></div>
   </div>
@@ -2695,7 +2705,10 @@ function vidRun(record){
   ov.classList.remove("done");
   el("vidShare").style.display = "none";
   el("vidDownload").style.display = "none";
-  el("vidSave").disabled = true;
+  var sv0 = el("vidSave");
+  sv0.classList.remove("alt");
+  sv0.textContent = "🎬 إنشاء الفيديو";
+  sv0.disabled = true;
   el("vidReplay").disabled = true;
 
   var D = vidData(vidMode);
@@ -2725,6 +2738,9 @@ function vidRun(record){
         }catch(e){}
         el("vidShare").style.display = canShare ? "" : "none";
         el("vidDownload").style.display = canShare ? "none" : "";
+        var sv = el("vidSave");
+        sv.classList.add("alt");
+        sv.textContent = "🎬 إنشاء من جديد";
         el("vidStatus").innerHTML = "جاهز — <b>" + vidTime(VID.DUR) + "</b> · " +
           (vidBlob.size / 1048576).toFixed(1) + " ميغابايت";
         var vNote = vidVoice ? "<br><b>الملفّ يحوي الموسيقى دون التعليق الصوتيّ</b> — المتصفّح لا يتيح تسجيل النُّطق داخل الفيديو." : "";
