@@ -2169,6 +2169,7 @@ function vidData(mode){
       D.bars.push({ v:dayScore(key(bd), tasks), l:DAY_SHORT[i], off: bd > today });
     }
     D.barTitle = "أيام هذا الأسبوع";
+    D.nDone = done; D.nTotal = total;
     D.verdict = p === 100 ? "يومٌ تامّ — أُنجزت المهامّ كلّها"
       : p >= 70 ? "يومٌ قويّ — بقي القليل"
       : p >= 40 ? "نصف الطريق — واصِل"
@@ -2190,6 +2191,7 @@ function vidData(mode){
     D.bars = st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], off:x.future }; });
     D.barMax = tasks.length;
     D.barTitle = "الإنجاز عبر الأسبوع";
+    D.nDone = st.done; D.nTotal = st.total; D.nPerfect = st.perfect;
     D.verdict = st.pct >= 85 ? "أسبوعٌ عالي الالتزام"
       : st.pct >= 60 ? "أسبوعٌ جيّد وفيه فسحة"
       : st.pct >= 35 ? "أسبوعٌ متذبذب — ثبّته" : "ابدأ بمهمّة واحدة تثبتها";
@@ -2223,6 +2225,7 @@ function vidData(mode){
       D.bars.push({ v:pct(o.s, o.n * (tasks.length || 1)), l:String(i + 1), off:false });
     });
     D.barTitle = "اتّجاه الأسابيع";
+    D.nDone = ms.done; D.nTotal = ms.total; D.nPerfect = ms.perfect; D.nCounted = ms.counted;
     D.verdict = ms.pct >= 85 ? "شهرٌ عالي الالتزام"
       : ms.pct >= 60 ? "شهرٌ جيّد ومستقرّ"
       : ms.pct >= 35 ? "شهرٌ متفاوت — الثبات مطلوب" : "ابنِ عادةً واحدة تثبت";
@@ -2507,20 +2510,23 @@ function vidMusicBuild(){
   var ac = new AC();
   var dest = ac.createMediaStreamDestination();
   var master = ac.createGain(); master.gain.value = 0;
+  /* عقدة وسيطة تُخفض تحت التعليق الصوتيّ */
+  var music = ac.createGain(); music.gain.value = 1;
   var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2100; lp.Q.value = .5;
 
   /* صدى بسيط يمنح اتّساعًا كالمكان الواسع */
   var dly = ac.createDelay(1.0); dly.delayTime.value = 0.34;
   var fb = ac.createGain(); fb.gain.value = 0.32;
   var wet = ac.createGain(); wet.gain.value = 0.3;
-  master.connect(lp);
-  master.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(wet); wet.connect(lp);
+  master.connect(music);
+  music.connect(lp);
+  music.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(wet); wet.connect(lp);
   lp.connect(dest); lp.connect(ac.destination);
 
   var t0 = ac.currentTime + .05, DU = VID.DUR;
   master.gain.setValueAtTime(0, t0);
-  master.gain.linearRampToValueAtTime(.26, t0 + 2.2);
-  master.gain.setValueAtTime(.26, t0 + DU - 3.2);
+  master.gain.linearRampToValueAtTime(.15, t0 + 2.2);
+  master.gain.setValueAtTime(.15, t0 + DU - 3.2);
   master.gain.linearRampToValueAtTime(0, t0 + DU - .15);
 
   /* دَرون ممتدّ على الرّي */
@@ -2556,12 +2562,106 @@ function vidMusicBuild(){
     o.start(ts); o.stop(ts + 1.7);
   });
 
-  return { ac:ac, dest:dest, master:master,
+  return { ac:ac, dest:dest, master:master, music:music,
     stop:function(){ try{
       master.gain.cancelScheduledValues(ac.currentTime);
       master.gain.linearRampToValueAtTime(0, ac.currentTime + .15);
       setTimeout(function(){ try{ ac.close(); }catch(e){} }, 400);
     }catch(e){} } };
+}
+
+
+/* ── التعليق الصوتيّ: نُطق عربيّ بصوت رجل ── */
+var vidVoice = null, vidVoiceReady = false;
+
+function vidPickVoice(){
+  if(!("speechSynthesis" in window)) return null;
+  var vs = [];
+  try{ vs = speechSynthesis.getVoices() || []; }catch(e){ return null; }
+  var ar = vs.filter(function(v){ return /^ar/i.test(v.lang || ""); });
+  if(!ar.length) return null;
+  /* أصوات عربيّة ذكوريّة معروفة — «ماجد» هو الصوت العربيّ في iOS */
+  var male = ar.filter(function(v){
+    return /maged|majed|majid|tarik|hamza|male|رجل|ماجد/i.test(v.name || "");
+  });
+  return male[0] || ar[0];
+}
+function vidVoiceInit(){
+  if(!("speechSynthesis" in window)) return;
+  vidVoice = vidPickVoice();
+  vidVoiceReady = !!vidVoice;
+  if(!vidVoiceReady){
+    try{ speechSynthesis.onvoiceschanged = function(){
+      vidVoice = vidPickVoice(); vidVoiceReady = !!vidVoice;
+    }; }catch(e){}
+  }
+}
+function vidSay(text){
+  if(!vidVoice || vidMuted || !text) return;
+  try{
+    var u = new SpeechSynthesisUtterance(text);
+    /* إسناد الصوت قد يرفض في بعض المتصفّحات — لا يمنع ذلك النُّطق باللغة وحدها */
+    try{ u.voice = vidVoice; }catch(e){}
+    try{ u.lang = (vidVoice && vidVoice.lang) || "ar-SA"; }catch(e){}
+    u.rate = 0.94;    /* متمهّل ليواكب المشاهد */
+    u.pitch = 0.92;   /* أخفض قليلًا — نبرة أوقر */
+    u.volume = 1;
+    /* خفض الموسيقى أثناء الكلام ثم إعادتها */
+    u.onstart = function(){ vidDuck(true); };
+    u.onend   = function(){ vidDuck(false); };
+    u.onerror = function(){ vidDuck(false); };
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function vidShutUp(){
+  try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
+}
+
+/* خفض الموسيقى تحت الصوت */
+function vidDuck(on){
+  if(!vidAudio || !vidAudio.music) return;
+  try{
+    var g = vidAudio.music.gain, ac = vidAudio.ac;
+    g.cancelScheduledValues(ac.currentTime);
+    g.linearRampToValueAtTime(on ? 0.30 : 1.0, ac.currentTime + 0.35);
+  }catch(e){}
+}
+
+/* نصّ التعليق موزّعًا على المشاهد */
+function vidNarration(D){
+  var kind = D.mode === "day" ? "اليوميّ" : D.mode === "week" ? "الأسبوعيّ" : "الشهريّ";
+  var L = [];
+
+  L.push({ t:1.3, s:"تقرير أساس " + kind + "، " + D.period });
+  L.push({ t:5.6, s:"نسبة التزامك " + D.pct + " بالمئة" });
+
+  /* صيغة الجمع العربيّة تُنطق كما تُكتب — «واكتملت ١ أيام» لحنٌ ظاهر */
+  function full(n, of){
+    if(n === 0) return "ولم يكتمل يومٌ واحد" + (of ? " من " + of : "");
+    return "وعدد الأيام الكاملة " + days(n) + (of ? " من " + of : "");
+  }
+  if(D.mode === "day"){
+    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " مهمّة" +
+      (D.streak > 0 ? "، وسلسلتك " + days(D.streak) : "") });
+  } else if(D.mode === "week"){
+    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة، " +
+      full(D.nPerfect, "سبعة") });
+  } else {
+    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة عبر " +
+      days(D.nCounted) + "، " + full(D.nPerfect, "") });
+  }
+
+  L.push({ t:16.3, s:D.barTitle });
+
+  if(D.rows && D.rows.length){
+    var top = D.rows[0], low = D.rows[D.rows.length - 1];
+    var line = "أكثر ما ثبّته: " + top.name;
+    if(low && low !== top) line += ". وأضعف ما لديك: " + low.name;
+    L.push({ t:21.6, s:line });
+  }
+
+  L.push({ t:25.7, s:D.verdict });
+  return L;
 }
 
 /* ── التشغيل والتسجيل ── */
@@ -2627,9 +2727,10 @@ function vidRun(record){
         el("vidDownload").style.display = canShare ? "none" : "";
         el("vidStatus").innerHTML = "جاهز — <b>" + vidTime(VID.DUR) + "</b> · " +
           (vidBlob.size / 1048576).toFixed(1) + " ميغابايت";
-        el("vidNote").innerHTML = canShare
+        var vNote = vidVoice ? "<br><b>الملفّ يحوي الموسيقى دون التعليق الصوتيّ</b> — المتصفّح لا يتيح تسجيل النُّطق داخل الفيديو." : "";
+        el("vidNote").innerHTML = (canShare
           ? "لحفظه في الاستوديو: اضغط الزرّ ثم اختر <b>«حفظ الفيديو»</b> من القائمة.<br>ولإرساله: اختر واتساب أو البريد من القائمة نفسها."
-          : "اضغط «تنزيل الملف» لحفظه على جهازك.";
+          : "اضغط «تنزيل الملف» لحفظه على جهازك.") + vNote;
       };
       rec.start(200);
     }catch(err){
@@ -2638,6 +2739,8 @@ function vidRun(record){
     }
   }
 
+  var narr = vidNarration(D), nIdx = 0;
+  vidShutUp();
   var t0 = performance.now();
   el("vidDur").textContent = vidTime(VID.DUR);
   el("vidStatus").textContent = record ? "جارٍ التسجيل… أبقِ الشاشة مفتوحة" : "المعاينة تعمل…";
@@ -2650,6 +2753,8 @@ function vidRun(record){
     vidFrame(x, Math.min(t, VID.BODY), D);
     el("vidProg").style.width = (t / VID.DUR * 100).toFixed(1) + "%";
     el("vidNow").textContent = vidTime(t);
+    /* التعليق الصوتيّ يتبع المشاهد */
+    while(nIdx < narr.length && t >= narr[nIdx].t){ vidSay(narr[nIdx].s); nIdx++; }
     if(t < VID.DUR){ vidRAF = requestAnimationFrame(frame); return; }
 
     vidRunning = false;
@@ -2674,6 +2779,7 @@ function vidRun(record){
 function vidStop(){
   cancelAnimationFrame(vidRAF);
   vidRunning = false;
+  vidShutUp();
   if(vidAudio){ vidAudio.stop(); vidAudio = null; }
 }
 
@@ -2691,6 +2797,7 @@ function openVideo(mode){
   el("vidNow").textContent = "0:00";
   el("vidDur").textContent = vidTime(VID.DUR);
   el("vidProg").style.width = "0%";
+  vidVoiceInit();
   buzz(12);
   setTimeout(function(){ vidRun(false); }, 220);
 }
@@ -2920,7 +3027,10 @@ el("vidDownload").onclick = vidDownloadFile;
 el("vidMute").onclick   = function(){
   vidMuted = !vidMuted;
   this.textContent = vidMuted ? "🔇" : "🔊";
-  if(vidMuted && vidAudio){ vidAudio.stop(); vidAudio = null; }
+  if(vidMuted){
+    vidShutUp();
+    if(vidAudio){ vidAudio.stop(); vidAudio = null; }
+  }
 };
 
 /* التقارير */
@@ -3048,6 +3158,8 @@ try{
     });
   }
 }catch(e){}
+
+try{ vidVoiceInit(); }catch(e){}
 
 applyTheme();
 renderAll();
