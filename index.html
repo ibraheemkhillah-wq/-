@@ -2135,7 +2135,7 @@ function closeReport(){
    التقرير المرئيّ — موشن جرافيك على كانفس + موسيقى مولَّدة
    ═══════════════════════════════════════════════════ */
 
-var VID = { W:1080, H:1920, FPS:30, DUR:28, BODY:26.5 };
+var VID = { W:1080, H:1920, FPS:30, DUR:30, BODY:24.5 };
 var VC = {
   bg1:"#28345c", bg2:"#171f38", bg3:"#0b0f19",
   gold:"#e0b054", gold2:"#f7d98c", gold3:"#a8762a",
@@ -2442,15 +2442,15 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٥) المهامّ 20.8–25.6 */
-  var in5 = seg(t, 20.8, 21.4), out5 = 1 - seg(t, 25.0, 25.6);
+  /* ٥) المهامّ 19.6–23.4 */
+  var in5 = seg(t, 19.6, 20.2), out5 = 1 - seg(t, 22.9, 23.4);
   if(in5 > 0 && out5 > 0 && D.rows && D.rows.length){
     x.save(); x.globalAlpha = out5;
     vidText(x, D.rowsTitle || "أبرز المهامّ", cx, 700, 54, VC.gold, 700);
     var show = D.rows.slice(0, 3);
     show.forEach(function(r, i){
       var ry = 950 + i * 200;
-      var a = seg(t, 21.3 + i * .42, 22.4 + i * .42);
+      var a = seg(t, 20.1 + i * .38, 21.1 + i * .38);
       if(a <= 0) return;
       x.globalAlpha = ease(a) * out5;
       var pad = 90, barW = W - pad * 2;
@@ -2469,8 +2469,8 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٦) الخاتمة 25.4–26.5 ثم ثبات */
-  var in6 = seg(t, 25.4, 26.2);
+  /* ٦) الخاتمة 23.2–24.5 ثم ثبات خمس ثوانٍ ونصف */
+  var in6 = seg(t, 23.2, 24.1);
   if(in6 > 0){
     x.save(); x.globalAlpha = ease(in6);
     vidArch(x, cx, 760, .46, ease(in6));
@@ -2532,8 +2532,8 @@ function vidMusicBuild(){
 
   var t0 = ac.currentTime + .05, DU = VID.DUR;
   master.gain.setValueAtTime(0, t0);
-  master.gain.linearRampToValueAtTime(.15, t0 + 2.2);
-  master.gain.setValueAtTime(.15, t0 + DU - 3.2);
+  master.gain.linearRampToValueAtTime(.30, t0 + 2.2);
+  master.gain.setValueAtTime(.30, t0 + DU - 3.2);
   master.gain.linearRampToValueAtTime(0, t0 + DU - .15);
 
   /* دَرون ممتدّ على الرّي */
@@ -2558,7 +2558,7 @@ function vidMusicBuild(){
   }
 
   /* نغمة صافية عند مطلع كل مشهد */
-  [4.7, 10.4, 15.6, 20.8, 25.4].forEach(function(tt){
+  [4.7, 10.4, 15.6, 19.6, 23.2].forEach(function(tt){
     var o = ac.createOscillator(), g = ac.createGain();
     o.type = "sine"; o.frequency.value = 880;
     var ts = t0 + tt;
@@ -2577,6 +2577,59 @@ function vidMusicBuild(){
     }catch(e){} } };
 }
 
+
+
+/* ── تهيئة النصّ للنطق ── */
+var AR_ONES = ["صفر","واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة",
+               "عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر","خمسة عشر",
+               "ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر"];
+var AR_TENS = ["","","عشرون","ثلاثون","أربعون","خمسون","ستون","سبعون","ثمانون","تسعون"];
+var AR_HUND = ["","مئة","مئتان","ثلاثمئة","أربعمئة","خمسمئة","ستمئة","سبعمئة","ثمانمئة","تسعمئة"];
+var AR_THOU = ["","ألف","ألفان","ثلاثة آلاف","أربعة آلاف","خمسة آلاف",
+               "ستة آلاف","سبعة آلاف","ثمانية آلاف","تسعة آلاف"];
+
+/* محرّكات النطق العربيّة تقرأ الأرقام رقمًا رقمًا — والكلمات أسلم */
+function arWords(n){
+  n = Math.round(Math.abs(+n || 0));
+  if(n > 9999) return String(n);
+  if(n < 20) return AR_ONES[n];
+  var th = (n / 1000) | 0, rest = n % 1000;
+  var h = (rest / 100) | 0, r = rest % 100, out = [];
+  if(th) out.push(AR_THOU[th]);
+  if(h) out.push(AR_HUND[h]);
+  if(r){
+    if(r < 20) out.push(AR_ONES[r]);
+    else{
+      var t = (r / 10) | 0, o = r % 10;
+      out.push(o ? AR_ONES[o] + " و" + AR_TENS[t] : AR_TENS[t]);
+    }
+  }
+  return out.join(" و");
+}
+
+/* صيغة الجرّ — «من مئتين وأربعين» لا «من مئتان وأربعون» */
+function arWordsGen(n){
+  return arWords(n)
+    .replace(/عشرون/g, "عشرين").replace(/ثلاثون/g, "ثلاثين")
+    .replace(/أربعون/g, "أربعين").replace(/خمسون/g, "خمسين")
+    .replace(/ستون/g, "ستين").replace(/سبعون/g, "سبعين")
+    .replace(/ثمانون/g, "ثمانين").replace(/تسعون/g, "تسعين")
+    .replace(/مئتان/g, "مئتين").replace(/ألفان/g, "ألفين")
+    .replace(/\bاثنان\b/g, "اثنين");
+}
+
+/* التشكيل يربك محرّك النطق فيلحن — نجرّده قبل النطق */
+function sayable(t){
+  return String(t)
+    .replace(/[ً-ْٰـ]/g, "")   /* تشكيل وتطويل */
+    .replace(/٪|%/g, " بالمئة")
+    /* السنة تُنطق مجرورةً بعد اسم الشهر: «يوليو ألفين وستة وعشرين» */
+    .replace(/(\d+)/g, function(m){
+      return " " + (+m >= 1000 ? arWordsGen(m) : arWords(m)) + " ";
+    })
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 
 /* ── التعليق الصوتيّ: نُطق عربيّ بصوت رجل ── */
 var vidVoice = null, vidVoiceReady = false;
@@ -2627,17 +2680,23 @@ function vidSay(text){
   if(vidMuted || !text) return;
   if(!("speechSynthesis" in window)) return;
   try{
-    var u = new SpeechSynthesisUtterance(text);
+    var u = new SpeechSynthesisUtterance(sayable(text));
     /* إسناد الصوت قد يرفض — والنُّطق باللغة وحدها أولى من الصمت */
     if(vidVoice){ try{ u.voice = vidVoice; }catch(e){} }
     try{ u.lang = (vidVoice && vidVoice.lang) || "ar-SA"; }catch(e){}
-    u.rate = 0.94;    /* متمهّل ليواكب المشاهد */
-    u.pitch = 0.92;   /* أخفض قليلًا — نبرة أوقر */
+    u.rate = 0.95;    /* متمهّل قليلًا ليواكب المشاهد */
+    u.pitch = 1.0;    /* النبرة الطبيعيّة أقرب للواقع من المُزاحة */
     u.volume = 1;
     /* خفض الموسيقى أثناء الكلام ثم إعادتها */
-    u.onstart = function(){ vidDuck(true); };
-    u.onend   = function(){ vidDuck(false); };
-    u.onerror = function(){ vidDuck(false); };
+    var guard = 0;
+    u.onstart = function(){
+      vidDuck(true);
+      clearTimeout(guard);
+      /* لو لم يصل onend — وسفاري يُهمله أحيانًا — تعود الموسيقى وحدها */
+      guard = setTimeout(function(){ vidDuck(false); }, 9000);
+    };
+    u.onend   = function(){ clearTimeout(guard); vidDuck(false); };
+    u.onerror = function(){ clearTimeout(guard); vidDuck(false); };
     speechSynthesis.speak(u);
     /* سفاري يعلّق الطابور أحيانًا بعد فترة صمت */
     try{ speechSynthesis.resume(); }catch(e){}
@@ -2653,7 +2712,7 @@ function vidDuck(on){
   try{
     var g = vidAudio.music.gain, ac = vidAudio.ac;
     g.cancelScheduledValues(ac.currentTime);
-    g.linearRampToValueAtTime(on ? 0.30 : 1.0, ac.currentTime + 0.35);
+    g.linearRampToValueAtTime(on ? 0.55 : 1.0, ac.currentTime + 0.35);
   }catch(e){}
 }
 
@@ -2667,18 +2726,21 @@ function vidNarration(D){
 
   /* صيغة الجمع العربيّة تُنطق كما تُكتب — «واكتملت ١ أيام» لحنٌ ظاهر */
   function full(n, of){
-    if(n === 0) return "ولم يكتمل يومٌ واحد" + (of ? " من " + of : "");
-    return "وعدد الأيام الكاملة " + days(n) + (of ? " من " + of : "");
+    if(n === 0) return "ولم يكتمل يوم واحد" + (of ? " من " + of : "");
+    var w = n === 1 ? "يوم واحد" : n === 2 ? "يومان"
+          : n <= 10 ? arWords(n) + " أيام" : arWords(n) + " يوما";
+    return "والأيام الكاملة " + w + (of ? " من " + of : "");
   }
+  /* أعدادٌ مجرورة بعد «من أصل» و«خلال»، وجُملٌ قصيرة أوضح في السمع */
   if(D.mode === "day"){
-    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " مهمّة" +
-      (D.streak > 0 ? "، وسلسلتك " + days(D.streak) : "") });
+    L.push({ t:11.0, s:"أنجزت " + arWords(D.nDone) + " من أصل " + arWordsGen(D.nTotal) +
+      (D.streak > 0 ? ". وسلسلتك " + arWords(D.streak) + (D.streak <= 10 ? " أيام" : " يوما") : "") });
   } else if(D.mode === "week"){
-    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة، " +
-      full(D.nPerfect, "سبعة") });
+    L.push({ t:11.0, s:"أنجزت " + arWords(D.nDone) + " من أصل " + arWordsGen(D.nTotal) +
+      ". " + full(D.nPerfect, "سبعة") });
   } else {
-    L.push({ t:11.0, s:"أنجزت " + D.nDone + " من " + D.nTotal + " فرصة عبر " +
-      days(D.nCounted) + "، " + full(D.nPerfect, "") });
+    L.push({ t:11.0, s:"أنجزت " + arWords(D.nDone) + " من أصل " + arWordsGen(D.nTotal) +
+      " خلال " + arWordsGen(D.nCounted) + " يوما. " + full(D.nPerfect, "") });
   }
 
   L.push({ t:16.3, s:D.barTitle });
@@ -2687,10 +2749,10 @@ function vidNarration(D){
     var top = D.rows[0], low = D.rows[D.rows.length - 1];
     var line = "أكثر ما ثبّته: " + top.name;
     if(low && low !== top) line += ". وأضعف ما لديك: " + low.name;
-    L.push({ t:21.6, s:line });
+    L.push({ t:20.4, s:line });
   }
 
-  L.push({ t:25.7, s:D.verdict });
+  L.push({ t:23.4, s:D.verdict });
   return L;
 }
 
@@ -2798,8 +2860,11 @@ function vidRun(record){
       try{ rec.requestData(); }catch(e){}
       setTimeout(function(){
         try{ rec.requestData(); }catch(e){}
-        setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 500);
-      }, 700);
+        setTimeout(function(){
+          try{ rec.requestData(); }catch(e){}
+          setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 900);
+        }, 600);
+      }, 600);
     }
     else if(!record) el("vidStatus").textContent = "انتهت المعاينة — اضغط «حفظ ومشاركة» لإنتاج ملف الفيديو.";
   }
