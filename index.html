@@ -650,6 +650,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   box-shadow:var(--shadow-sm);transition:transform .12s, filter .2s;
 }
 .vid-btn:active{transform:scale(.985);}
+.rpt-btn + .vid-btn{margin-top:9px;}
 .vid-btn .ic{font-size:1.05rem;}
 
 .vid-overlay{
@@ -809,6 +810,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   <div id="taskList" style="display:flex;flex-direction:column;gap:16px;"></div>
 
   <button class="rpt-btn" data-rpt="day">📄 تقرير اليوم — PDF</button>
+  <button class="vid-btn" data-vid="day"><span class="ic">🎬</span> تقرير اليوم المرئيّ — فيديو</button>
 
   <div class="card note">
     <h3 class="card-t">✍️ ملاحظة اليوم</h3>
@@ -844,6 +846,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   <div id="wRows" style="display:flex;flex-direction:column;gap:8px;"></div>
 
   <button class="rpt-btn" data-rpt="week">📄 تقرير الأسبوع — PDF</button>
+  <button class="vid-btn" data-vid="week"><span class="ic">🎬</span> تقرير الأسبوع المرئيّ — فيديو</button>
 
   <div class="card">
     <h3 class="card-t">📋 المراجعة الأسبوعية</h3>
@@ -897,6 +900,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   </div>
 
   <button class="rpt-btn" data-rpt="month">📄 تقرير الشهر — PDF</button>
+  <button class="vid-btn" data-vid="month"><span class="ic">🎬</span> تقرير الشهر المرئيّ — فيديو</button>
 
   <div class="card">
     <h3 class="card-t">📋 المراجعة الشهرية</h3>
@@ -973,10 +977,10 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       اضغط «تصدير PDF» ← تفتح شاشة الطباعة ← اضغط زر المشاركة فيها ←
       «حفظ في الملفات» أو أرسله مباشرة عبر واتساب أو البريد.
     </div>
-    <div class="rpt-doc" id="rptDoc"></div>
-    <button class="vid-btn" id="vidOpen" style="margin-top:14px">
-      <span class="ic">🎬</span> تقرير مرئيّ — فيديو
+    <button class="vid-btn" id="vidOpen" style="margin-bottom:14px">
+      <span class="ic">🎬</span> شاهد التقرير المرئيّ — فيديو
     </button>
+    <div class="rpt-doc" id="rptDoc"></div>
   </div>
 </div>
 
@@ -2731,6 +2735,10 @@ document.addEventListener("click", function(e){
   /* اختيار رمز المهمّة الجديدة */
   t = e.target.closest("[data-em]");
   if(t){ pickedEm = t.getAttribute("data-em"); renderPick(); buzz(8); return; }
+
+  /* فتح التقرير المرئيّ من الصفحة مباشرةً */
+  t = e.target.closest("[data-vid]");
+  if(t){ openVideo(t.getAttribute("data-vid")); return; }
 
   /* فتح تقرير */
   t = e.target.closest("[data-rpt]");
