@@ -685,7 +685,12 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   border-top:1px solid rgba(255,255,255,.1);
   display:flex;flex-direction:column;gap:10px;
 }
-.vid-prog{height:5px;border-radius:20px;background:rgba(255,255,255,.13);overflow:hidden;}
+.vid-timeline{display:flex;align-items:center;gap:10px;}
+.vid-t{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.74rem;color:#c8cfe0;min-width:2.6em;text-align:center;flex:none;
+}
+.vid-prog{flex:1;height:5px;border-radius:20px;background:rgba(255,255,255,.13);overflow:hidden;}
 .vid-prog i{display:block;height:100%;width:0;border-radius:20px;background:var(--gold);transition:width .12s linear;}
 .vid-status{font-size:.78rem;color:#a3abbf;text-align:center;line-height:1.6;min-height:1.4em;}
 .vid-status b{color:var(--gold);}
@@ -995,12 +1000,17 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <video id="vidPlayer" playsinline controls></video>
   </div>
   <div class="vid-foot">
-    <div class="vid-prog"><i id="vidProg"></i></div>
+    <div class="vid-timeline">
+      <span class="vid-t" id="vidNow">0:00</span>
+      <div class="vid-prog"><i id="vidProg"></i></div>
+      <span class="vid-t" id="vidDur">0:28</span>
+    </div>
     <div class="vid-status" id="vidStatus">—</div>
     <div class="vid-acts">
       <button class="replay" id="vidReplay">▶︎ إعادة</button>
       <button class="save" id="vidSave">حفظ ومشاركة</button>
-      <button class="full" id="vidShare" style="display:none">📤 مشاركة الفيديو</button>
+      <button class="full" id="vidShare" style="display:none">📤 مشاركة أو حفظ في الاستوديو</button>
+      <button class="full" id="vidDownload" style="display:none">⬇︎ تنزيل الملف</button>
     </div>
     <div class="vid-note" id="vidNote"></div>
   </div>
@@ -2118,7 +2128,7 @@ function closeReport(){
    التقرير المرئيّ — موشن جرافيك على كانفس + موسيقى مولَّدة
    ═══════════════════════════════════════════════════ */
 
-var VID = { W:1080, H:1920, FPS:30, DUR:18.5 };
+var VID = { W:1080, H:1920, FPS:30, DUR:28, BODY:26.5 };
 var VC = {
   bg1:"#28345c", bg2:"#171f38", bg3:"#0b0f19",
   gold:"#e0b054", gold2:"#f7d98c", gold3:"#a8762a",
@@ -2330,9 +2340,9 @@ function vidFrame(x, t, D){
   vidBg(x, t);
   var W = VID.W, cx = W / 2;
 
-  /* ١) الافتتاح 0–3 */
-  var s1 = seg(t, .2, 1.4), s1b = seg(t, .9, 2.0), s1c = seg(t, 1.4, 2.4);
-  var out1 = 1 - seg(t, 3.0, 3.6);
+  /* ١) الافتتاح 0–4.9 */
+  var s1 = seg(t, .2, 1.7), s1b = seg(t, 1.2, 2.5), s1c = seg(t, 1.9, 3.1);
+  var out1 = 1 - seg(t, 4.2, 4.9);
   if(out1 > 0){
     var ly = 690 - (1 - ease(s1)) * 40;
     vidArch(x, cx, ly, .62 * (0.9 + 0.1 * pop(Math.min(s1, 1))), ease(s1) * out1);
@@ -2345,8 +2355,8 @@ function vidFrame(x, t, D){
     x.globalAlpha = 1;
   }
 
-  /* ٢) الحلقة 3.4–7.4 */
-  var s2 = seg(t, 3.6, 6.0), in2 = seg(t, 3.4, 4.0), out2 = 1 - seg(t, 7.0, 7.5);
+  /* ٢) الحلقة 4.7–10.6 — العدّاد يتصاعد على مهل */
+  var s2 = seg(t, 5.1, 9.2), in2 = seg(t, 4.7, 5.4), out2 = 1 - seg(t, 10.0, 10.6);
   if(in2 > 0 && out2 > 0){
     x.save(); x.globalAlpha = in2 * out2;
     var R = 300, ry = 880;
@@ -2365,8 +2375,8 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٣) الأرقام 7.4–11.2 */
-  var in3 = seg(t, 7.4, 7.8), out3 = 1 - seg(t, 10.8, 11.3);
+  /* ٣) الأرقام 10.4–15.8 */
+  var in3 = seg(t, 10.4, 11.0), out3 = 1 - seg(t, 15.2, 15.8);
   if(in3 > 0 && out3 > 0){
     x.save(); x.globalAlpha = out3;
     vidText(x, "الأرقام", cx, 640, 54, VC.gold, 700);
@@ -2375,7 +2385,7 @@ function vidFrame(x, t, D){
       var col = i % 2, row = (i / 2) | 0;
       var kx = cx + (col === 0 ? (cw + gap)/2 : -(cw + gap)/2);
       var ky = 900 + row * (ch + gap);
-      var a = seg(t, 7.6 + i * .22, 8.2 + i * .22);
+      var a = seg(t, 10.8 + i * .38, 11.7 + i * .38);
       if(a <= 0) return;
       x.save();
       x.translate(kx, ky); x.scale(.86 + .14 * pop(a), .86 + .14 * pop(a)); x.translate(-kx, -ky);
@@ -2388,8 +2398,8 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٤) الرسم البيانيّ 11.2–14.6 */
-  var in4 = seg(t, 11.2, 11.6), out4 = 1 - seg(t, 14.2, 14.7);
+  /* ٤) الرسم البيانيّ 15.6–21.0 */
+  var in4 = seg(t, 15.6, 16.2), out4 = 1 - seg(t, 20.4, 21.0);
   if(in4 > 0 && out4 > 0){
     x.save(); x.globalAlpha = out4;
     vidText(x, D.barTitle, cx, 620, 54, VC.gold, 700);
@@ -2399,7 +2409,7 @@ function vidFrame(x, t, D){
     D.bars.forEach(function(bar, i){
       /* من اليمين لليسار */
       var bx = W - 90 - bw/2 - i * (bw + gp);
-      var a = seg(t, 11.5 + i * .1, 12.2 + i * .1);
+      var a = seg(t, 16.1 + i * .18, 17.1 + i * .18);
       var hv = D.barMax > 0 ? (bar.v / D.barMax) : 0;
       var hh = maxH * hv * ease(a);
       var pctv = Math.round(hv * 100);
@@ -2422,15 +2432,15 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٥) المهامّ 14.6–16.8 */
-  var in5 = seg(t, 14.6, 15.0), out5 = 1 - seg(t, 16.4, 16.9);
+  /* ٥) المهامّ 20.8–25.6 */
+  var in5 = seg(t, 20.8, 21.4), out5 = 1 - seg(t, 25.0, 25.6);
   if(in5 > 0 && out5 > 0 && D.rows && D.rows.length){
     x.save(); x.globalAlpha = out5;
     vidText(x, D.rowsTitle || "أبرز المهامّ", cx, 700, 54, VC.gold, 700);
     var show = D.rows.slice(0, 3);
     show.forEach(function(r, i){
       var ry = 950 + i * 200;
-      var a = seg(t, 14.8 + i * .18, 15.5 + i * .18);
+      var a = seg(t, 21.3 + i * .42, 22.4 + i * .42);
       if(a <= 0) return;
       x.globalAlpha = ease(a) * out5;
       var pad = 90, barW = W - pad * 2;
@@ -2449,8 +2459,8 @@ function vidFrame(x, t, D){
     x.restore();
   }
 
-  /* ٦) الخاتمة 16.8–18.5 */
-  var in6 = seg(t, 16.8, 17.4);
+  /* ٦) الخاتمة 25.4–26.5 ثم ثبات */
+  var in6 = seg(t, 25.4, 26.2);
   if(in6 > 0){
     x.save(); x.globalAlpha = ease(in6);
     vidArch(x, cx, 760, .46, ease(in6));
@@ -2463,76 +2473,114 @@ function vidFrame(x, t, D){
   }
 }
 
-/* ── الموسيقى ── */
+/* ── الموسيقى: مقام الحجاز، نفَس شبيه بالنّاي فوق دَرون ── */
 var vidAudio = null, vidMuted = false;
+
+/* الحجاز على الرّي: ري، مي♭، فا♯، صول، لا، سي♭، دو */
+var HIJAZ = [293.66, 311.13, 369.99, 392.00, 440.00, 466.16, 523.25, 587.33];
+
+function neyNote(ac, bus, f, st, dur, vol){
+  var o = ac.createOscillator(), g = ac.createGain();
+  var lfo = ac.createOscillator(), lg = ac.createGain();
+  o.type = "sine"; o.frequency.value = f;
+  /* اهتزاز خفيف يعطي نفَس النّاي */
+  lfo.type = "sine"; lfo.frequency.value = 5.1;
+  lg.gain.value = f * 0.0055;
+  lfo.connect(lg); lg.connect(o.frequency);
+  /* توافقيّة خافتة تُدفئ النغمة */
+  var h = ac.createOscillator(), hg = ac.createGain();
+  h.type = "sine"; h.frequency.value = f * 2; hg.gain.value = 0.16;
+  h.connect(hg); hg.connect(g);
+  g.gain.setValueAtTime(0.0001, st);
+  g.gain.linearRampToValueAtTime(vol, st + 0.38);
+  g.gain.setValueAtTime(vol, st + Math.max(dur - 0.55, 0.4));
+  g.gain.exponentialRampToValueAtTime(0.0008, st + dur);
+  o.connect(g); g.connect(bus);
+  o.start(st); o.stop(st + dur + 0.05);
+  h.start(st); h.stop(st + dur + 0.05);
+  lfo.start(st); lfo.stop(st + dur + 0.05);
+}
+
 function vidMusicBuild(){
   var AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return null;
   var ac = new AC();
   var dest = ac.createMediaStreamDestination();
   var master = ac.createGain(); master.gain.value = 0;
-  var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2400; lp.Q.value = .6;
-  master.connect(lp); lp.connect(dest); lp.connect(ac.destination);
+  var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2100; lp.Q.value = .5;
+
+  /* صدى بسيط يمنح اتّساعًا كالمكان الواسع */
+  var dly = ac.createDelay(1.0); dly.delayTime.value = 0.34;
+  var fb = ac.createGain(); fb.gain.value = 0.32;
+  var wet = ac.createGain(); wet.gain.value = 0.3;
+  master.connect(lp);
+  master.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(wet); wet.connect(lp);
+  lp.connect(dest); lp.connect(ac.destination);
 
   var t0 = ac.currentTime + .05, DU = VID.DUR;
-  /* تصاعد وتلاشٍ */
   master.gain.setValueAtTime(0, t0);
-  master.gain.linearRampToValueAtTime(.22, t0 + 1.6);
-  master.gain.setValueAtTime(.22, t0 + DU - 2.2);
-  master.gain.linearRampToValueAtTime(0, t0 + DU - .1);
+  master.gain.linearRampToValueAtTime(.26, t0 + 2.2);
+  master.gain.setValueAtTime(.26, t0 + DU - 3.2);
+  master.gain.linearRampToValueAtTime(0, t0 + DU - .15);
 
-  /* طبقة ممتدّة */
-  [146.83, 220.00, 293.66].forEach(function(f, i){
+  /* دَرون ممتدّ على الرّي */
+  [73.42, 146.83, 220.00].forEach(function(f, i){
     var o = ac.createOscillator(), g = ac.createGain();
-    o.type = i === 2 ? "sine" : "triangle";
+    o.type = i === 0 ? "triangle" : "sine";
     o.frequency.value = f;
-    o.detune.value = (i - 1) * 6;
-    g.gain.value = i === 2 ? .05 : .09;
+    o.detune.value = (i - 1) * 4;
+    g.gain.value = i === 0 ? .11 : (i === 1 ? .07 : .035);
     o.connect(g); g.connect(master);
     o.start(t0); o.stop(t0 + DU);
   });
 
-  /* أربيدج لطيف */
-  var scale = [293.66, 349.23, 392.00, 440.00, 523.25, 587.33];
-  var step = .42, k = 0;
-  for(var tt = .6; tt < DU - 1.2; tt += step){
-    var f2 = scale[k % scale.length];
-    if(k % 12 === 11) f2 = scale[5];
-    var o2 = ac.createOscillator(), g2 = ac.createGain();
-    o2.type = "sine"; o2.frequency.value = f2 * (k % 8 >= 4 ? 2 : 1);
-    var st = t0 + tt;
-    g2.gain.setValueAtTime(0, st);
-    g2.gain.linearRampToValueAtTime(.075, st + .02);
-    g2.gain.exponentialRampToValueAtTime(.0008, st + .85);
-    o2.connect(g2); g2.connect(master);
-    o2.start(st); o2.stop(st + .9);
-    k++;
+  /* لحن الحجاز — صعود متأنٍّ ثم هبوط، يتنفّس مع المشاهد */
+  var phrase = [0,1,2,3, 4,3,2,1, 0,2,3,4, 5,4,3,2, 0,1,2,0, 3,2,1,0];
+  var st = t0 + 1.0, i = 0;
+  while(st < t0 + DU - 2.0 && i < phrase.length){
+    var dur = (i % 4 === 3) ? 1.9 : 1.15;
+    neyNote(ac, master, HIJAZ[phrase[i]], st, dur, 0.085);
+    st += dur * 0.92;
+    i++;
   }
 
-  /* نغمة عند كل مشهد */
-  [3.5, 7.4, 11.2, 14.6, 16.8].forEach(function(tt){
-    var o3 = ac.createOscillator(), g3 = ac.createGain();
-    o3.type = "sine"; o3.frequency.value = 880;
-    var st = t0 + tt;
-    g3.gain.setValueAtTime(0, st);
-    g3.gain.linearRampToValueAtTime(.05, st + .015);
-    g3.gain.exponentialRampToValueAtTime(.0006, st + 1.1);
-    o3.connect(g3); g3.connect(master);
-    o3.start(st); o3.stop(st + 1.2);
+  /* نغمة صافية عند مطلع كل مشهد */
+  [4.7, 10.4, 15.6, 20.8, 25.4].forEach(function(tt){
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.value = 880;
+    var ts = t0 + tt;
+    g.gain.setValueAtTime(0.0001, ts);
+    g.gain.linearRampToValueAtTime(.042, ts + .02);
+    g.gain.exponentialRampToValueAtTime(.0006, ts + 1.6);
+    o.connect(g); g.connect(master);
+    o.start(ts); o.stop(ts + 1.7);
   });
 
   return { ac:ac, dest:dest, master:master,
-    stop:function(){ try{ master.gain.cancelScheduledValues(ac.currentTime);
-      master.gain.linearRampToValueAtTime(0, ac.currentTime + .12);
-      setTimeout(function(){ try{ ac.close(); }catch(e){} }, 300); }catch(e){} } };
+    stop:function(){ try{
+      master.gain.cancelScheduledValues(ac.currentTime);
+      master.gain.linearRampToValueAtTime(0, ac.currentTime + .15);
+      setTimeout(function(){ try{ ac.close(); }catch(e){} }, 400);
+    }catch(e){} } };
 }
 
 /* ── التشغيل والتسجيل ── */
 var vidMode = "day", vidRunning = false, vidBlob = null, vidRAF = 0;
 
+function vidTime(sec){
+  sec = Math.max(0, Math.round(sec));
+  return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+}
 function vidPickMime(){
-  var opts = ["video/mp4;codecs=avc1", "video/mp4",
-              "video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"];
+  /* H.264 + AAC أوّلًا: أوسع توافقًا مع واتساب والاستوديو ومشغّلات iOS */
+  var opts = [
+    'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
+    'video/mp4;codecs="avc1.4D401E,mp4a.40.2"',
+    'video/mp4;codecs=h264,aac',
+    'video/mp4;codecs=avc1',
+    "video/mp4",
+    "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"
+  ];
   for(var i = 0; i < opts.length; i++){
     try{ if(window.MediaRecorder && MediaRecorder.isTypeSupported(opts[i])) return opts[i]; }catch(e){}
   }
@@ -2546,6 +2594,7 @@ function vidRun(record){
   var ov = el("vidOverlay");
   ov.classList.remove("done");
   el("vidShare").style.display = "none";
+  el("vidDownload").style.display = "none";
   el("vidSave").disabled = true;
   el("vidReplay").disabled = true;
 
@@ -2569,9 +2618,18 @@ function vidRun(record){
         var pl = el("vidPlayer");
         pl.src = url; pl.load();
         ov.classList.add("done");
-        el("vidShare").style.display = "";
-        el("vidStatus").innerHTML = "جاهز — <b>" + (vidBlob.size / 1048576).toFixed(1) + " ميغابايت</b>";
-        el("vidNote").textContent = "اضغط «مشاركة الفيديو» لإرساله عبر واتساب أو حفظه في الصور.";
+        var canShare = false;
+        try{
+          var f0 = new File([vidBlob], "a.mp4", { type: vidBlob.type });
+          canShare = !!(navigator.canShare && navigator.canShare({ files:[f0] }));
+        }catch(e){}
+        el("vidShare").style.display = canShare ? "" : "none";
+        el("vidDownload").style.display = canShare ? "none" : "";
+        el("vidStatus").innerHTML = "جاهز — <b>" + vidTime(VID.DUR) + "</b> · " +
+          (vidBlob.size / 1048576).toFixed(1) + " ميغابايت";
+        el("vidNote").innerHTML = canShare
+          ? "لحفظه في الاستوديو: اضغط الزرّ ثم اختر <b>«حفظ الفيديو»</b> من القائمة.<br>ولإرساله: اختر واتساب أو البريد من القائمة نفسها."
+          : "اضغط «تنزيل الملف» لحفظه على جهازك.";
       };
       rec.start(200);
     }catch(err){
@@ -2581,20 +2639,33 @@ function vidRun(record){
   }
 
   var t0 = performance.now();
+  el("vidDur").textContent = vidTime(VID.DUR);
   el("vidStatus").textContent = record ? "جارٍ التسجيل… أبقِ الشاشة مفتوحة" : "المعاينة تعمل…";
 
   function frame(now){
     var t = (now - t0) / 1000;
     if(t > VID.DUR) t = VID.DUR;
     x.clearRect(0, 0, VID.W, VID.H);
-    vidFrame(x, t, D);
+    /* بعد نهاية المحتوى تثبت الخاتمة، فلا يقع أي معنى في ذيل التسجيل */
+    vidFrame(x, Math.min(t, VID.BODY), D);
     el("vidProg").style.width = (t / VID.DUR * 100).toFixed(1) + "%";
+    el("vidNow").textContent = vidTime(t);
     if(t < VID.DUR){ vidRAF = requestAnimationFrame(frame); return; }
+
     vidRunning = false;
     el("vidReplay").disabled = false;
     el("vidSave").disabled = false;
     if(vidAudio){ vidAudio.stop(); vidAudio = null; }
-    if(rec && rec.state !== "inactive"){ setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 260); }
+
+    if(rec && rec.state !== "inactive"){
+      /* اطلب آخر دفعة صراحةً، ثم أمهل المُرمِّز قبل الإيقاف — وإلّا بُترت الثواني الأخيرة */
+      el("vidStatus").textContent = "جارٍ إنهاء الملف…";
+      try{ rec.requestData(); }catch(e){}
+      setTimeout(function(){
+        try{ rec.requestData(); }catch(e){}
+        setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 500);
+      }, 700);
+    }
     else if(!record) el("vidStatus").textContent = "انتهت المعاينة — اضغط «حفظ ومشاركة» لإنتاج ملف الفيديو.";
   }
   vidRAF = requestAnimationFrame(frame);
@@ -2617,6 +2688,9 @@ function openVideo(mode){
   el("vidNote").textContent = window.MediaRecorder ? "" :
     "متصفّحك لا يدعم إنتاج ملف فيديو — يمكنك تسجيل الشاشة أثناء العرض.";
   el("vidSave").style.display = window.MediaRecorder ? "" : "none";
+  el("vidNow").textContent = "0:00";
+  el("vidDur").textContent = vidTime(VID.DUR);
+  el("vidProg").style.width = "0%";
   buzz(12);
   setTimeout(function(){ vidRun(false); }, 220);
 }
@@ -2630,23 +2704,29 @@ function closeVideo(){
   document.body.style.overflow = "";
 }
 
+function vidFileName(){
+  var ext = /mp4/.test(vidBlob.type) ? "mp4" : "webm";
+  return "asas-" + vidMode + "-" + key(new Date()) + "." + ext;
+}
+function vidDownloadFile(){
+  if(!vidBlob) return;
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(vidBlob); a.download = vidFileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  toast("💾 نُزّل الفيديو");
+}
 async function vidShareFile(){
   if(!vidBlob) return;
-  var ext = /mp4/.test(vidBlob.type) ? "mp4" : "webm";
-  var name = "asas-" + vidMode + "-" + key(new Date()) + "." + ext;
   var file = null;
-  try{ file = new File([vidBlob], name, { type: vidBlob.type }); }catch(e){}
+  try{ file = new File([vidBlob], vidFileName(), { type: vidBlob.type }); }catch(e){}
   if(file && navigator.canShare && navigator.canShare({ files:[file] })){
     try{
       await navigator.share({ files:[file], title:"تقرير أساس المرئيّ" });
       return;
     }catch(e){ if(e && e.name === "AbortError") return; }
   }
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(vidBlob); a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
-  toast("💾 حُفظ الفيديو");
+  vidDownloadFile();
 }
 
 /* ═══════════════ التحديث الشامل ═══════════════ */
@@ -2835,7 +2915,8 @@ el("vidOpen").onclick   = function(){ openVideo(rptMode); };
 el("vidClose").onclick  = closeVideo;
 el("vidReplay").onclick = function(){ vidStop(); vidRun(false); };
 el("vidSave").onclick   = function(){ vidStop(); vidRun(true); };
-el("vidShare").onclick  = vidShareFile;
+el("vidShare").onclick    = vidShareFile;
+el("vidDownload").onclick = vidDownloadFile;
 el("vidMute").onclick   = function(){
   vidMuted = !vidMuted;
   this.textContent = vidMuted ? "🔇" : "🔊";
