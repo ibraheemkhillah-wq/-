@@ -487,6 +487,160 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 .tab.on{color:var(--gold);}
 .tab.on svg{stroke-width:2.1;}
 
+
+/* ═══════════════ التقارير ═══════════════ */
+.rpt-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);
+  padding:12px;font-size:.87rem;font-weight:700;color:var(--ink-2);
+  transition:border-color .2s, color .2s, transform .12s;
+}
+.rpt-btn:active{transform:scale(.985);}
+.rpt-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+.rpt-overlay{position:fixed;inset:0;z-index:100;background:var(--ground);display:flex;flex-direction:column;}
+.rpt-overlay[hidden]{display:none;}
+.rpt-bar{
+  display:flex;align-items:center;gap:10px;flex:none;
+  padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  border-bottom:1px solid var(--line);background:var(--surface);
+}
+.rpt-bar span{flex:1;text-align:center;font-size:.86rem;font-weight:700;color:var(--ink-2);}
+.rpt-bar button{font-size:.82rem;font-weight:700;padding:8px 13px;border-radius:10px;flex:none;}
+.rpt-bar .x{background:var(--surface-2);color:var(--ink-2);}
+.rpt-bar .go{background:var(--gold);color:#fff;}
+.rpt-scroll{flex:1;overflow-y:auto;padding:14px;}
+.rpt-hint{
+  background:var(--gold-wash);color:var(--gold-2);border-radius:var(--r-sm);
+  padding:11px 13px;font-size:.78rem;line-height:1.75;margin-bottom:14px;
+}
+.rpt-hint b{display:block;margin-bottom:3px;font-size:.83rem;}
+
+.rpt-doc{
+  background:#fff;color:#141824;border-radius:var(--r);
+  padding:20px 18px;margin-inline:auto;max-width:760px;
+  box-shadow:var(--shadow);font-family:var(--font-body);
+}
+.rpt-head{display:flex;align-items:center;gap:13px;padding-bottom:14px;border-bottom:2px solid #141824;}
+.rpt-head svg{width:46px;height:46px;flex:none;}
+.rpt-head .ttl{flex:1;min-width:0;}
+.rpt-head .ttl b{display:block;font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.2;color:#141824;}
+.rpt-head .ttl span{display:block;font-size:.8rem;color:#5a6175;margin-top:2px;}
+.rpt-head .per{text-align:left;font-size:.72rem;color:#5a6175;line-height:1.6;flex:none;}
+.rpt-head .per b{display:block;font-size:.88rem;color:#141824;}
+
+.rpt-sec{margin-top:20px;}
+.rpt-sec > h3{
+  font-family:var(--font-display);font-size:1.02rem;font-weight:700;margin:0 0 11px;color:#141824;
+  padding-bottom:6px;border-bottom:1px solid #d3d9e6;display:flex;align-items:center;gap:7px;
+}
+
+.rpt-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+.rpt-kpi{background:#f2f4f9;border:1px solid #dde3ee;border-radius:11px;padding:11px 8px;text-align:center;}
+.rpt-kpi b{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.4rem;font-weight:800;line-height:1.15;color:#141824;
+}
+.rpt-kpi span{display:block;font-size:.64rem;color:#5a6175;margin-top:3px;line-height:1.35;}
+.rpt-kpi.hi b{color:#2c6b50;} .rpt-kpi.mid b{color:#9a6f22;} .rpt-kpi.lo b{color:#9c4a2c;}
+
+.rpt-hero{display:flex;align-items:center;gap:16px;}
+.rpt-ring{position:relative;width:104px;height:104px;flex:none;}
+.rpt-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.rpt-ring circle{fill:none;stroke-width:10;stroke-linecap:round;}
+.rpt-ring b{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:1.45rem;font-weight:800;
+}
+.rpt-hero-txt{flex:1;min-width:0;}
+.rpt-verdict{
+  font-family:var(--font-display);font-size:1.08rem;font-weight:700;line-height:1.55;
+  margin:0 0 7px;text-wrap:balance;color:#141824;
+}
+.rpt-hero-txt p{margin:0;font-size:.85rem;line-height:1.7;color:#41485c;}
+.rpt-hero-txt p b{color:#141824;}
+
+.rpt-bars{display:flex;align-items:flex-end;gap:6px;height:132px;padding-top:6px;}
+.rpt-bars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end;}
+.rpt-bars .stk{width:100%;background:#e8ecf4;border-radius:5px 5px 0 0;position:relative;flex:1;display:flex;align-items:flex-end;}
+.rpt-bars .fill{width:100%;border-radius:5px 5px 0 0;min-height:2px;}
+.rpt-bars .cap{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:.6rem;color:#5a6175;line-height:1;}
+.rpt-bars .lbl{font-size:.66rem;font-weight:700;color:#41485c;line-height:1;}
+
+.rpt-tbl{width:100%;border-collapse:collapse;font-size:.82rem;}
+.rpt-tbl th{
+  text-align:right;font-size:.68rem;font-weight:700;color:#5a6175;
+  padding:0 6px 7px;border-bottom:1px solid #d3d9e6;white-space:nowrap;
+}
+.rpt-tbl th:last-child,.rpt-tbl td:last-child{text-align:left;}
+.rpt-tbl td{padding:8px 6px;border-bottom:1px solid #edf0f6;vertical-align:middle;color:#141824;}
+.rpt-tbl tr:last-child td{border-bottom:0;}
+.rpt-tbl .nm{font-weight:600;}
+.rpt-tbl .vl{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap;}
+.rpt-mini{height:6px;border-radius:20px;background:#e8ecf4;overflow:hidden;min-width:54px;}
+.rpt-mini i{display:block;height:100%;border-radius:20px;}
+.c-hi{color:#2c6b50;} .c-mid{color:#9a6f22;} .c-lo{color:#9c4a2c;}
+.b-hi{background:#2c6b50;} .b-mid{background:#c2953f;} .b-lo{background:#9c4a2c;}
+
+.rpt-day{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #edf0f6;}
+.rpt-day:last-child{border-bottom:0;}
+.rpt-day .em{font-size:1.05rem;width:24px;text-align:center;flex:none;}
+.rpt-day .nm{flex:1;min-width:0;font-size:.86rem;font-weight:600;color:#141824;}
+.rpt-day .st{font-size:.74rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex:none;}
+.rpt-day .st.y{background:#dcefe4;color:#2c6b50;}
+.rpt-day .st.n{background:#f6e2da;color:#9c4a2c;}
+.rpt-day .sk{font-size:.68rem;color:#5a6175;white-space:nowrap;flex:none;}
+.rpt-grp{margin-top:11px;font-size:.7rem;font-weight:700;letter-spacing:.1em;color:#5a6175;}
+
+.rpt-heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.rpt-heat .hd{text-align:center;font-size:.64rem;font-weight:700;color:#5a6175;padding-bottom:2px;}
+.rpt-heat .cl{
+  aspect-ratio:1/1;border-radius:6px;background:#eef1f7;display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:.62rem;font-weight:700;color:#5a6175;
+}
+.rpt-heat .cl.pad{background:transparent;}
+.rpt-heat .cl.on{color:#fff;}
+
+.rpt-line{width:100%;height:auto;display:block;}
+
+.rpt-rec{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #edf0f6;align-items:flex-start;}
+.rpt-rec:last-child{border-bottom:0;}
+.rpt-rec .em{font-size:1.02rem;flex:none;line-height:1.5;width:1.5em;text-align:center;}
+.rpt-rec .bd{flex:1;min-width:0;}
+.rpt-rec .bd b{display:block;font-size:.85rem;margin-bottom:2px;color:#141824;}
+.rpt-rec .bd p{margin:0;font-size:.8rem;line-height:1.65;color:#41485c;}
+
+.rpt-note{padding:9px 0;border-bottom:1px solid #edf0f6;font-size:.82rem;line-height:1.7;color:#141824;}
+.rpt-note:last-child{border-bottom:0;}
+.rpt-note b{display:block;font-size:.72rem;color:#5a6175;margin-bottom:2px;}
+.rpt-empty{font-size:.8rem;color:#6b7286;padding:12px 0;text-align:center;}
+
+.rpt-foot{
+  margin-top:22px;padding-top:11px;border-top:1px solid #d3d9e6;
+  display:flex;justify-content:space-between;gap:10px;font-size:.68rem;color:#6b7286;
+}
+
+@media (max-width:420px){
+  .rpt-kpis{grid-template-columns:repeat(2,1fr);}
+  .rpt-head{flex-wrap:wrap;}
+  .rpt-head .per{text-align:right;width:100%;}
+}
+
+/* ═══════════════ الطباعة / تصدير PDF ═══════════════ */
+@media print{
+  @page{ size:A4 portrait; margin:11mm; }
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  #app > header, #app > main, #app > nav, #toast, .confetti{ display:none !important; }
+  .rpt-bar, .rpt-hint{ display:none !important; }
+  #app{ min-height:0 !important; background:#fff !important; display:block !important; }
+  .rpt-overlay{ position:static !important; display:block !important; background:#fff !important; }
+  .rpt-scroll{ overflow:visible !important; padding:0 !important; }
+  .rpt-doc{ box-shadow:none !important; border-radius:0 !important; max-width:none !important; padding:0 !important; margin:0 !important; }
+  .rpt-sec, .rpt-rec, .rpt-day, .rpt-note{ break-inside:avoid; page-break-inside:avoid; }
+  .rpt-tbl tr{ break-inside:avoid; page-break-inside:avoid; }
+  .rpt-head, .rpt-sec > h3{ break-after:avoid; page-break-after:avoid; }
+}
+
 /* ═══════════════ الرسالة المنبثقة ═══════════════ */
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:80;}
 @keyframes bumpk{0%{transform:scale(1);}38%{transform:scale(1.3);}100%{transform:scale(1);}}
@@ -587,6 +741,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   <div id="debtBox"></div>
   <div id="taskList" style="display:flex;flex-direction:column;gap:16px;"></div>
 
+  <button class="rpt-btn" data-rpt="day">📄 تقرير اليوم — PDF</button>
+
   <div class="card note">
     <h3 class="card-t">✍️ ملاحظة اليوم</h3>
     <p class="card-s">خاطرة، دعاء، أو ما قرأته اليوم</p>
@@ -619,6 +775,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 
   <div class="wk-head" id="wHead"></div>
   <div id="wRows" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+  <button class="rpt-btn" data-rpt="week">📄 تقرير الأسبوع — PDF</button>
 
   <div class="card">
     <h3 class="card-t">📋 المراجعة الأسبوعية</h3>
@@ -670,6 +828,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <p class="card-s">المُنجز من عدد أيام الشهر المنقضية</p>
     <div id="moBars"></div>
   </div>
+
+  <button class="rpt-btn" data-rpt="month">📄 تقرير الشهر — PDF</button>
 
   <div class="card">
     <h3 class="card-t">📋 المراجعة الشهرية</h3>
@@ -733,6 +893,22 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <span>المزيد</span>
   </button>
 </nav>
+
+<div class="rpt-overlay" id="rptOverlay" hidden>
+  <div class="rpt-bar">
+    <button class="x" id="rptClose">إغلاق</button>
+    <span id="rptTitle">معاينة التقرير</span>
+    <button class="go" id="rptPrint">تصدير PDF</button>
+  </div>
+  <div class="rpt-scroll">
+    <div class="rpt-hint">
+      <b>كيف تحفظه وتشاركه؟</b>
+      اضغط «تصدير PDF» ← تفتح شاشة الطباعة ← اضغط زر المشاركة فيها ←
+      «حفظ في الملفات» أو أرسله مباشرة عبر واتساب أو البريد.
+    </div>
+    <div class="rpt-doc" id="rptDoc"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -1425,6 +1601,420 @@ function renderMore(){
   });
 }
 
+
+/* ═══════════════════════════════════════════════════
+   التقارير — يوميّ / أسبوعيّ / شهريّ
+   ═══════════════════════════════════════════════════ */
+
+var RPT_LOGO =
+  '<svg viewBox="0 0 512 512" aria-hidden="true">' +
+  '<defs>' +
+  '<linearGradient id="rl1" x1="0" y1="0" x2="0.35" y2="1">' +
+  '<stop offset="0%" stop-color="#28345c"/><stop offset="55%" stop-color="#171f38"/>' +
+  '<stop offset="100%" stop-color="#0b0f19"/></linearGradient>' +
+  '<linearGradient id="rl2" x1="0" y1="1" x2="0" y2="0">' +
+  '<stop offset="0%" stop-color="#f7d98c"/><stop offset="42%" stop-color="#e0b054"/>' +
+  '<stop offset="100%" stop-color="#a8762a"/></linearGradient>' +
+  '</defs>' +
+  '<rect width="512" height="512" rx="104" fill="url(#rl1)"/>' +
+  '<path d="M150 400 V250 C150 168 236 150 256 88 C276 150 362 168 362 250 V400 Z" fill="url(#rl2)"/>' +
+  '<path d="M194 400 V254 C194 196 244 184 256 142 C268 184 318 196 318 254 V400" fill="none" ' +
+  'stroke="#7d551a" stroke-width="5" opacity=".34" stroke-linecap="round"/>' +
+  '<g transform="translate(256 46)" fill="#e8bc60">' +
+  '<rect x="-19" y="-19" width="38" height="38" rx="3"/>' +
+  '<rect x="-19" y="-19" width="38" height="38" rx="3" transform="rotate(45)"/></g>' +
+  '<rect x="122" y="400" width="268" height="22" rx="7" fill="#c9963c"/></svg>';
+
+function lv(p){ return p >= 80 ? "hi" : (p >= 50 ? "mid" : "lo"); }
+
+/* حلقة النسبة */
+function rptRing(p){
+  var R = 45, C = 2 * Math.PI * R;
+  var col = p >= 80 ? "#2c6b50" : (p >= 50 ? "#c2953f" : "#9c4a2c");
+  return '<div class="rpt-ring"><svg viewBox="0 0 110 110">' +
+    '<circle cx="55" cy="55" r="' + R + '" stroke="#e8ecf4"/>' +
+    '<circle cx="55" cy="55" r="' + R + '" stroke="' + col + '" ' +
+    'stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - p / 100)).toFixed(1) + '"/>' +
+    '</svg><b style="color:' + col + '">' + ar(p) + '٪</b></div>';
+}
+
+/* أعمدة رأسيّة — الأوّل إلى اليمين */
+function rptBars(items, max){
+  var h = '<div class="rpt-bars">';
+  items.forEach(function(it){
+    var pc = max > 0 ? Math.round(it.v * 100 / max) : 0;
+    h += '<div class="col">' +
+         '<div class="cap">' + (it.future ? "—" : ar(it.v)) + '</div>' +
+         '<div class="stk"><div class="fill ' + (it.future ? "" : "b-" + lv(pc)) + '" style="height:' +
+           (it.future ? 0 : Math.max(pc, 2)) + '%' + (it.future ? ';background:#eef1f7' : '') + '"></div></div>' +
+         '<div class="lbl">' + esc(it.l) + '</div></div>';
+  });
+  return h + '</div>';
+}
+
+/* منحنى الاتّجاه — نسب مئويّة، من اليمين إلى اليسار */
+function rptLine(pts, labels){
+  if(pts.length < 2) return "";
+  var W = 720, H = 168, PT = 14, PB = 30, PR = 34, PL = 12;
+  var iw = W - PL - PR, ih = H - PT - PB, i;
+  function X(i){ return PL + iw - (iw * i / (pts.length - 1)); }
+  function Y(v){ return PT + ih * (1 - v / 100); }
+
+  var grid = "";
+  [0, 25, 50, 75, 100].forEach(function(v){
+    var y = Y(v);
+    grid += '<line x1="' + PL + '" y1="' + y.toFixed(1) + '" x2="' + (PL + iw) + '" y2="' + y.toFixed(1) +
+            '" stroke="#e4e9f2" stroke-width="1"/>' +
+            '<text x="' + (W - PR + 6) + '" y="' + (y + 3.5).toFixed(1) + '" font-size="10" fill="#8b93a6">' + v + '</text>';
+  });
+
+  var d = "";
+  for(i = 0; i < pts.length; i++) d += (i ? " L" : "M") + X(i).toFixed(1) + " " + Y(pts[i]).toFixed(1);
+  var area = d + " L" + X(pts.length - 1).toFixed(1) + " " + (PT + ih).toFixed(1) +
+                 " L" + X(0).toFixed(1) + " " + (PT + ih).toFixed(1) + " Z";
+
+  var dots = "", lbl = "";
+  for(i = 0; i < pts.length; i++){
+    var cx = X(i), cy = Y(pts[i]);
+    dots += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="4" fill="#fff" stroke="#9a6f22" stroke-width="2.4"/>' +
+            '<text x="' + cx.toFixed(1) + '" y="' + (cy - 11).toFixed(1) + '" text-anchor="middle" ' +
+            'font-size="11" font-weight="700" fill="#7a5616">' + pts[i] + '</text>';
+    lbl += '<text x="' + cx.toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle" ' +
+           'font-size="11" fill="#5a6175">' + esc(labels[i]) + '</text>';
+  }
+  return '<svg class="rpt-line" viewBox="0 0 ' + W + ' ' + H + '" role="img">' + grid +
+    '<path d="' + area + '" fill="#9a6f22" opacity=".12"/>' +
+    '<path d="' + d + '" fill="none" stroke="#9a6f22" stroke-width="2.6" ' +
+    'stroke-linejoin="round" stroke-linecap="round"/>' + dots + lbl + '</svg>';
+}
+
+/* جدول المهامّ */
+function rptTable(rows, denomLabel){
+  var h = '<table class="rpt-tbl"><thead><tr><th>المهمّة</th><th>' + esc(denomLabel) +
+          '</th><th style="width:34%">النسبة</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    h += '<tr><td class="nm">' + (r.em || "⭐") + ' ' + esc(r.name) + '</td>' +
+      '<td class="vl">' + ar(r.n) + ' / ' + ar(r.d) + '</td>' +
+      '<td><div style="display:flex;align-items:center;gap:8px">' +
+        '<div class="rpt-mini" style="flex:1"><i class="b-' + lv(r.p) + '" style="width:' + r.p + '%"></i></div>' +
+        '<span class="vl c-' + lv(r.p) + '">' + ar(r.p) + '٪</span></div></td></tr>';
+  });
+  return h + '</tbody></table>';
+}
+
+/* ملاحظات الفترة */
+function rptNotes(from, to){
+  var out = [], d;
+  for(d = new Date(from); d <= to; d = addDays(d, 1)){
+    var k = key(d), n = S.notes[k];
+    if(n && n.trim())
+      out.push('<div class="rpt-note"><b>' + DAY_LONG[dowIndex(d)] + " " + d.getDate() + " " +
+        MONTHS[d.getMonth()] + '</b>' + esc(n.trim()) + '</div>');
+  }
+  return out.length ? out.join("") : '<div class="rpt-empty">لا ملاحظات مدوّنة في هذه الفترة.</div>';
+}
+
+/* ═══ محرّك التوصيات ═══ */
+function rptRecs(mode, ctx){
+  var r = [], p = ctx.pct;
+
+  if(p >= 85) r.push({ e:"🏆", t:"إيقاعك عالٍ — ثبّته",
+    x:"بلغتَ " + ar(p) + "٪. أنجح ما تفعله الآن هو ألّا تغيّر شيئًا؛ الاستمرار على الوتيرة نفسها أنفع من محاولة الزيادة." });
+  else if(p >= 60) r.push({ e:"📈", t:"أساسك متين وفيه فجوة تُسدّ",
+    x:"عند " + ar(p) + "٪. ارفع مهمّة واحدة ضعيفة إلى مستوى بقيّة مهامّك بدل توزيع الجهد على الكلّ." });
+  else if(p >= 35) r.push({ e:"⚖️", t:"التذبذب هو التحدّي، لا الكسل",
+    x:"عند " + ar(p) + "٪، وأداؤك متفاوت. اختر مهمّتين ثابتتين والتزم بهما بلا استثناء قبل التفكير في الباقي." });
+  else r.push({ e:"🌱", t:"ابدأ صغيرًا واثبت",
+    x:"عند " + ar(p) + "٪. لا تحاول إتمام الثمانِ دفعة واحدة — مهمّة واحدة كل يوم لأسبوعين تبني عادة أقوى من اندفاعة تنطفئ." });
+
+  if(ctx.weak && ctx.weak.p < 70)
+    r.push({ e:"🎯", t:"ركّز على: " + ctx.weak.name,
+      x:"أضعف مهامّك — " + ar(ctx.weak.n) + " من " + ar(ctx.weak.d) + " فقط (" + ar(ctx.weak.p) + "٪). " +
+        (ctx.weak.grp === "night" ? "وهي مهمّة ليليّة، والليل مظنّة التفلّت؛ اربطها بموعد ثابت قبل النوم."
+         : ctx.weak.grp === "dawn" ? "وهي مهمّة فجريّة؛ تقديم موعد النوم ليلًا أنفع لها من أي تذكير."
+         : "اربطها بعادة قائمة عندك — بعد صلاة بعينها مثلًا — فالعادة تجرّ العادة.") });
+
+  if(ctx.strong && ctx.strong.p >= 80)
+    r.push({ e:"💪", t:"أرسخ ما عندك: " + ctx.strong.name,
+      x:ar(ctx.strong.n) + " من " + ar(ctx.strong.d) + " (" + ar(ctx.strong.p) +
+        "٪). اجعلها المرساة: ألحِق بها المهمّة الضعيفة مباشرةً فتُحمل عليها." });
+
+  if(ctx.debt.length){
+    var tot = 0, names = ctx.debt.map(function(x){ tot += x.n; return x.name + " (" + ar(x.n) + ")"; });
+    r.push({ e:"⏳", t:"تعويضات في ذمّتك: " + ar(tot),
+      x:names.join("، ") + ". سدّد واحدة كل يوم مع وردك المعتاد حتى تُبرئ ذمّتك، ولا تؤجّلها دفعةً واحدة." });
+  } else {
+    r.push({ e:"🤍", t:"ذمّتك بيضاء", x:"لا تعويضات معلّقة — وهذا في ذاته إنجاز يستحقّ أن يُحفظ." });
+  }
+
+  if(ctx.streak >= 7) r.push({ e:"🔥", t:"سلسلة " + days(ctx.streak),
+    x:"لا تكسرها. حين يضيق وقتك أدِّ الحدّ الأدنى ولا تُفوّت اليوم كاملًا — كسر السلسلة أغلى من نقص الإتقان." });
+
+  if(mode !== "day" && ctx.worstDow)
+    r.push({ e:"📅", t:"أضعف أيامك: " + ctx.worstDow.name,
+      x:"متوسّط إنجازك فيه " + ar(ctx.worstDow.avg) + "٪ مقابل " + ar(ctx.avgDow) +
+        "٪ في بقيّة الأيام. انظر ما يميّز هذا اليوم في جدولك وهيّئ له ترتيبًا خاصًّا." });
+
+  if(mode !== "day" && ctx.perfect === 0)
+    r.push({ e:"⭐", t:"لم يكتمل يوم واحد بعد",
+      x:"اجعل هدفك القادم يومًا واحدًا تامًّا لا أكثر. إتمام يوم كامل مرّة يكسر حاجزًا نفسيًّا يصعب وصفه." });
+
+  return r;
+}
+
+/* ═══ عناصر مشتركة ═══ */
+function rptHead(kind, range, hij){
+  return '<div class="rpt-head">' + RPT_LOGO +
+    '<div class="ttl"><b>أساس</b><span>' + esc(kind) + '</span></div>' +
+    '<div class="per"><b>' + esc(range) + '</b>' + esc(hij || "") + '</div></div>';
+}
+function rptFoot(){
+  var n = new Date();
+  return '<div class="rpt-foot"><span>أُنشئ في ' + n.getDate() + " " + MONTHS[n.getMonth()] + " " + n.getFullYear() +
+    " — " + String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0") +
+    '</span><span>أساس · متتبّع المهامّ اليوميّة</span></div>';
+}
+function rptSec(title, body){ return '<div class="rpt-sec"><h3>' + title + '</h3>' + body + '</div>'; }
+function rptKpi(v, l, cls){
+  return '<div class="rpt-kpi ' + (cls || "") + '"><b>' + v + '</b><span>' + esc(l) + '</span></div>';
+}
+function rptRecList(recs){
+  return recs.map(function(r){
+    return '<div class="rpt-rec"><span class="em">' + r.e + '</span><div class="bd"><b>' +
+      esc(r.t) + '</b><p>' + esc(r.x) + '</p></div></div>';
+  }).join("");
+}
+function debtList(tasks){
+  var out = [];
+  tasks.forEach(function(t){
+    if(!t.makeup) return;
+    var n = debtOf(t.id);
+    if(n > 0) out.push({ name:t.name, em:t.em, n:n });
+  });
+  return out;
+}
+/* متوسّط الإنجاز لكل يوم من أيام الأسبوع */
+function dowProfile(from, to, tasks){
+  var sum = [0,0,0,0,0,0,0], cnt = [0,0,0,0,0,0,0];
+  var today = startOfDay(new Date()), start = fromKey(S.start), d, j;
+  for(d = new Date(from); d <= to; d = addDays(d, 1)){
+    if(d > today || d < start) continue;
+    var i = dowIndex(d);
+    sum[i] += pct(dayScore(key(d), tasks), tasks.length); cnt[i]++;
+  }
+  var avgs = [], all = 0, allN = 0;
+  for(j = 0; j < 7; j++){
+    if(cnt[j]){ var a = Math.round(sum[j] / cnt[j]); avgs.push({ i:j, name:DAY_LONG[j], avg:a }); all += a; allN++; }
+  }
+  if(avgs.length < 3) return null;
+  avgs.sort(function(a, b){ return a.avg - b.avg; });
+  return { worst:avgs[0], avg:Math.round(all / allN) };
+}
+
+/* ═══ التقرير اليوميّ ═══ */
+function buildDayReport(){
+  var tasks = activeTasks(), k = key(curDay);
+  var done = dayScore(k, tasks), total = tasks.length, p = pct(done, total);
+  var h = rptHead("تقرير يوميّ", DAY_LONG[dowIndex(curDay)] + " " + gDate(curDay),
+        hijri(curDay, { day:"numeric", month:"long", year:"numeric" }));
+
+  var msg = p === 100 ? "يومٌ تامّ، أُنجزت المهامّ كلّها."
+    : p >= 70 ? "يومٌ قويّ، بقي القليل ليكتمل."
+    : p >= 40 ? "يومٌ متوسّط، النصف قائم والنصف يحتاج شدّة."
+    : done > 0 ? "يومٌ ضعيف، لكن البداية موجودة." : "لم يُسجَّل شيء في هذا اليوم.";
+  h += rptSec("🎯 الخلاصة",
+    '<div class="rpt-hero">' + rptRing(p) +
+    '<div class="rpt-hero-txt"><p class="rpt-verdict">' + esc(msg) + '</p>' +
+    '<p>أنجزتَ <b>' + ar(done) + '</b> من <b>' + ar(total) + '</b> مهمّة. ' +
+    (done === total ? "أتمَمتَ كلّ ما نويت." : "بقيت " + ar(total - done) + " دون إنجاز.") + '</p></div></div>');
+
+  var sum7 = 0, n7 = 0, i;
+  for(i = 1; i <= 7; i++){
+    var d7 = addDays(curDay, -i);
+    if(d7 < fromKey(S.start)) break;
+    sum7 += dayScore(key(d7), tasks); n7++;
+  }
+  var avg7 = n7 ? Math.round(sum7 / n7 * 10) / 10 : 0, streak = overallStreak();
+  h += rptSec("📊 الأرقام",
+    '<div class="rpt-kpis">' +
+      rptKpi(ar(done) + "/" + ar(total), "مهامّ اليوم", lv(p)) +
+      rptKpi(ar(p) + "٪", "نسبة الإتمام", lv(p)) +
+      rptKpi(n7 ? String(avg7) : "—", "متوسّط ٧ أيام") +
+      rptKpi(ar(streak), "سلسلة الأيام", streak > 0 ? "hi" : "lo") + '</div>');
+
+  var body = "";
+  GROUPS.forEach(function(g){
+    var inG = tasks.filter(function(t){ return (t.grp || "day") === g.id; });
+    if(!inG.length) return;
+    body += '<div class="rpt-grp">' + g.em + " " + esc(g.label) + '</div>';
+    inG.forEach(function(t){
+      var on = isDone(k, t.id), sk = taskStreak(t.id);
+      body += '<div class="rpt-day"><span class="em">' + (t.em || "⭐") + '</span>' +
+        '<span class="nm">' + esc(t.name) + '</span>' +
+        (sk > 1 ? '<span class="sk">' + streakTxt(sk) + '</span>' : '') +
+        '<span class="st ' + (on ? "y" : "n") + '">' + (on ? "تمّ" : "فات") + '</span></div>';
+    });
+  });
+  h += rptSec("✅ تفصيل المهامّ", body || '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
+
+  var ws = weekStart(curDay), bars = [], today = startOfDay(new Date()), b;
+  for(b = 0; b < 7; b++){
+    var bd = addDays(ws, b);
+    bars.push({ v:dayScore(key(bd), tasks), l:DAY_SHORT[b], future: bd > today });
+  }
+  h += rptSec("📈 موقع اليوم من أسبوعه", rptBars(bars, total));
+
+  var ctx = { tasks:tasks, pct:p, streak:streak, perfect:(p === 100 ? 1 : 0),
+    debt:debtList(tasks), weak:null, strong:null, worstDow:null, avgDow:0 };
+  var srt = tasks.map(function(t){
+    var n = 0, dd = 0, from = fromKey(S.start), lo = addDays(curDay, -29);
+    for(var dc = new Date(lo > from ? lo : from); dc <= curDay; dc = addDays(dc, 1)){
+      dd++; if(isDone(key(dc), t.id)) n++;
+    }
+    return { name:t.name, em:t.em, grp:t.grp, n:n, d:dd, p:pct(n, dd) };
+  }).sort(function(a, b){ return b.p - a.p; });
+  if(srt.length){ ctx.strong = srt[0]; ctx.weak = srt[srt.length - 1]; }
+  h += rptSec("💡 توصيات وملاحظات", rptRecList(rptRecs("day", ctx)));
+
+  var note = S.notes[k];
+  h += rptSec("✍️ ملاحظة اليوم", note && note.trim()
+    ? '<div class="rpt-note">' + esc(note.trim()) + '</div>'
+    : '<div class="rpt-empty">لا ملاحظة مدوّنة لهذا اليوم.</div>');
+  return h + rptFoot();
+}
+
+/* ═══ التقرير الأسبوعيّ ═══ */
+function buildWeekReport(){
+  var tasks = activeTasks(), st = weekStats(curWeek), end = addDays(curWeek, 6), p = st.pct;
+  var h = rptHead("تقرير أسبوعيّ",
+    curWeek.getDate() + " " + MONTHS[curWeek.getMonth()] + " – " + end.getDate() + " " +
+    MONTHS[end.getMonth()] + " " + end.getFullYear(),
+    "الأسبوع يبدأ الاثنين" + (st.ended ? " · منتهٍ" : " · جارٍ"));
+
+  var msg = p >= 85 ? "أسبوعٌ عالي الالتزام." : p >= 60 ? "أسبوعٌ جيّد وفيه فسحة للتحسين."
+    : p >= 35 ? "أسبوعٌ متذبذب يحتاج تثبيتًا." : "أسبوعٌ ضعيف، والبداية من مهمّة واحدة.";
+  h += rptSec("🎯 الخلاصة",
+    '<div class="rpt-hero">' + rptRing(p) +
+    '<div class="rpt-hero-txt"><p class="rpt-verdict">' + esc(msg) + '</p>' +
+    '<p>أنجزتَ <b>' + ar(st.done) + '</b> من <b>' + ar(st.total) + '</b> فرصة' +
+    (st.ended ? "" : " حتى الآن") + '، واكتملت <b>' + ar(st.perfect) + '</b> من ٧ أيام كاملةً.</p></div></div>');
+
+  h += rptSec("📊 الأرقام",
+    '<div class="rpt-kpis">' +
+      rptKpi(ar(st.done) + "/" + ar(st.total), "مهامّ مُنجزة", lv(p)) +
+      rptKpi(ar(p) + "٪", "نسبة الالتزام", lv(p)) +
+      rptKpi(ar(st.perfect) + "/7", "أيام كاملة", st.perfect >= 4 ? "hi" : (st.perfect ? "mid" : "lo")) +
+      rptKpi(ar(st.makeups), "تعويضات سُدّدت", st.makeups ? "hi" : "") + '</div>');
+
+  h += rptSec("📈 الإنجاز عبر أيام الأسبوع",
+    rptBars(st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], future:x.future }; }), tasks.length));
+
+  var rows = tasks.map(function(t){
+    return { name:t.name, em:t.em, grp:t.grp, n:st.per[t.id], d:7, p:pct(st.per[t.id], 7) };
+  }).sort(function(a, b){ return b.p - a.p; });
+  h += rptSec("✅ كل مهمّة على حدة",
+    rows.length ? rptTable(rows, "من ٧") : '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
+
+  var ctx = { tasks:tasks, pct:p, streak:overallStreak(), perfect:st.perfect,
+    debt:debtList(tasks), strong:rows[0] || null, weak:rows[rows.length - 1] || null,
+    worstDow:null, avgDow:0 };
+  var dp = dowProfile(curWeek, end, tasks);
+  if(dp){ ctx.worstDow = dp.worst; ctx.avgDow = dp.avg; }
+  h += rptSec("💡 توصيات وملاحظات", rptRecList(rptRecs("week", ctx)));
+  h += rptSec("✍️ ملاحظات الأسبوع", rptNotes(curWeek, end));
+  return h + rptFoot();
+}
+
+/* ═══ التقرير الشهريّ ═══ */
+function buildMonthReport(){
+  var tasks = activeTasks(), st = monthStats(curMonth), p = st.pct, today = startOfDay(new Date());
+  var h = rptHead("تقرير شهريّ", MONTHS[curMonth.getMonth()] + " " + curMonth.getFullYear(),
+    hijri(new Date(curMonth.getFullYear(), curMonth.getMonth(), 15), { month:"long", year:"numeric" }));
+
+  var msg = p >= 85 ? "شهرٌ عالي الالتزام." : p >= 60 ? "شهرٌ جيّد ومستقرّ."
+    : p >= 35 ? "شهرٌ متفاوت، الثبات هو المطلوب." : "شهرٌ ضعيف، والبناء يبدأ من عادة واحدة.";
+  h += rptSec("🎯 الخلاصة",
+    '<div class="rpt-hero">' + rptRing(p) +
+    '<div class="rpt-hero-txt"><p class="rpt-verdict">' + esc(msg) + '</p>' +
+    '<p>أنجزتَ <b>' + ar(st.done) + '</b> من <b>' + ar(st.total) + '</b> فرصة عبر <b>' +
+    ar(st.counted) + '</b> يومًا، واكتملت <b>' + ar(st.perfect) + '</b> أيامٍ كاملةً.</p></div></div>');
+
+  h += rptSec("📊 الأرقام",
+    '<div class="rpt-kpis">' +
+      rptKpi(ar(st.done) + "/" + ar(st.total), "مهامّ مُنجزة", lv(p)) +
+      rptKpi(ar(p) + "٪", "نسبة الالتزام", lv(p)) +
+      rptKpi(ar(st.perfect), "أيام كاملة", st.perfect ? "hi" : "lo") +
+      rptKpi(ar(st.makeups), "تعويضات سُدّدت", st.makeups ? "hi" : "") + '</div>');
+
+  var seen = {}, wpts = [], wlbl = [];
+  st.days.forEach(function(x){
+    if(x.future) return;
+    var wk = key(weekStart(x.d));
+    if(!seen[wk]) seen[wk] = { s:0, n:0 };
+    seen[wk].s += x.score; seen[wk].n++;
+  });
+  Object.keys(seen).sort().forEach(function(wk, i){
+    var o = seen[wk];
+    wpts.push(pct(o.s, o.n * (tasks.length || 1)));
+    wlbl.push("الأسبوع " + (i + 1));
+  });
+  if(wpts.length >= 2) h += rptSec("📈 اتّجاه الأسابيع", rptLine(wpts, wlbl));
+
+  var heat = '<div class="rpt-heat">', i;
+  DAY_SHORT.forEach(function(d){ heat += '<div class="hd">' + d + '</div>'; });
+  for(i = 0; i < dowIndex(st.days[0].d); i++) heat += '<div class="cl pad"></div>';
+  st.days.forEach(function(x){
+    var r = tasks.length ? x.score / tasks.length : 0, bg = "", cls = "cl";
+    if(!x.future && r > 0){
+      if(r >= 1){ bg = "background:#9a6f22"; cls += " on"; }
+      else bg = "background:rgba(154,111,34," + (0.15 + r * 0.6).toFixed(2) + ")";
+    }
+    if(x.future) bg = "background:#f6f8fc;color:#b3bacb";
+    heat += '<div class="' + cls + '" style="' + bg + '">' + x.d.getDate() + '</div>';
+  });
+  h += rptSec("🗓️ خريطة الشهر", heat + '</div>');
+
+  var elapsed = Math.max(st.counted, 1);
+  var rows = tasks.map(function(t){
+    return { name:t.name, em:t.em, grp:t.grp, n:st.per[t.id], d:elapsed, p:pct(st.per[t.id], elapsed) };
+  }).sort(function(a, b){ return b.p - a.p; });
+  h += rptSec("✅ كل مهمّة على حدة",
+    rows.length ? rptTable(rows, "من " + ar(elapsed)) : '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
+
+  if(st.bestDay && st.bestDay.score > 0)
+    h += rptSec("🥇 أبرز الأيام",
+      '<div class="rpt-day"><span class="em">🥇</span><span class="nm">أفضل يوم — ' +
+      DAY_LONG[dowIndex(st.bestDay.d)] + " " + st.bestDay.d.getDate() + " " + MONTHS[st.bestDay.d.getMonth()] +
+      '</span><span class="st y">' + ar(st.bestDay.score) + " من " + ar(tasks.length) + '</span></div>');
+
+  var ctx = { tasks:tasks, pct:p, streak:overallStreak(), perfect:st.perfect,
+    debt:debtList(tasks), strong:rows[0] || null, weak:rows[rows.length - 1] || null,
+    worstDow:null, avgDow:0 };
+  var last = new Date(curMonth.getFullYear(), curMonth.getMonth(), st.len);
+  var to = last > today ? today : last;
+  var dp = dowProfile(curMonth, to, tasks);
+  if(dp){ ctx.worstDow = dp.worst; ctx.avgDow = dp.avg; }
+  h += rptSec("💡 توصيات وملاحظات", rptRecList(rptRecs("month", ctx)));
+  h += rptSec("✍️ ملاحظات الشهر", rptNotes(curMonth, to));
+  return h + rptFoot();
+}
+
+/* ═══ فتح / إغلاق ═══ */
+function openReport(mode){
+  var doc = el("rptDoc"), ttl = el("rptTitle");
+  if(mode === "day"){       doc.innerHTML = buildDayReport();   ttl.textContent = "تقرير يوميّ"; }
+  else if(mode === "week"){ doc.innerHTML = buildWeekReport();  ttl.textContent = "تقرير أسبوعيّ"; }
+  else {                    doc.innerHTML = buildMonthReport(); ttl.textContent = "تقرير شهريّ"; }
+  el("rptOverlay").hidden = false;
+  document.body.style.overflow = "hidden";
+  el("rptOverlay").querySelector(".rpt-scroll").scrollTop = 0;
+  buzz(10);
+}
+function closeReport(){
+  el("rptOverlay").hidden = true;
+  document.body.style.overflow = "";
+}
+
 /* ═══════════════ التحديث الشامل ═══════════════ */
 function renderAll(){
   renderToday(); renderWeek(); renderMonth(); renderMore();
@@ -1512,6 +2102,10 @@ document.addEventListener("click", function(e){
   t = e.target.closest("[data-em]");
   if(t){ pickedEm = t.getAttribute("data-em"); renderPick(); buzz(8); return; }
 
+  /* فتح تقرير */
+  t = e.target.closest("[data-rpt]");
+  if(t){ openReport(t.getAttribute("data-rpt")); return; }
+
   /* التبويبات */
   t = e.target.closest(".tab");
   if(t){ show(t.getAttribute("data-v")); return; }
@@ -1597,6 +2191,13 @@ el("resetBtn").onclick = function(){
   };
   save(); renderAll(); toast("🧹 مُسحت البيانات");
 };
+
+/* التقارير */
+el("rptClose").onclick = closeReport;
+el("rptPrint").onclick = function(){ buzz(12); setTimeout(function(){ window.print(); }, 60); };
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && !el("rptOverlay").hidden) closeReport();
+});
 
 /* المظهر */
 function applyTheme(){

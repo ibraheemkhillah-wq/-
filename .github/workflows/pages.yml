@@ -1,8 +1,10 @@
 name: نشر أساس
 
 on:
+  # بيئة github-pages تسمح بالنشر من الفرع الافتراضي وحده،
+  # فالتشغيل على فروع التطوير يفشل حتمًا ولا فائدة منه
   push:
-    branches: ["main", "claude/ready-to-code-4t382l"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
