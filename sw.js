@@ -1,5 +1,5 @@
 /* عامل خدمة صغير: التطبيق يعمل بلا إنترنت، ويتحدّث حين يتوفّر */
-var CACHE = "asas-v1";
+var CACHE = "asas-v2";
 var ASSETS = ["./", "./index.html", "./manifest.webmanifest",
               "./icon-180.png", "./icon-512.png", "./icon-1024.png"];
 
