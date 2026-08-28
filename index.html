@@ -466,6 +466,144 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   font-weight:700;font-size:.85rem;flex:none;
 }
 
+
+/* ═══════════════ الديون ═══════════════ */
+.dbt-hero{
+  background:linear-gradient(175deg, var(--surface) 0%, var(--surface-2) 100%);
+  border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:16px 15px;
+}
+.dbt-top{display:flex;align-items:center;gap:15px;}
+.dbt-ring{position:relative;width:96px;height:96px;flex:none;}
+.dbt-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.dbt-ring circle{fill:none;stroke-width:9;stroke-linecap:round;}
+.dbt-ring b{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.15rem;font-weight:800;
+}
+.dbt-top-txt{flex:1;min-width:0;}
+.dbt-top-txt .lbl{font-size:.76rem;color:var(--ink-3);}
+.dbt-top-txt .big{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:2rem;font-weight:800;line-height:1.15;color:var(--warn);
+  word-break:break-all;
+}
+.dbt-top-txt .cur{font-size:1rem;font-weight:700;color:var(--ink-3);margin-inline-start:4px;}
+.dbt-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px;}
+.dbt-mini div{
+  background:var(--surface-2);border-radius:var(--r-sm);padding:9px 6px;text-align:center;
+}
+.dbt-mini b{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1rem;font-weight:800;line-height:1.2;
+}
+.dbt-mini span{display:block;font-size:.63rem;color:var(--ink-3);margin-top:2px;}
+.dbt-mini .g b{color:var(--good);}
+.dbt-mini .w b{color:var(--warn);}
+
+.dbt-curbar{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.74rem;color:var(--ink-3);}
+.dbt-curbar select{
+  font-family:var(--font-body);font-size:.8rem;font-weight:700;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:6px 10px;
+}
+
+/* بطاقة شخص */
+.dbt-p{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow-sm);padding:13px 14px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.dbt-p.done{border-color:color-mix(in srgb,var(--good) 45%,var(--line));}
+.dbt-p-h{display:flex;align-items:flex-start;gap:10px;}
+.dbt-p-h .nm{flex:1;min-width:0;}
+.dbt-p-h .nm b{display:block;font-size:1rem;font-weight:700;line-height:1.35;}
+.dbt-p-h .nm span{display:block;font-size:.72rem;color:var(--ink-3);margin-top:2px;}
+.dbt-p-h .amt{text-align:left;flex:none;}
+.dbt-p-h .amt b{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.2rem;font-weight:800;line-height:1.2;color:var(--warn);
+}
+.dbt-p.done .amt b{color:var(--good);}
+.dbt-p-h .amt span{display:block;font-size:.66rem;color:var(--ink-3);}
+.dbt-bar{height:7px;border-radius:20px;background:var(--surface-2);overflow:hidden;}
+.dbt-bar i{display:block;height:100%;border-radius:20px;background:var(--good);transition:width .45s cubic-bezier(.2,.8,.3,1);}
+.dbt-acts{display:grid;grid-template-columns:1fr 1fr 44px;gap:7px;}
+.dbt-acts button{
+  padding:9px 6px;border-radius:10px;font-size:.79rem;font-weight:700;
+  transition:transform .12s;
+}
+.dbt-acts button:active{transform:scale(.95);}
+.dbt-acts .pay{background:color-mix(in srgb,var(--good) 15%,var(--surface));color:var(--good);}
+.dbt-acts .more{background:color-mix(in srgb,var(--warn) 13%,var(--surface));color:var(--warn);}
+.dbt-acts .log{background:var(--surface-2);color:var(--ink-3);}
+
+.dbt-tx{
+  border-top:1px solid var(--line);padding-top:9px;
+  display:flex;flex-direction:column;gap:7px;
+}
+.dbt-tx[hidden]{display:none;}
+.dbt-tx-r{display:flex;align-items:center;gap:9px;font-size:.79rem;}
+.dbt-tx-r .ic{
+  width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;
+  font-size:.85rem;font-weight:800;
+}
+.dbt-tx-r.add .ic{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn);}
+.dbt-tx-r.pay .ic{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good);}
+.dbt-tx-r .d{flex:1;min-width:0;color:var(--ink-3);font-size:.72rem;line-height:1.4;}
+.dbt-tx-r .d b{display:block;color:var(--ink-2);font-size:.76rem;font-weight:600;}
+.dbt-tx-r .v{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-weight:800;white-space:nowrap;
+}
+.dbt-tx-r.add .v{color:var(--warn);} .dbt-tx-r.pay .v{color:var(--good);}
+.dbt-tx-r .x{
+  width:26px;height:26px;border-radius:7px;background:var(--surface-2);
+  display:grid;place-items:center;color:var(--ink-3);font-size:.75rem;flex:none;
+}
+
+/* لوح الإدخال */
+.sheet{
+  position:fixed;inset:0;z-index:105;display:flex;align-items:flex-end;
+  background:rgba(8,11,18,.55);backdrop-filter:blur(3px);
+}
+.sheet[hidden]{display:none;}
+.sheet-box{
+  width:100%;max-width:640px;margin-inline:auto;
+  background:var(--surface);border-radius:20px 20px 0 0;
+  padding:18px 16px calc(env(safe-area-inset-bottom) + 18px);
+  border-top:1px solid var(--line);
+  box-shadow:0 -10px 40px -12px rgba(0,0,0,.5);
+  animation:sheetUp .24s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes sheetUp{from{transform:translateY(30px);opacity:.5;}to{transform:none;opacity:1;}}
+.sheet-box h3{
+  font-family:var(--font-display);font-size:1.08rem;font-weight:700;margin:0 0 4px;
+}
+.sheet-box .sub{font-size:.78rem;color:var(--ink-3);margin:0 0 15px;}
+.sheet-f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.sheet-f label{font-size:.75rem;font-weight:700;color:var(--ink-2);}
+.sheet-f input{
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:12px 13px;font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+  direction:rtl;width:100%;
+}
+.sheet-f input[type="number"]{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.15rem;font-weight:800;direction:ltr;text-align:right;
+}
+.sheet-f input:focus{outline:none;border-color:var(--lapis);}
+.sheet-err{font-size:.75rem;color:var(--warn);min-height:1.1em;margin-bottom:8px;}
+.sheet-acts{display:grid;grid-template-columns:1fr 1.4fr;gap:9px;}
+.sheet-acts button{padding:14px 10px;border-radius:12px;font-size:.9rem;font-weight:700;}
+.sheet-acts .no{background:var(--surface-2);color:var(--ink-2);}
+.sheet-acts .yes{background:var(--gold);color:#1a1206;}
+.sheet-acts .yes.pay{background:var(--good);color:#fff;}
+
+.tab span{font-size:.62rem;}
+.tab svg{width:20px;height:20px;}
+
 /* ═══════════════ شريط التبويب ═══════════════ */
 .tabs{
   position:sticky;bottom:0;z-index:30;
@@ -473,8 +611,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   backdrop-filter:saturate(1.6) blur(14px);
   -webkit-backdrop-filter:saturate(1.6) blur(14px);
   border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(4,1fr);
-  padding:6px 6px calc(env(safe-area-inset-bottom) + 6px);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);
 }
 .tab{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -921,6 +1059,44 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   </div>
 </section>
 
+<!-- ══════════════════ الديون ══════════════════ -->
+<section class="view" id="v-debt">
+  <div class="dbt-hero">
+    <div class="dbt-top">
+      <div class="dbt-ring">
+        <svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="42"/><circle class="vl" id="dbtRing" cx="50" cy="50" r="42"/></svg>
+        <b id="dbtRingTxt">0٪</b>
+      </div>
+      <div class="dbt-top-txt">
+        <div class="lbl">المتبقّي عليك</div>
+        <div class="big"><span id="dbtRemain">0</span><span class="cur" id="dbtCur1">₪</span></div>
+      </div>
+    </div>
+    <div class="dbt-mini">
+      <div class="w"><b id="dbtOwed">0</b><span>إجمالي الدَّين</span></div>
+      <div class="g"><b id="dbtPaid">0</b><span>ما سدّدت</span></div>
+      <div><b id="dbtCount">0</b><span>أشخاص</span></div>
+    </div>
+    <div class="dbt-curbar">
+      <span>العملة</span>
+      <select id="dbtCurSel">
+        <option value="₪">₪ شيكل</option>
+        <option value="د.أ">د.أ دينار</option>
+        <option value="₺">₺ ليرة</option>
+        <option value="$">$ دولار</option>
+        <option value="€">€ يورو</option>
+        <option value="ر.س">ر.س ريال</option>
+        <option value="ج.م">ج.م جنيه</option>
+        <option value="د.إ">د.إ درهم</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="vid-btn" id="dbtNew"><span class="ic">➕</span> إضافة دَين جديد</button>
+
+  <div id="dbtList" style="display:flex;flex-direction:column;gap:10px;"></div>
+</section>
+
 <!-- ══════════════════ المزيد ══════════════════ -->
 <section class="view" id="v-more">
   <div class="card">
@@ -971,6 +1147,10 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8.5 13h2M13.5 13h2M8.5 16.5h2M13.5 16.5h2"/></svg>
     <span>الشهر</span>
   </button>
+  <button class="tab" data-v="debt">
+    <svg viewBox="0 0 24 24"><path d="M3 7.5h13.5a3.5 3.5 0 0 1 3.5 3.5v6a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 2 17V6.8A2.3 2.3 0 0 1 4.3 4.5h10.2"/><circle cx="16.5" cy="13.5" r="1.2"/></svg>
+    <span>الديون</span>
+  </button>
   <button class="tab" data-v="more">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="18" r="1.4"/></svg>
     <span>المزيد</span>
@@ -1020,6 +1200,30 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       <button class="full" id="vidDownload" style="display:none">⬇︎ تنزيل الملف</button>
     </div>
     <div class="vid-note" id="vidNote"></div>
+  </div>
+</div>
+
+<div class="sheet" id="dbtSheet" hidden>
+  <div class="sheet-box">
+    <h3 id="dbtSheetT">دَين جديد</h3>
+    <p class="sub" id="dbtSheetS">سجّل لمن تدين وبكم</p>
+    <div class="sheet-f" id="dbtFName">
+      <label for="dbtIName">لمن تدين؟</label>
+      <input id="dbtIName" maxlength="40" placeholder="اسم الشخص" autocomplete="off">
+    </div>
+    <div class="sheet-f">
+      <label for="dbtIAmt" id="dbtLAmt">المبلغ</label>
+      <input id="dbtIAmt" type="number" inputmode="decimal" step="any" min="0" placeholder="0">
+    </div>
+    <div class="sheet-f">
+      <label for="dbtINote">ملاحظة (اختياريّة)</label>
+      <input id="dbtINote" maxlength="60" placeholder="سبب الدَّين أو تاريخه" autocomplete="off">
+    </div>
+    <div class="sheet-err" id="dbtErr"></div>
+    <div class="sheet-acts">
+      <button class="no" id="dbtCancel">إلغاء</button>
+      <button class="yes" id="dbtOk">حفظ</button>
+    </div>
   </div>
 </div>
 
@@ -1108,6 +1312,7 @@ if(!S || !S.tasks){
   writeStore(S);
 }
 S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
+if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
 if(!S.start) S.start = key(new Date());
 
 function save(){ writeStore(S); }
@@ -2931,9 +3136,226 @@ async function vidShareFile(){
   vidDownloadFile();
 }
 
+
+/* ═══════════════════════════════════════════════════
+   الديون — دفتر حركات لكل شخص: إضافةٌ تزيد وسدادٌ ينقص
+   ═══════════════════════════════════════════════════ */
+
+function dbtInit(){
+  if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
+  if(!S.debts.cur) S.debts.cur = "₪";
+}
+
+function money(n){
+  n = +n || 0;
+  var neg = n < 0;
+  n = Math.abs(n);
+  var t = (Math.round(n * 100) / 100).toLocaleString("en-US", { maximumFractionDigits:2 });
+  return (neg ? "−" : "") + t;
+}
+
+/* رصيد الشخص = مجموع الديون − مجموع المسدَّد */
+function dbtOf(p){
+  var owed = 0, paid = 0;
+  (p.tx || []).forEach(function(t){
+    if(t.t === "pay") paid += (+t.amount || 0);
+    else owed += (+t.amount || 0);
+  });
+  return { owed:owed, paid:paid, left: owed - paid };
+}
+function dbtTotals(){
+  var owed = 0, paid = 0, open = 0;
+  (S.debts.people || []).forEach(function(p){
+    var b = dbtOf(p);
+    owed += b.owed; paid += b.paid;
+    if(b.left > 0.004) open++;
+  });
+  return { owed:owed, paid:paid, left: owed - paid, open:open, count:(S.debts.people||[]).length };
+}
+
+function dbtFind(id){
+  var a = S.debts.people || [];
+  for(var i = 0; i < a.length; i++) if(a[i].id === id) return a[i];
+  return null;
+}
+
+function dbtDate(k){
+  var d = fromKey(k);
+  return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+}
+
+/* ── العرض ── */
+var dbtOpen = {};   /* أي السجلّات مفتوحة */
+
+function renderDebts(){
+  dbtInit();
+  var cur = S.debts.cur, T = dbtTotals();
+
+  el("dbtRemain").textContent = money(T.left);
+  el("dbtCur1").textContent = cur;
+  el("dbtOwed").textContent = money(T.owed);
+  el("dbtPaid").textContent = money(T.paid);
+  el("dbtCount").textContent = ar(T.count);
+  el("dbtCurSel").value = cur;
+
+  var pc = T.owed > 0 ? Math.round(T.paid * 100 / T.owed) : 0;
+  var R = 42, C = 2 * Math.PI * R, c = el("dbtRing");
+  c.style.strokeDasharray = C;
+  c.style.strokeDashoffset = C * (1 - pc / 100);
+  c.style.stroke = pc >= 100 ? "var(--good)" : (pc >= 50 ? "var(--gold)" : "var(--warn)");
+  el("dbtRingTxt").textContent = ar(pc) + "٪";
+
+  var box = el("dbtList");
+  box.innerHTML = "";
+  if(!T.count){
+    box.innerHTML = '<div class="card"><div class="empty">لا ديون مسجّلة.<br>' +
+      'اضغط «إضافة دَين جديد» لتبدأ متابعة ما عليك.</div></div>';
+    return;
+  }
+
+  /* الأثقل أوّلًا، والمسدَّد بالكامل في الآخر */
+  var list = (S.debts.people || []).slice().sort(function(a, b){
+    return dbtOf(b).left - dbtOf(a).left;
+  });
+
+  list.forEach(function(p){
+    var b = dbtOf(p), settled = b.left <= 0.004;
+    var pct2 = b.owed > 0 ? Math.min(100, Math.round(b.paid * 100 / b.owed)) : 0;
+    var d = document.createElement("div");
+    d.className = "dbt-p" + (settled ? " done" : "");
+
+    var tx = (p.tx || []).slice().reverse();
+    var txHtml = tx.map(function(t){
+      return '<div class="dbt-tx-r ' + (t.t === "pay" ? "pay" : "add") + '">' +
+        '<span class="ic">' + (t.t === "pay" ? "−" : "+") + '</span>' +
+        '<span class="d"><b>' + (t.t === "pay" ? "سداد" : "دَين") +
+          (t.note ? " · " + esc(t.note) : "") + '</b>' + dbtDate(t.date) + '</span>' +
+        '<span class="v">' + money(t.amount) + '</span>' +
+        '<button class="x" data-dtx="' + esc(p.id) + '|' + esc(t.id) + '" aria-label="حذف الحركة">✕</button>' +
+        '</div>';
+    }).join("");
+
+    d.innerHTML =
+      '<div class="dbt-p-h">' +
+        '<span class="nm"><b>' + esc(p.name) + '</b>' +
+          (p.note ? '<span>' + esc(p.note) + '</span>' : '') + '</span>' +
+        '<span class="amt"><b>' + money(b.left) + '</b><span>' + esc(cur) +
+          (settled ? ' · سُدّد' : '') + '</span></span>' +
+      '</div>' +
+      '<div class="dbt-bar"><i style="width:' + pct2 + '%"></i></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--ink-3)">' +
+        '<span>سُدّد ' + money(b.paid) + ' من ' + money(b.owed) + '</span>' +
+        '<span>' + ar(pct2) + '٪</span>' +
+      '</div>' +
+      '<div class="dbt-acts">' +
+        '<button class="pay" data-dpay="' + esc(p.id) + '">− سداد</button>' +
+        '<button class="more" data-dadd="' + esc(p.id) + '">+ دَين</button>' +
+        '<button class="log" data-dlog="' + esc(p.id) + '" aria-label="السجلّ">' +
+          (dbtOpen[p.id] ? "▴" : "▾") + '</button>' +
+      '</div>' +
+      '<div class="dbt-tx" ' + (dbtOpen[p.id] ? "" : "hidden") + '>' +
+        (txHtml || '<div class="empty" style="padding:6px">لا حركات.</div>') +
+        '<button class="rowbtn danger" data-ddel="' + esc(p.id) + '" style="border-top:1px solid var(--line);margin-top:2px">' +
+          '<span class="nm">حذف هذا الشخص وسجلّه</span><span class="ar">✕</span></button>' +
+      '</div>';
+    box.appendChild(d);
+  });
+}
+
+/* ── لوح الإدخال ── */
+var dbtMode = "new", dbtTarget = null;
+
+function dbtSheet(mode, id){
+  dbtInit();
+  dbtMode = mode; dbtTarget = id || null;
+  var p = id ? dbtFind(id) : null;
+  var t = el("dbtSheetT"), sub = el("dbtSheetS"), ok = el("dbtOk");
+
+  el("dbtFName").style.display = mode === "new" ? "" : "none";
+  el("dbtIName").value = "";
+  el("dbtIAmt").value = "";
+  el("dbtINote").value = "";
+  el("dbtErr").textContent = "";
+  ok.classList.toggle("pay", mode === "pay");
+
+  if(mode === "new"){
+    t.textContent = "دَين جديد";
+    sub.textContent = "سجّل لمن تدين وبكم";
+    el("dbtLAmt").textContent = "المبلغ (" + S.debts.cur + ")";
+    ok.textContent = "حفظ الدَّين";
+  } else if(mode === "add"){
+    t.textContent = "زيادة دَين — " + (p ? p.name : "");
+    sub.textContent = "يُضاف إلى رصيده فيرتفع مجموع ما عليك";
+    el("dbtLAmt").textContent = "المبلغ المُضاف (" + S.debts.cur + ")";
+    ok.textContent = "إضافة";
+  } else {
+    t.textContent = "سداد — " + (p ? p.name : "");
+    var b = p ? dbtOf(p) : { left:0 };
+    sub.textContent = "المتبقّي له " + money(b.left) + " " + S.debts.cur;
+    el("dbtLAmt").textContent = "المبلغ المسدَّد (" + S.debts.cur + ")";
+    ok.textContent = "تسجيل السداد";
+  }
+  el("dbtSheet").hidden = false;
+  document.body.style.overflow = "hidden";
+  setTimeout(function(){
+    (mode === "new" ? el("dbtIName") : el("dbtIAmt")).focus();
+  }, 120);
+}
+function dbtClose(){
+  el("dbtSheet").hidden = true;
+  document.body.style.overflow = "";
+}
+
+function dbtSave(){
+  var amt = parseFloat(el("dbtIAmt").value);
+  var note = el("dbtINote").value.trim();
+  var err = el("dbtErr");
+
+  if(!(amt > 0)){ err.textContent = "أدخل مبلغًا أكبر من صفر."; return; }
+
+  if(dbtMode === "new"){
+    var name = el("dbtIName").value.trim();
+    if(!name){ err.textContent = "اكتب اسم الشخص."; return; }
+    S.debts.people.push({
+      id: "p" + Date.now().toString(36),
+      name: name, note: note, created: key(new Date()),
+      tx: [{ id:"t" + Date.now().toString(36), t:"add", amount:amt, date:key(new Date()), note:"" }]
+    });
+    save(); dbtClose(); renderDebts(); buzz(14);
+    toast("➕ أُضيف دَين " + money(amt) + " " + S.debts.cur);
+    return;
+  }
+
+  var p = dbtFind(dbtTarget);
+  if(!p){ err.textContent = "تعذّر العثور على الشخص."; return; }
+
+  if(dbtMode === "pay"){
+    var b = dbtOf(p);
+    if(amt - b.left > 0.004){
+      err.textContent = "المبلغ أكبر من المتبقّي (" + money(b.left) + " " + S.debts.cur + ").";
+      return;
+    }
+  }
+  p.tx.push({
+    id: "t" + Date.now().toString(36),
+    t: dbtMode === "pay" ? "pay" : "add",
+    amount: amt, date: key(new Date()), note: note
+  });
+  save(); dbtClose(); renderDebts(); buzz(14);
+
+  var left = dbtOf(p).left;
+  if(dbtMode === "pay"){
+    toast(left <= 0.004
+      ? "🤍 سُدّد دَين " + p.name + " بالكامل"
+      : "− سُجّل سداد " + money(amt) + " — بقي " + money(left) + " " + S.debts.cur);
+  } else {
+    toast("+ زاد دَين " + p.name + " إلى " + money(left) + " " + S.debts.cur);
+  }
+}
+
 /* ═══════════════ التحديث الشامل ═══════════════ */
 function renderAll(){
-  renderToday(); renderWeek(); renderMonth(); renderMore();
+  renderToday(); renderWeek(); renderMonth(); renderDebts(); renderMore();
 }
 
 /* ═══════════════ الأحداث ═══════════════ */
@@ -3018,6 +3440,38 @@ document.addEventListener("click", function(e){
   t = e.target.closest("[data-em]");
   if(t){ pickedEm = t.getAttribute("data-em"); renderPick(); buzz(8); return; }
 
+  /* ═══ الديون ═══ */
+  t = e.target.closest("[data-dpay]");
+  if(t){ dbtSheet("pay", t.getAttribute("data-dpay")); return; }
+  t = e.target.closest("[data-dadd]");
+  if(t){ dbtSheet("add", t.getAttribute("data-dadd")); return; }
+  t = e.target.closest("[data-dlog]");
+  if(t){
+    var lid = t.getAttribute("data-dlog");
+    dbtOpen[lid] = !dbtOpen[lid];
+    renderDebts(); buzz(8); return;
+  }
+  t = e.target.closest("[data-dtx]");
+  if(t){
+    var parts = t.getAttribute("data-dtx").split("|");
+    var pp = dbtFind(parts[0]);
+    if(pp && confirm("حذف هذه الحركة؟ سيتغيّر الرصيد تبعًا لذلك.")){
+      pp.tx = pp.tx.filter(function(x){ return x.id !== parts[1]; });
+      save(); renderDebts(); toast("🗑️ حُذفت الحركة");
+    }
+    return;
+  }
+  t = e.target.closest("[data-ddel]");
+  if(t){
+    var did = t.getAttribute("data-ddel"), dp = dbtFind(did);
+    if(dp && confirm("حذف «" + dp.name + "» وكل سجلّ حركاته؟")){
+      S.debts.people = S.debts.people.filter(function(x){ return x.id !== did; });
+      delete dbtOpen[did];
+      save(); renderDebts(); toast("🗑️ حُذف الشخص وسجلّه");
+    }
+    return;
+  }
+
   /* فتح التقرير المرئيّ من الصفحة مباشرةً */
   t = e.target.closest("[data-vid]");
   if(t){ vidUnlockSpeech(); openVideo(t.getAttribute("data-vid")); return; }
@@ -3094,6 +3548,7 @@ el("impFile").onchange = function(){
       if(!o || !o.tasks) throw new Error("bad");
       S = o;
       S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
+      if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
       if(!S.start) S.start = key(new Date());
       save(); renderAll(); toast("📥 استُوردت النسخة بنجاح");
     }catch(err){ toast("⚠️ الملف غير صالح"); }
@@ -3107,10 +3562,23 @@ el("resetBtn").onclick = function(){
   S = {
     v:1, start:key(new Date()),
     tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
-    log:{}, makeups:{}, notes:{}, theme:S.theme
+    log:{}, makeups:{}, notes:{}, debts:{ cur:"₪", people:[] }, theme:S.theme
   };
   save(); renderAll(); toast("🧹 مُسحت البيانات");
 };
+
+/* الديون */
+el("dbtNew").onclick    = function(){ dbtSheet("new"); };
+el("dbtCancel").onclick = dbtClose;
+el("dbtOk").onclick     = dbtSave;
+el("dbtSheet").addEventListener("click", function(e){
+  if(e.target === this) dbtClose();
+});
+el("dbtCurSel").onchange = function(){
+  dbtInit(); S.debts.cur = this.value; save(); renderDebts(); buzz(8);
+};
+el("dbtIAmt").addEventListener("keydown", function(e){ if(e.key === "Enter") dbtSave(); });
+el("dbtINote").addEventListener("keydown", function(e){ if(e.key === "Enter") dbtSave(); });
 
 /* التقرير المرئيّ */
 el("vidOpen").onclick   = function(){ vidUnlockSpeech(); openVideo(rptMode); };
@@ -3133,6 +3601,7 @@ el("rptClose").onclick = closeReport;
 el("rptPrint").onclick = function(){ buzz(12); setTimeout(function(){ window.print(); }, 60); };
 document.addEventListener("keydown", function(e){
   if(e.key !== "Escape") return;
+  if(!el("dbtSheet").hidden){ dbtClose(); return; }
   if(!el("vidOverlay").hidden){ closeVideo(); return; }
   if(!el("rptOverlay").hidden) closeReport();
 });
@@ -3152,7 +3621,7 @@ el("themeBtn").onclick = function(){
 
 /* التبويبات */
 function show(v){
-  var views = { today:"v-today", week:"v-week", month:"v-month", more:"v-more" };
+  var views = { today:"v-today", week:"v-week", month:"v-month", debt:"v-debt", more:"v-more" };
   Object.keys(views).forEach(function(k){
     el(views[k]).classList.toggle("on", k === v);
   });
@@ -3162,6 +3631,7 @@ function show(v){
   window.scrollTo({ top:0, behavior:"instant" });
   if(v === "week") renderWeek();
   if(v === "month") renderMonth();
+  if(v === "debt") renderDebts();
   if(v === "more") renderMore();
 }
 
