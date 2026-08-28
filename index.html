@@ -885,6 +885,30 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   .mihrab-wrap{width:86px;height:118px;}
   .strip b{font-size:1.15rem;}
 }
+
+/* ── تنبيه تعذّر الحفظ ── */
+.storewarn{
+  margin:10px 14px 0;padding:11px 13px;border-radius:var(--r-sm);
+  background:var(--gold-wash);border:1px solid var(--gold);
+  display:flex;gap:9px;align-items:flex-start;
+  box-shadow:var(--shadow-sm);
+}
+.storewarn .sw-ic{font-size:1.05rem;line-height:1.35;}
+.storewarn .sw-tx{flex:1;min-width:0;}
+.storewarn b{display:block;font-size:.86rem;color:var(--gold-2);margin-bottom:2px;}
+.storewarn .sw-why{font-size:.76rem;color:var(--ink-2);line-height:1.65;}
+.storewarn[hidden]{display:none;}
+
+/* ── سطر حالة الحفظ في «المزيد» ── */
+.sstat{
+  display:flex;align-items:center;gap:8px;
+  margin:0 0 10px;padding:9px 11px;border-radius:var(--r-sm);
+  background:var(--surface-2);font-size:.79rem;color:var(--ink-2);line-height:1.6;
+}
+.sstat .dotk{width:9px;height:9px;border-radius:50%;flex:none;background:var(--good);}
+.sstat.bad{background:var(--gold-wash);}
+.sstat.bad .dotk{background:var(--warn);}
+.sstat span{min-width:0;}
 </style>
 
 <!-- ══════════════════ الترويسة ══════════════════ -->
@@ -899,6 +923,14 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     </svg>
   </button>
 </header>
+
+<div class="storewarn" id="storeWarn" hidden role="alert">
+  <span class="sw-ic">⚠️</span>
+  <span class="sw-tx">
+    <b>لم يُحفَظ ما سجّلته</b>
+    <span class="sw-why">المتصفّح يمنع الحفظ على هذا الجهاز.</span>
+  </span>
+</div>
 
 <main>
 
@@ -1112,11 +1144,13 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 
   <div class="card">
     <h3 class="card-t">💾 النسخة الاحتياطية</h3>
-    <p class="card-s">سجلّك محفوظ في هذا المتصفّح فقط — احفظ نسخة بين حين وآخر</p>
+    <p class="card-s">سجلّك محفوظ في هذا الجهاز — احفظ نسخة بين حين وآخر</p>
+    <div class="sstat" id="storeStat"><i class="dotk"></i><span>—</span></div>
     <button class="rowbtn" id="expBtn"><span class="nm">تصدير نسخة احتياطية</span><span class="ar">↓</span></button>
     <button class="rowbtn" id="impBtn"><span class="nm">استيراد نسخة</span><span class="ar">↑</span></button>
     <button class="rowbtn danger" id="resetBtn"><span class="nm">مسح كل البيانات</span><span class="ar">✕</span></button>
     <input type="file" id="impFile" accept="application/json,.json" hidden>
+    <p class="card-s" id="bkNote" style="margin:10px 0 0">—</p>
   </div>
 
   <div class="card">
@@ -1234,15 +1268,186 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 "use strict";
 
 /* ═══════════════ التخزين ═══════════════ */
+/* ═══════════════════════════════════════════════════
+   التخزين — طبقتان: localStorage فوريّة، و IndexedDB أمتن
+   كل كتابة تُتحقَّق بالقراءة، وأي فشل يظهر للمستخدم لا يُبتلع
+   ═══════════════════════════════════════════════════ */
 var KEY = "asas.v1";
 var memFallback = null;
+var storeOK = true;          /* هل الحفظ يعمل فعلًا؟ */
+var storeMsg = "";           /* سبب العطل إن وُجد */
+var storeAt = 0;             /* وقت آخر حفظ ناجح */
+var bootFresh = false;       /* أقلعنا بلا سجلّ محفوظ؟ */
+var hydrating = true;        /* لم يُفحص IndexedDB بعد */
+
+/* ── localStorage ── */
+function lsRead(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(!raw) return null;
+    var o = JSON.parse(raw);
+    return (o && typeof o === "object") ? o : null;
+  }catch(e){ return null; }
+}
+function lsWrite(o){
+  try{
+    var txt = JSON.stringify(o);
+    localStorage.setItem(KEY, txt);
+    /* لا نكتفي بغياب الاستثناء — نقرأ ما كُتب فعلًا */
+    var back = localStorage.getItem(KEY);
+    if(back !== txt) throw new Error("read-back mismatch");
+    return true;
+  }catch(e){
+    storeMsg = (e && e.name === "QuotaExceededError")
+      ? "مساحة التخزين ممتلئة"
+      : "المتصفّح يمنع الحفظ (تصفّح خاصّ أو إعدادات الخصوصيّة)";
+    return false;
+  }
+}
+
+/* ── IndexedDB: حصّة أكبر وأقلّ عرضةً للتنظيف ── */
+var idb = null, idbTried = false;
+function idbOpen(){
+  return new Promise(function(res){
+    if(idb) return res(idb);
+    if(idbTried || !window.indexedDB) return res(null);
+    idbTried = true;
+    var rq;
+    try{ rq = indexedDB.open("asas", 1); }catch(e){ return res(null); }
+    rq.onupgradeneeded = function(){
+      try{
+        var d = rq.result;
+        if(!d.objectStoreNames.contains("state")) d.createObjectStore("state");
+      }catch(e){}
+    };
+    rq.onsuccess = function(){ idb = rq.result; res(idb); };
+    rq.onerror = function(){ res(null); };
+    rq.onblocked = function(){ res(null); };
+  });
+}
+function idbWrite(o){
+  return idbOpen().then(function(d){
+    if(!d) return false;
+    return new Promise(function(res){
+      try{
+        var tx = d.transaction("state", "readwrite");
+        tx.objectStore("state").put(JSON.stringify(o), KEY);
+        tx.oncomplete = function(){ res(true); };
+        tx.onerror = function(){ res(false); };
+        tx.onabort = function(){ res(false); };
+      }catch(e){ res(false); }
+    });
+  }).catch(function(){ return false; });
+}
+function idbRead(){
+  return idbOpen().then(function(d){
+    if(!d) return null;
+    return new Promise(function(res){
+      try{
+        var tx = d.transaction("state", "readonly");
+        var rq = tx.objectStore("state").get(KEY);
+        rq.onsuccess = function(){
+          try{ res(rq.result ? JSON.parse(rq.result) : null); }catch(e){ res(null); }
+        };
+        rq.onerror = function(){ res(null); };
+      }catch(e){ res(null); }
+    });
+  }).catch(function(){ return null; });
+}
+
+/* ── الواجهة المستعملة في التطبيق ── */
 function readStore(){
-  try{ var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; }
-  catch(e){ return memFallback; }
+  var o = lsRead();
+  if(o) return o;
+  return memFallback;
 }
 function writeStore(o){
   memFallback = o;
-  try{ localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){}
+  o.updated = Date.now();
+  var ok = lsWrite(o);
+  if(ok){ storeAt = o.updated; }
+
+  /* إن أقلعنا بحالة جديدة فارغة، فقد يكون في IndexedDB سجلٌّ ناجٍ
+     من تنظيف localStorage — لا تكتب فوقه قبل أن يفحصه hydrate */
+  if(hydrating && bootFresh){
+    if(ok !== storeOK){ storeOK = ok; storeBanner(); }
+    if(ok) storeMsg = "";
+    return ok;
+  }
+
+  idbWrite(o).then(function(ok2){
+    /* يكفي نجاح إحدى الطبقتين لاعتبار الحفظ سليمًا */
+    var good = ok || ok2;
+    if(ok2 && !ok) storeAt = o.updated;
+    if(good !== storeOK){ storeOK = good; storeBanner(); }
+    if(good) storeMsg = "";
+    storeBanner();
+  });
+  if(!ok && storeOK){ storeOK = false; storeBanner(); }
+  else if(ok && !storeOK){ storeOK = true; storeMsg = ""; storeBanner(); }
+  return ok;
+}
+
+/* ── تنبيه ظاهر حين يتعذّر الحفظ ── */
+function storeBanner(){
+  var b = document.getElementById("storeWarn");
+  if(b){
+    b.hidden = storeOK;
+    if(!storeOK){
+      b.querySelector(".sw-why").textContent = (storeMsg ||
+        "المتصفّح يمنع الحفظ على هذا الجهاز.") +
+        " — صدّر نسخة احتياطيّة الآن من صفحة «المزيد».";
+    }
+  }
+  var st = document.getElementById("storeStat");
+  if(st){
+    st.className = storeOK ? "sstat" : "sstat bad";
+    st.querySelector("span").textContent = storeOK
+      ? ("محفوظ على هذا الجهاز" + (storeAt ? " — آخر حفظ " + savedAgo(storeAt) : ""))
+      : (storeMsg || "تعذّر الحفظ على هذا الجهاز");
+  }
+}
+function savedAgo(t){
+  var m = Math.floor((Date.now() - t) / 60000);
+  if(m < 1) return "الآن";
+  if(m < 60) return "قبل " + mins(m);
+  var d = new Date(t), tk = key(d);
+  var hh = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  return (tk === key(new Date()) ? "اليوم " : tk + " ") + hh;
+}
+function mins(n){
+  if(n === 1) return "دقيقة";
+  if(n === 2) return "دقيقتين";
+  if(n <= 10) return n + " دقائق";
+  return n + " دقيقة";
+}
+
+/* ── عند الإقلاع: اعتمد الأحدث بين الطبقتين ── */
+function hydrate(){
+  idbRead().then(function(o){
+    var mine   = (S && S.updated) || 0;
+    var theirs = (o && o.updated) || 0;
+    var usable = !!(o && o.tasks);
+    /* إن أقلعنا بحالة جديدة فأي سجلّ ناجٍ أولى مهما كانت الطوابع */
+    if(usable && (bootFresh || theirs > mine)){
+      S = o;
+      S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
+      if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
+      if(!S.start) S.start = key(new Date());
+      hydrating = false;
+      lsWrite(S);
+      renderAll();
+      toast("↩︎ استُعيد سجلّك من النسخة المحفوظة");
+    } else {
+      hydrating = false;
+      idbWrite(S);   /* أعِد ملء IndexedDB من الأحدث */
+    }
+    storeBanner();
+  }).catch(function(){ hydrating = false; });
+  /* اطلب تخزينًا دائمًا حيث يُتاح — يمنع التنظيف التلقائيّ */
+  try{
+    if(navigator.storage && navigator.storage.persist) navigator.storage.persist();
+  }catch(e){}
 }
 
 /* ═══════════════ التواريخ ═══════════════ */
@@ -1300,6 +1505,7 @@ var PICK_EM = ["⭐","🏃","💧","🌿","✍️","🧠","🍎","💤","🧹","
 /* ═══════════════ الحالة ═══════════════ */
 var S = readStore();
 if(!S || !S.tasks){
+  bootFresh = true;
   S = {
     v:1,
     start: key(new Date()),
@@ -1309,11 +1515,13 @@ if(!S || !S.tasks){
     notes:{},
     theme:null
   };
-  writeStore(S);
 }
 S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
 if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
 if(!S.start) S.start = key(new Date());
+if(S.updated) storeAt = S.updated;
+/* اكتب الحالة الجديدة كاملةً بعد استيفاء حقولها */
+if(bootFresh) writeStore(S);
 
 function save(){ writeStore(S); }
 function activeTasks(){ return S.tasks.filter(function(t){ return t.on !== false; }); }
@@ -1906,6 +2114,7 @@ function renderPick(){
 
 function renderMore(){
   renderPick();
+  renderBackupNote();
   var box = el("tkManage"); box.innerHTML = "";
   S.tasks.forEach(function(t){
     var row = document.createElement("div");
@@ -1917,6 +2126,19 @@ function renderMore(){
       (t.custom ? '<button class="x" data-del="'+esc(t.id)+'" aria-label="حذف">✕</button>' : "");
     box.appendChild(row);
   });
+}
+
+/* متى آخر نسخة احتياطيّة؟ تذكيرٌ لطيف لا إنذار */
+function renderBackupNote(){
+  var n = el("bkNote"); if(!n) return;
+  if(!S.backupAt){
+    n.textContent = "لم تأخذ نسخة احتياطيّة بعد — خذ واحدة واحفظها في الملفّات أو أرسلها لنفسك.";
+    n.style.color = "var(--warn)";
+    return;
+  }
+  var d = Math.floor((Date.now() - S.backupAt) / 86400000);
+  n.textContent = "آخر نسخة احتياطيّة: " + (d <= 0 ? "اليوم" : "قبل " + days(d)) + ".";
+  n.style.color = d >= 30 ? "var(--warn)" : "var(--ink-3)";
 }
 
 
@@ -3356,6 +3578,7 @@ function dbtSave(){
 /* ═══════════════ التحديث الشامل ═══════════════ */
 function renderAll(){
   renderToday(); renderWeek(); renderMonth(); renderDebts(); renderMore();
+  storeBanner();
 }
 
 /* ═══════════════ الأحداث ═══════════════ */
@@ -3534,6 +3757,7 @@ el("expBtn").onclick = function(){
     a.href = url; a.download = "asas-" + key(new Date()) + ".json";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    S.backupAt = Date.now(); save(); renderBackupNote();
     toast("💾 تمّ تصدير النسخة");
   }catch(err){ toast("⚠️ تعذّر التصدير في هذا المتصفّح"); }
 };
@@ -3728,6 +3952,14 @@ try{ vidVoiceInit(); }catch(e){}
 
 applyTheme();
 renderAll();
+storeBanner();
+hydrate();
+
+/* احفظ ما في الذاكرة قبل أن تُخفى الصفحة — تأمينٌ أخير */
+document.addEventListener("pagehide", function(){ try{ lsWrite(S); }catch(e){} });
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){ try{ lsWrite(S); }catch(e){} }
+});
 
 })();
 </script>
