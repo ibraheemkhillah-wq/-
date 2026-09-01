@@ -275,18 +275,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   border-color:color-mix(in srgb,var(--gold) 42%,var(--line));
   background:color-mix(in srgb,var(--gold) 6%,var(--surface));
 }
-.tick{
-  width:29px;height:29px;flex:none;border-radius:50%;
-  border:2px solid var(--line);
-  display:grid;place-items:center;
-  transition:border-color .2s, background .2s, transform .2s;
-}
-.tick svg{width:15px;height:15px;stroke:#fff;stroke-width:3;fill:none;
-  stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .3s ease .05s;}
-.task.done .tick{background:var(--gold);border-color:var(--gold);animation:tickpop .38s cubic-bezier(.34,1.7,.5,1) both;}
 @keyframes tickpop{0%{transform:scale(.72);}55%{transform:scale(1.24);}100%{transform:scale(1.06);}}
-.task.done .tick svg{stroke-dashoffset:0;}
 .t-em{
   width:40px;height:40px;flex:none;border-radius:13px;
   background:var(--surface-2);
@@ -304,6 +293,81 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 }
 .pill.gold{background:var(--gold-wash);color:var(--gold-2);}
 .pill.warn{background:color-mix(in srgb,var(--warn) 15%,var(--surface));color:var(--warn);}
+
+/* ═══════════════ الشخصان ═══════════════ */
+/* لكل شخص لونه: إبراهيم ذهبيّ كهويّة أساس، ونور لازورديّ يقابله */
+:root{ --m-ib:var(--gold); --m-ib-2:var(--gold-2); --m-ib-w:var(--gold-wash);
+       --m-nr:#2f6f8f;    --m-nr-2:#215268;    --m-nr-w:#d7e9f1; }
+
+.whobar{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:5px;
+  margin:0 14px 12px;padding:4px;
+  background:var(--surface-2);border-radius:13px;
+}
+.whobar button{
+  padding:8px 4px;border-radius:9px;
+  font-family:var(--font-body);font-size:.82rem;font-weight:700;
+  color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:background .18s, color .18s, box-shadow .18s;
+}
+.whobar button .em{margin-inline-end:3px;}
+.whobar button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);}
+.whobar button.on[data-who="ib"]{color:var(--m-ib-2);}
+.whobar button.on[data-who="nr"]{color:var(--m-nr-2);}
+.whobar[hidden]{display:none;}
+
+/* علامتا التنفيذ في صفّ المهمّة */
+.t-marks{display:flex;align-items:center;gap:7px;flex:none;}
+.mark{
+  width:34px;height:34px;flex:none;border-radius:50%;
+  border:2px solid var(--line);background:var(--surface);
+  display:grid;place-items:center;position:relative;
+  transition:border-color .2s, background .2s, transform .2s;
+}
+.mark:active{transform:scale(.88);}
+.mark .ini{
+  font-size:.88rem;font-weight:800;color:var(--ink-3);line-height:1;
+  transition:opacity .18s, transform .18s;
+}
+.mark svg{
+  position:absolute;width:16px;height:16px;stroke:#fff;stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;opacity:0;
+  transition:stroke-dashoffset .3s ease .04s, opacity .12s;
+}
+.mark.on{animation:tickpop .38s cubic-bezier(.34,1.7,.5,1) both;}
+.mark.on .ini{opacity:0;transform:scale(.6);}
+.mark.on svg{stroke-dashoffset:0;opacity:1;}
+.mark[data-who="ib"].on{background:var(--m-ib);border-color:var(--m-ib);}
+.mark[data-who="nr"].on{background:var(--m-nr);border-color:var(--m-nr);}
+
+/* حالة الصفّ: تامّ للجميع، أو بعضه */
+.task.part{border-color:color-mix(in srgb,var(--ink-3) 30%,var(--line));}
+.task.part .t-em{background:var(--surface-3);}
+
+/* بطاقة مقارنة الشخصين */
+.vs{display:flex;flex-direction:column;gap:9px;}
+.vs-row{display:flex;align-items:center;gap:10px;}
+.vs-row .who{
+  width:76px;flex:none;font-size:.8rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.vs-row .bar{flex:1;height:9px;border-radius:6px;background:var(--surface-2);overflow:hidden;}
+.vs-row .bar i{display:block;height:100%;border-radius:6px;transition:width .5s cubic-bezier(.3,1,.4,1);}
+.vs-row[data-who="ib"] .bar i{background:var(--m-ib);}
+.vs-row[data-who="nr"] .bar i{background:var(--m-nr);}
+.vs-row .vl{
+  width:62px;flex:none;text-align:end;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.82rem;font-weight:800;
+}
+
+/* ملاحظة لكل شخص */
+.note-who{
+  font-size:.72rem;font-weight:700;color:var(--ink-3);
+  margin:9px 2px 4px;display:flex;align-items:center;gap:5px;
+}
+.note-who:first-child{margin-top:0;}
 
 /* ═══════════════ الملاحظة ═══════════════ */
 .note textarea{
@@ -350,6 +414,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 .dot:active{transform:scale(.86);}
 .dot.on{background:var(--gold);}
 .dot.on::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--surface);opacity:.85;}
+.dot.half::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--surface);opacity:.55;}
 .dot.future{opacity:.32;pointer-events:none;}
 .dot.now{border-color:var(--ink-3);}
 
@@ -423,6 +488,29 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 .verdict.lo{background:color-mix(in srgb,var(--warn) 11%,var(--surface));color:var(--warn);}
 
 /* ═══════════════ صفحة المزيد ═══════════════ */
+.who-edit{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 0;border-top:1px solid var(--line);
+}
+.who-edit:first-child{border-top:0;padding-top:2px;}
+.who-edit .av{
+  width:38px;height:38px;flex:none;border-radius:12px;
+  display:grid;place-items:center;font-size:1.15rem;
+}
+.who-edit[data-who="ib"] .av{background:var(--m-ib-w);}
+.who-edit[data-who="nr"] .av{background:var(--m-nr-w);}
+.who-edit input{
+  flex:1;min-width:0;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:9px 11px;
+  font-family:var(--font-body);font-size:.9rem;color:var(--ink);direction:rtl;
+}
+.who-edit input:focus{outline:none;border-color:var(--lapis);}
+.who-edit .st{
+  flex:none;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.76rem;font-weight:700;color:var(--ink-3);white-space:nowrap;
+}
+
 .rowbtn{
   display:flex;align-items:center;gap:11px;width:100%;
   padding:12px 3px;border-top:1px solid var(--line);
@@ -666,6 +754,26 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 .rpt-head .ttl span{display:block;font-size:.8rem;color:#5a6175;margin-top:2px;}
 .rpt-head .per{text-align:left;font-size:.72rem;color:#5a6175;line-height:1.6;flex:none;}
 .rpt-head .per b{display:block;font-size:.88rem;color:#141824;}
+.rpt-head .ttl .who{
+  display:inline-block;margin-top:4px;padding:2px 9px;border-radius:20px;
+  background:#f0e3c4;color:#7d551a;font-size:.72rem;font-weight:700;
+}
+
+/* مقارنة الشخصين داخل التقرير */
+.rpt-vs{display:flex;flex-direction:column;gap:9px;}
+.rpt-vs-row{display:flex;align-items:center;gap:9px;font-size:.78rem;}
+.rpt-vs-row .nm{width:104px;flex:none;font-weight:700;color:#141824;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rpt-vs-row .tr{flex:1;height:10px;border-radius:6px;background:#e7ebf3;overflow:hidden;}
+.rpt-vs-row .tr i{display:block;height:100%;border-radius:6px;}
+.rpt-vs-row .tr i.ib{background:#9a6f22;}
+.rpt-vs-row .tr i.nr{background:#2f6f8f;}
+.rpt-vs-row .vl{width:46px;flex:none;text-align:end;font-weight:800;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;color:#141824;}
+.rpt-vs-row .vl.hi{color:#2c6b50;} .rpt-vs-row .vl.mid{color:#9a6f22;} .rpt-vs-row .vl.lo{color:#9c4a2c;}
+.rpt-vs-row .nb{flex:none;font-size:.7rem;color:#5a6175;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.rpt-vs-v{margin:10px 0 0;font-size:.78rem;color:#5a6175;line-height:1.7;}
 
 .rpt-sec{margin-top:20px;}
 .rpt-sec > h3{
@@ -777,6 +885,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   .rpt-sec, .rpt-rec, .rpt-day, .rpt-note{ break-inside:avoid; page-break-inside:avoid; }
   .rpt-tbl tr{ break-inside:avoid; page-break-inside:avoid; }
   .rpt-head, .rpt-sec > h3{ break-after:avoid; page-break-after:avoid; }
+  .rpt-vs-row, .rpt-day{ break-inside:avoid; page-break-inside:avoid; }
 }
 
 
@@ -924,6 +1033,12 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   </button>
 </header>
 
+<nav class="whobar" id="whoBar" role="tablist" aria-label="لمن هذه المتابعة">
+  <button data-who="ib" role="tab"><span class="em">🕌</span><span class="nm">إبراهيم</span></button>
+  <button data-who="nr" role="tab"><span class="em">🌸</span><span class="nm">نور</span></button>
+  <button data-who="both" role="tab" class="on"><span class="em">👥</span><span class="nm">كلاهما</span></button>
+</nav>
+
 <div class="storewarn" id="storeWarn" hidden role="alert">
   <span class="sw-ic">⚠️</span>
   <span class="sw-tx">
@@ -997,7 +1112,7 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   <div class="card note">
     <h3 class="card-t">✍️ ملاحظة اليوم</h3>
     <p class="card-s">خاطرة، دعاء، أو ما قرأته اليوم</p>
-    <textarea id="noteBox" placeholder="اكتب هنا…" rows="3"></textarea>
+    <div id="noteWrap"></div>
   </div>
 </section>
 
@@ -1023,6 +1138,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       </div>
     </div>
   </div>
+
+  <div class="card" id="wVs" hidden></div>
 
   <div class="wk-head" id="wHead"></div>
   <div id="wRows" style="display:flex;flex-direction:column;gap:8px;"></div>
@@ -1079,6 +1196,9 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <h3 class="card-t">📈 كل مهمة على حدة</h3>
     <p class="card-s">المُنجز من عدد أيام الشهر المنقضية</p>
     <div id="moBars"></div>
+  </div>
+
+  <div class="card" id="moVs" hidden>
   </div>
 
   <button class="rpt-btn" data-rpt="month">📄 تقرير الشهر — PDF</button>
@@ -1140,6 +1260,12 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       <input id="newTask" placeholder="اسم مهمة جديدة" maxlength="40">
       <button id="addTask">إضافة</button>
     </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-t">👥 الشخصان</h3>
+    <p class="card-s">كل بند مطلوبٌ منكما، ويُقيَّم كلٌّ على حِدة</p>
+    <div id="whoEdit"></div>
   </div>
 
   <div class="card">
@@ -1430,10 +1556,7 @@ function hydrate(){
     var usable = !!(o && o.tasks);
     /* إن أقلعنا بحالة جديدة فأي سجلّ ناجٍ أولى مهما كانت الطوابع */
     if(usable && (bootFresh || theirs > mine)){
-      S = o;
-      S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
-      if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
-      if(!S.start) S.start = key(new Date());
+      S = migrate(o);
       hydrating = false;
       lsWrite(S);
       renderAll();
@@ -1502,69 +1625,154 @@ var GROUPS = [
 ];
 var PICK_EM = ["⭐","🏃","💧","🌿","✍️","🧠","🍎","💤","🧹","🤲","💰","📞","🏋️","🧺"];
 
+/* ═══════════════ الأشخاص ═══════════════ */
+/* المتابعة لشخصين: كل بند مطلوبٌ من كليهما، ويُقيَّم كلٌّ منهما على حِدة */
+var PIDS = ["ib", "nr"];
+var PEOPLE_DEF = [
+  { id:"ib", name:"إبراهيم", em:"🕌" },
+  { id:"nr", name:"نور",     em:"🌸" }
+];
+
+/* ترقية سجلٍّ قديم كان لشخص واحد — يصير كلّه لإبراهيم بلا فقدِ يوم */
+var migrated = false;   /* هل غيّرت الترقيةُ الشكلَ فيلزم حفظه؟ */
+function migrate(o){
+  if(!o || !o.tasks) return o;
+  if(!o.logs){
+    migrated = true;
+    o.logs    = { ib: o.log     || {}, nr:{} };
+    o.makeups = { ib: o.makeups || {}, nr:{} };
+    o.notes   = { ib: o.notes   || {}, nr:{} };
+    delete o.log;
+    o.who = "ib";   /* سجلٌّ قائم: تبقى أرقامه كما اعتادها صاحبه */
+  }
+  PIDS.forEach(function(w){
+    o.logs[w]    = o.logs[w]    || {};
+    o.makeups[w] = o.makeups[w] || {};
+    o.notes[w]   = o.notes[w]   || {};
+  });
+  if(!o.people || o.people.length !== 2){
+    o.people = PEOPLE_DEF.map(function(x){ return Object.assign({}, x); });
+  }
+  o.people.forEach(function(x, i){
+    x.id = PIDS[i];
+    if(!x.name) x.name = PEOPLE_DEF[i].name;
+    if(!x.em)   x.em   = PEOPLE_DEF[i].em;
+  });
+  if(["ib","nr","both"].indexOf(o.who) < 0) o.who = "both";
+  if(!o.debts || !o.debts.people) o.debts = { cur:"₪", people:[] };
+  if(!o.start) o.start = key(new Date());
+  return o;
+}
+
 /* ═══════════════ الحالة ═══════════════ */
 var S = readStore();
 if(!S || !S.tasks){
   bootFresh = true;
   S = {
-    v:1,
+    v:2,
     start: key(new Date()),
     tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
-    log:{},        /* "2026-08-03": { fajr:1, wird:1 } */
-    makeups:{},    /* taskId: ["2026-08-03", ...] سجلّ التعويضات المسدّدة */
-    notes:{},
+    people: PEOPLE_DEF.map(function(x){ return Object.assign({}, x); }),
+    who:"both",           /* نطاق العرض: ib | nr | both */
+    logs:    { ib:{}, nr:{} },   /* شخص → "2026-08-03" → { fajr:1 } */
+    makeups: { ib:{}, nr:{} },   /* شخص → taskId → ["2026-08-03", ...] */
+    notes:   { ib:{}, nr:{} },   /* شخص → "2026-08-03" → نصّ */
     theme:null
   };
 }
-S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
-if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
-if(!S.start) S.start = key(new Date());
+migrate(S);
 if(S.updated) storeAt = S.updated;
-/* اكتب الحالة الجديدة كاملةً بعد استيفاء حقولها */
-if(bootFresh) writeStore(S);
+/* اكتب الشكل الجديد فورًا — سواءٌ حالةٌ جديدة أو سجلٌّ رُقِّي للتوّ */
+if(bootFresh || migrated){ S.v = 2; writeStore(S); }
 
 function save(){ writeStore(S); }
 function activeTasks(){ return S.tasks.filter(function(t){ return t.on !== false; }); }
 function taskById(id){ for(var i=0;i<S.tasks.length;i++) if(S.tasks[i].id===id) return S.tasks[i]; return null; }
-function isDone(k, id){ return !!(S.log[k] && S.log[k][id]); }
+
+/* ── الأشخاص والنطاق ── */
+function person(w){
+  for(var i=0;i<S.people.length;i++) if(S.people[i].id === w) return S.people[i];
+  return S.people[0];
+}
+function pName(w){ return person(w).name; }
+function pEm(w){ return person(w).em; }
+function scopeIds(){ return S.who === "both" ? PIDS.slice() : [S.who]; }
+function units(){ return scopeIds().length; }
+function bothMode(){ return S.who === "both"; }
+function scopeLabel(){
+  return bothMode() ? (pName("ib") + " و" + pName("nr")) : pName(S.who);
+}
+
+/* ── الإنجاز ── */
+function doneFor(k, id, w){ var L = S.logs[w]; return !!(L && L[k] && L[k][id]); }
+/* عدد من أنجزها من أهل النطاق: ٠ أو ١ (أو ٢ في «كلاهما») */
+function doneCount(k, id){
+  var m = scopeIds(), n = 0;
+  for(var i=0;i<m.length;i++) if(doneFor(k, id, m[i])) n++;
+  return n;
+}
+/* «تمّت» = أنجزها كلّ من في النطاق */
+function isDone(k, id){ return doneCount(k, id) === units(); }
+function putDone(k, id, w, on){
+  var L = S.logs[w];
+  if(!L[k]) L[k] = {};
+  if(on) L[k][id] = 1; else delete L[k][id];
+  if(Object.keys(L[k]).length === 0) delete L[k];
+}
+function setDoneFor(k, id, w, on){ putDone(k, id, w, on); save(); }
 function setDone(k, id, on){
-  if(!S.log[k]) S.log[k] = {};
-  if(on) S.log[k][id] = 1; else delete S.log[k][id];
-  if(Object.keys(S.log[k]).length === 0) delete S.log[k];
+  scopeIds().forEach(function(w){ putDone(k, id, w, on); });
   save();
 }
 function dayScore(k, tasks){
   var n = 0;
-  for(var i=0;i<tasks.length;i++) if(isDone(k, tasks[i].id)) n++;
+  for(var i=0;i<tasks.length;i++) n += doneCount(k, tasks[i].id);
   return n;
 }
+/* المقام: عدد المهامّ × عدد الأشخاص في النطاق */
+function dayTotal(tasks){ return tasks.length * units(); }
 
 /* ═══════════════ التعويضات ═══════════════ */
 /* الدَّين = عدد الأيام الماضية التي فاتت فيها المهمة − عدد التعويضات المسدَّدة */
-function debtOf(id){
+function debtOfFor(id, w){
   var t = taskById(id);
   if(!t || !t.makeup || t.on === false) return 0;
   var from = fromKey(t.since || S.start);
   var today = startOfDay(new Date());
   var missed = 0;
   for(var d = new Date(from); d < today; d = addDays(d,1)){
-    if(!isDone(key(d), id)) missed++;
+    if(!doneFor(key(d), id, w)) missed++;
   }
-  var paid = (S.makeups[id] || []).length;
+  var paid = ((S.makeups[w] || {})[id] || []).length;
   return Math.max(0, missed - paid);
 }
-function payMakeup(id){
-  if(!S.makeups[id]) S.makeups[id] = [];
-  S.makeups[id].push(key(new Date()));
+/* دَين النطاق = مجموع دَين من فيه */
+function debtOf(id){
+  var m = scopeIds(), n = 0;
+  for(var i=0;i<m.length;i++) n += debtOfFor(id, m[i]);
+  return n;
+}
+function payMakeup(id, w){
+  if(!S.makeups[w][id]) S.makeups[w][id] = [];
+  S.makeups[w][id].push(key(new Date()));
   save();
 }
 function makeupsInRange(a,b){
   var n = 0, ka = key(a), kb = key(b);
-  for(var id in S.makeups){
-    var arr = S.makeups[id];
-    for(var i=0;i<arr.length;i++) if(arr[i] >= ka && arr[i] <= kb) n++;
-  }
+  scopeIds().forEach(function(w){
+    var M = S.makeups[w] || {};
+    for(var id in M){
+      var arr = M[id];
+      for(var i=0;i<arr.length;i++) if(arr[i] >= ka && arr[i] <= kb) n++;
+    }
+  });
   return n;
+}
+/* ── الملاحظات ── */
+function noteOf(k, w){ return (S.notes[w] && S.notes[w][k]) || ""; }
+function setNote(k, w, v){
+  if(v && v.trim()) S.notes[w][k] = v; else delete S.notes[w][k];
+  save();
 }
 
 /* ═══════════════ السلاسل ═══════════════ */
@@ -1575,10 +1783,11 @@ function overallStreak(){
   var n = 0;
   var d = new Date(today);
   /* اليوم لا يكسر السلسلة إن لم يكتمل بعد */
-  if(dayScore(key(d), tasks) < tasks.length) d = addDays(d,-1);
+  var full = dayTotal(tasks);
+  if(dayScore(key(d), tasks) < full) d = addDays(d,-1);
   var guard = 0;
   while(guard++ < 3000){
-    if(dayScore(key(d), tasks) === tasks.length){ n++; d = addDays(d,-1); }
+    if(dayScore(key(d), tasks) === full){ n++; d = addDays(d,-1); }
     else break;
   }
   return n;
@@ -1587,12 +1796,25 @@ function bestStreak(){
   var tasks = activeTasks();
   if(!tasks.length) return 0;
   var from = fromKey(S.start), today = startOfDay(new Date());
-  var best = 0, cur = 0;
+  var best = 0, cur = 0, full = dayTotal(tasks);
   for(var d = new Date(from); d <= today; d = addDays(d,1)){
-    if(dayScore(key(d), tasks) === tasks.length){ cur++; if(cur>best) best = cur; }
+    if(dayScore(key(d), tasks) === full){ cur++; if(cur>best) best = cur; }
     else cur = 0;
   }
   return best;
+}
+/* سلسلة أيام شخصٍ بعينه — لا تتأثّر بالنطاق المعروض */
+function whoStreak(w){
+  var tasks = activeTasks();
+  if(!tasks.length) return 0;
+  function fullDay(k){
+    for(var i=0;i<tasks.length;i++) if(!doneFor(k, tasks[i].id, w)) return false;
+    return true;
+  }
+  var d = startOfDay(new Date()), n = 0, guard = 0;
+  if(!fullDay(key(d))) d = addDays(d,-1);
+  while(guard++ < 3000 && fullDay(key(d))){ n++; d = addDays(d,-1); }
+  return n;
 }
 function taskStreak(id){
   var today = startOfDay(new Date());
@@ -1626,6 +1848,16 @@ function tasksLeft(n){
   return "بقيت " + n + " مهمّة";
 }
 function lvl(p){ return p>=80 ? "hi" : (p>=50 ? "mid" : "lo"); }
+/* الخطاب: مفردٌ لشخصٍ واحد، ومثنّى حين يكون العرض لكليهما */
+function du(one, two){ return bothMode() ? two : one; }
+/* «٠ أيام تامّة / يومٌ تامّ / يومان تامّان …» */
+function perfectTxt(n){
+  if(n === 0) return "بلا يوم تامّ";
+  if(n === 1) return "يومٌ تامّ";
+  if(n === 2) return "يومان تامّان";
+  if(n <= 10) return ar(n) + " أيام تامّة";
+  return ar(n) + " يومًا تامًّا";
+}
 function el(id){ return document.getElementById(id); }
 function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms || 12); }catch(e){} }
 function reduced(){ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } }
@@ -1703,11 +1935,36 @@ var curDay   = startOfDay(new Date());
 var curWeek  = weekStart(new Date());
 var curMonth = (function(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
 
+/* ═══════════════ نطاق الشخص ═══════════════ */
+function renderWhoBar(){
+  var bar = el("whoBar");
+  Array.prototype.forEach.call(bar.querySelectorAll("button"), function(b){
+    var w = b.getAttribute("data-who");
+    b.classList.toggle("on", w === S.who);
+    b.setAttribute("aria-selected", w === S.who ? "true" : "false");
+    if(w !== "both"){
+      b.querySelector(".em").textContent = pEm(w);
+      b.querySelector(".nm").textContent = pName(w);
+    }
+  });
+}
+function setWho(w){
+  if(["ib","nr","both"].indexOf(w) < 0 || w === S.who) return;
+  S.who = w; save();
+  renderWhoBar(); renderAll(); buzz(10);
+  toast(w === "both" ? "👥 العرض لكليهما" : (pEm(w) + " العرض لـ" + pName(w)));
+}
+
 /* ═══════════════ عرض: اليوم ═══════════════ */
 var MSG_FULL = ["اكتمل يومك. تمّت المهامّ كلّها.","يومٌ تامّ — أحسنتَ الحفاظ عليه.","كلّ ما نويتَه أُنجز اليوم."];
 var MSG_HIGH = ["بقي القليل، أتمِمه.","أنت على وشك إتمام اليوم.","خطوة أخرى ويكتمل."];
 var MSG_MID  = ["نصف الطريق — واصِل.","السجلّ يتقدّم، لا تقف.","ما تبقّى أقرب ممّا تظنّ."];
 var MSG_LOW  = ["ابدأ بواحدة، والبقيّة تتبع.","أوّل خطوة اليوم تصنع الفرق.","لم يفت الوقت بعد."];
+/* الصيغة المثنّاة حين يكون العرض لكليهما */
+var MSG_FULL2 = ["اكتمل يومكما. تمّت المهامّ كلّها.","يومٌ تامّ — أحسنتما الحفاظ عليه.","كلّ ما نويتماه أُنجز اليوم."];
+var MSG_HIGH2 = ["بقي القليل، أتمّاه.","أنتما على وشك إتمام اليوم.","خطوة أخرى ويكتمل."];
+var MSG_MID2  = ["نصف الطريق — واصِلا.","السجلّ يتقدّم، لا تقفا.","ما تبقّى أقرب ممّا تظنّان."];
+var MSG_LOW2  = ["ابدآ بواحدة، والبقيّة تتبع.","أوّل خطوة اليوم تصنع الفرق.","لم يفت الوقت بعد."];
 function pick(arr, seed){ return arr[seed % arr.length]; }
 
 function renderToday(){
@@ -1724,7 +1981,7 @@ function renderToday(){
   el("dToday").style.visibility = isToday ? "hidden" : "visible";
   el("dNext").disabled = isFuture || isToday;
 
-  var done = dayScore(k, tasks), total = tasks.length;
+  var done = dayScore(k, tasks), total = dayTotal(tasks);
   var p = pct(done, total);
 
   var faces = done===total && total>0 ? "🎉" : p>=70 ? "🔥" : p>=40 ? "💪" : p>0 ? "🚶" : "🌱";
@@ -1740,10 +1997,10 @@ function renderToday(){
 
   var seed = curDay.getDate();
   if(total === 0){ el("mFace").textContent = "🫙"; el("mTitle").textContent = "لا مهامّ مفعّلة"; el("mMsg").textContent = "فعّل مهامّك من صفحة المزيد."; }
-  else if(done === total){ el("mTitle").textContent = "تمّ اليوم"; el("mMsg").textContent = pick(MSG_FULL, seed); }
-  else if(p >= 70){ el("mTitle").textContent = "قاربتَ الإتمام"; el("mMsg").textContent = pick(MSG_HIGH, seed); }
-  else if(p >= 40){ el("mTitle").textContent = "في منتصف اليوم"; el("mMsg").textContent = pick(MSG_MID, seed); }
-  else { el("mTitle").textContent = "بداية اليوم"; el("mMsg").textContent = pick(MSG_LOW, seed); }
+  else if(done === total){ el("mTitle").textContent = "تمّ اليوم"; el("mMsg").textContent = pick(du(MSG_FULL,MSG_FULL2), seed); }
+  else if(p >= 70){ el("mTitle").textContent = du("قاربتَ الإتمام","قاربتما الإتمام"); el("mMsg").textContent = pick(du(MSG_HIGH,MSG_HIGH2), seed); }
+  else if(p >= 40){ el("mTitle").textContent = "في منتصف اليوم"; el("mMsg").textContent = pick(du(MSG_MID,MSG_MID2), seed); }
+  else { el("mTitle").textContent = "بداية اليوم"; el("mMsg").textContent = pick(du(MSG_LOW,MSG_LOW2), seed); }
 
   /* شريط السلاسل */
   var st = overallStreak(), bs = bestStreak();
@@ -1755,16 +2012,21 @@ function renderToday(){
 
   /* تنبيه التعويض */
   var debts = [];
-  tasks.forEach(function(t){
-    if(t.makeup){ var d = debtOf(t.id); if(d>0) debts.push({ t:t, n:d }); }
+  scopeIds().forEach(function(w){
+    tasks.forEach(function(t){
+      if(!t.makeup) return;
+      var d = debtOfFor(t.id, w);
+      if(d > 0) debts.push({ t:t, n:d, w:w });
+    });
   });
   var box = el("debtBox");
   if(debts.length){
     var html = '<div class="debt-card"><h3>⏳ تذكير بالتعويض</h3>';
     debts.forEach(function(x){
-      html += '<div class="debt-row"><span class="nm">'+(x.t.em||"⭐")+' '+esc(x.t.name)+'</span>'+
+      html += '<div class="debt-row"><span class="nm">'+(x.t.em||"⭐")+' '+esc(x.t.name)+
+              (bothMode() ? ' <span class="pill">'+pEm(x.w)+' '+esc(pName(x.w))+'</span>' : '')+'</span>'+
               '<span class="ct">'+days(x.n)+'</span>'+
-              '<button data-pay="'+esc(x.t.id)+'">سدّدت واحدة</button></div>';
+              '<button data-pay="'+esc(x.t.id)+'" data-payw="'+x.w+'">سدّدت واحدة</button></div>';
     });
     html += '</div>';
     box.innerHTML = html;
@@ -1786,11 +2048,10 @@ function renderToday(){
     head.innerHTML = '<span>'+g.em+' '+esc(g.label)+'</span><i></i>';
     wrap.appendChild(head);
     inG.forEach(function(t){
-      var on = isDone(k, t.id);
-      var b = document.createElement("button");
-      b.className = "task" + (on ? " done" : "");
-      b.setAttribute("data-toggle", t.id);
-      b.setAttribute("aria-pressed", on ? "true" : "false");
+      var m = scopeIds();
+      var n = doneCount(k, t.id);
+      var b = document.createElement("div");
+      b.className = "task" + (n === m.length ? " done" : (n > 0 ? " part" : ""));
       var strk = taskStreak(t.id);
       var meta = "";
       if(strk > 1) meta += '<span class="pill gold">'+streakTxt(strk)+'</span>';
@@ -1800,17 +2061,42 @@ function renderToday(){
           ? '<span class="pill warn">تعويض '+ar(d)+'</span>'
           : '<span class="pill">تعويض</span>';
       }
+      /* علامة لكل شخص في النطاق — فيصحّ أن ينجزها أحدهما دون الآخر */
+      var marks = m.map(function(w){
+        var mo = doneFor(k, t.id, w);
+        return '<button class="mark'+(mo?" on":"")+'" data-who="'+w+'" data-mark="'+esc(t.id)+'"'+
+          ' role="switch" aria-checked="'+(mo?"true":"false")+'"'+
+          ' aria-label="'+esc(pName(w))+' — '+esc(t.name)+'">'+
+          '<span class="ini">'+pEm(w)+'</span>'+
+          '<svg viewBox="0 0 24 24"><path d="m5 13 4.5 4.5L19 7"/></svg></button>';
+      }).join("");
       b.innerHTML =
         '<span class="t-em">'+(t.em || "⭐")+'</span>'+
         '<span class="t-body"><span class="t-name">'+esc(t.name)+'</span>'+
         (meta ? '<span class="t-meta">'+meta+'</span>' : '')+'</span>'+
-        '<span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4.5 4.5L19 7"/></svg></span>';
+        '<span class="t-marks">'+marks+'</span>';
       wrap.appendChild(b);
     });
     list.appendChild(wrap);
   });
 
-  el("noteBox").value = S.notes[k] || "";
+  /* ملاحظة لكل شخص في النطاق */
+  var nw = el("noteWrap"); nw.innerHTML = "";
+  scopeIds().forEach(function(w){
+    if(bothMode()){
+      var lab = document.createElement("div");
+      lab.className = "note-who";
+      lab.innerHTML = '<span>'+pEm(w)+'</span><span>'+esc(pName(w))+'</span>';
+      nw.appendChild(lab);
+    }
+    var ta = document.createElement("textarea");
+    ta.rows = 3;
+    ta.placeholder = "اكتب هنا…";
+    ta.setAttribute("data-note", w);
+    ta.value = noteOf(k, w);
+    nw.appendChild(ta);
+  });
+
   el("hdrDate").textContent = DAY_LONG[dowIndex(today)] + " · " + gDate(today);
 }
 
@@ -1826,8 +2112,10 @@ function weekStats(ws){
   var today = startOfDay(new Date());
   var start = fromKey(S.start);
   var days = [], done = 0, total = 0, perfect = 0, counted = 0;
-  var per = {};
+  var per = {}, byWho = {};
+  var full = dayTotal(tasks);
   tasks.forEach(function(t){ per[t.id] = 0; });
+  PIDS.forEach(function(w){ byWho[w] = { done:0, total:0, perfect:0 }; });
 
   for(var i=0;i<7;i++){
     var d = addDays(ws, i), k = key(d);
@@ -1836,14 +2124,22 @@ function weekStats(ws){
     days.push({ d:d, k:k, score:sc, future:future });
     if(!future && !before){
       counted++;
-      done += sc; total += tasks.length;
-      if(tasks.length && sc === tasks.length) perfect++;
+      done += sc; total += full;
+      if(tasks.length && sc === full) perfect++;
+      PIDS.forEach(function(w){
+        var n = 0;
+        tasks.forEach(function(t){ if(doneFor(k, t.id, w)) n++; });
+        byWho[w].done += n; byWho[w].total += tasks.length;
+        if(tasks.length && n === tasks.length) byWho[w].perfect++;
+      });
     }
-    if(!future){ tasks.forEach(function(t){ if(isDone(k, t.id)) per[t.id]++; }); }
+    if(!future){ tasks.forEach(function(t){ per[t.id] += doneCount(k, t.id); }); }
   }
+  PIDS.forEach(function(w){ byWho[w].pct = pct(byWho[w].done, byWho[w].total); });
   return {
     ws:ws, days:days, done:done, total:total, perfect:perfect,
-    counted:counted, per:per, pct:pct(done,total),
+    counted:counted, per:per, byWho:byWho, units:units(),
+    perDenom: 7 * units(), pct:pct(done,total),
     ended: addDays(ws,6) < today,
     makeups: makeupsInRange(ws, addDays(ws,6))
   };
@@ -1880,25 +2176,28 @@ function renderWeek(){
 
   var rows = el("wRows"); rows.innerHTML = "";
   if(!tasks.length){ rows.innerHTML = '<div class="empty">لا مهامّ مفعّلة.</div>'; }
+  var den = st.perDenom;
   tasks.forEach(function(t){
     var n = st.per[t.id];
-    var p = pct(n, 7);
+    var p = pct(n, den);
     var row = document.createElement("div");
     row.className = "wk-row";
     var dots = "";
     st.days.forEach(function(x){
-      var on = isDone(x.k, t.id);
-      dots += '<button class="dot'+(on?" on":"")+(x.future?" future":"")+
+      var c = doneCount(x.k, t.id);
+      dots += '<button class="dot'+(c===st.units?" on":(c>0?" half":""))+(x.future?" future":"")+
               (key(x.d)===key(today)?" now":"")+'" data-wd="'+x.k+'" data-wt="'+esc(t.id)+'"'+
+              (c>0 && c<st.units ? ' style="'+dotSplit(x.k, t.id)+'"' : '')+
               ' aria-label="'+esc(t.name)+'"></button>';
     });
     row.innerHTML =
       '<div class="wk-row-t"><span class="nm">'+(t.em||"⭐")+' '+esc(t.name)+'</span>'+
-      '<span class="tl lv-'+lvl(p)+'">'+ar(n)+' / 7</span></div>'+
+      '<span class="tl lv-'+lvl(p)+'">'+ar(n)+' / '+ar(den)+'</span></div>'+
       '<div class="dots">'+dots+'</div>';
     rows.appendChild(row);
   });
 
+  renderVs(el("wVs"), st, "week");
   renderReview(el("wReview"), st, tasks, "week");
 }
 
@@ -1910,7 +2209,9 @@ function monthStats(m0){
   var y = m0.getFullYear(), mo = m0.getMonth();
   var len = new Date(y, mo+1, 0).getDate();
   var per = {}; tasks.forEach(function(t){ per[t.id] = 0; });
+  var byWho = {}; PIDS.forEach(function(w){ byWho[w] = { done:0, total:0, perfect:0 }; });
   var days = [], done = 0, total = 0, perfect = 0, counted = 0, bestDay = null;
+  var full = dayTotal(tasks);
 
   for(var i=1;i<=len;i++){
     var d = new Date(y, mo, i), k = key(d);
@@ -1918,17 +2219,25 @@ function monthStats(m0){
     var sc = dayScore(k, tasks);
     days.push({ d:d, k:k, score:sc, future:future });
     if(!future){
-      tasks.forEach(function(t){ if(isDone(k, t.id)) per[t.id]++; });
+      tasks.forEach(function(t){ per[t.id] += doneCount(k, t.id); });
       if(!before){
-        counted++; done += sc; total += tasks.length;
-        if(tasks.length && sc === tasks.length) perfect++;
+        counted++; done += sc; total += full;
+        if(tasks.length && sc === full) perfect++;
         if(!bestDay || sc > bestDay.score) bestDay = { d:d, score:sc };
+        PIDS.forEach(function(w){
+          var n = 0;
+          tasks.forEach(function(t){ if(doneFor(k, t.id, w)) n++; });
+          byWho[w].done += n; byWho[w].total += tasks.length;
+          if(tasks.length && n === tasks.length) byWho[w].perfect++;
+        });
       }
     }
   }
+  PIDS.forEach(function(w){ byWho[w].pct = pct(byWho[w].done, byWho[w].total); });
   return {
     m0:m0, len:len, days:days, done:done, total:total, perfect:perfect,
-    counted:counted, per:per, pct:pct(done,total), bestDay:bestDay,
+    counted:counted, per:per, byWho:byWho, units:units(),
+    pct:pct(done,total), bestDay:bestDay,
     ended: new Date(y, mo+1, 0) < today,
     makeups: makeupsInRange(new Date(y,mo,1), new Date(y,mo,len))
   };
@@ -1969,7 +2278,7 @@ function renderMonth(){
   }
   st.days.forEach(function(x){
     var b = document.createElement("button");
-    var r = tasks.length ? x.score / tasks.length : 0;
+    var r = tasks.length ? x.score / dayTotal(tasks) : 0;
     var cls = "cell";
     if(x.future) cls += " fut";
     if(r > 0) cls += " f";
@@ -1987,7 +2296,7 @@ function renderMonth(){
 
   /* أشرطة المهام */
   var bars = el("moBars"); bars.innerHTML = "";
-  var elapsed = Math.max(st.counted, 1);
+  var elapsed = Math.max(st.counted, 1) * st.units;
   if(!tasks.length){ bars.innerHTML = '<div class="empty">لا مهامّ مفعّلة.</div>'; }
   tasks.forEach(function(t){
     var n = st.per[t.id], p = pct(n, elapsed);
@@ -2000,7 +2309,44 @@ function renderMonth(){
     bars.appendChild(row);
   });
 
+  renderVs(el("moVs"), st, "month");
   renderReview(el("moReview"), st, tasks, "month");
+}
+
+/* تدرّج النقطة حين ينجزها أحدهما دون الآخر — الأيمن لإبراهيم */
+function dotSplit(k, id){
+  var a = doneFor(k, id, "ib") ? "var(--m-ib)" : "var(--surface-2)";
+  var b = doneFor(k, id, "nr") ? "var(--m-nr)" : "var(--surface-2)";
+  return "background:linear-gradient(to left," + a + " 50%," + b + " 50%)";
+}
+
+/* بطاقة المقارنة بين الشخصين — تظهر في نطاق «كلاهما» وحده */
+function renderVs(node, st, mode){
+  if(!node) return;
+  if(!bothMode() || !st.counted){ node.hidden = true; node.innerHTML = ""; return; }
+  node.hidden = false;
+  var rows = PIDS.map(function(w){
+    var b = st.byWho[w];
+    return '<div class="vs-row" data-who="'+w+'">'+
+      '<span class="who">'+pEm(w)+' '+esc(pName(w))+'</span>'+
+      '<span class="bar"><i style="width:'+b.pct+'%"></i></span>'+
+      '<span class="vl lv-'+lvl(b.pct)+'">'+ar(b.pct)+'٪</span></div>';
+  }).join("");
+  var ib = st.byWho.ib, nr = st.byWho.nr;
+  var gap = Math.abs(ib.pct - nr.pct);
+  var verdict = gap <= 5
+    ? "متقاربان — تسيران معًا في هذه الفترة."
+    : (ib.pct > nr.pct ? pName("ib") : pName("nr")) + " أعلى بـ" + ar(gap) + "٪ في هذه الفترة.";
+  node.innerHTML =
+    '<h3 class="card-t">👥 مقارنة</h3>' +
+    '<p class="card-s">' + esc(verdict) + '</p>' +
+    '<div class="vs">' + rows + '</div>' +
+    '<p class="card-s" style="margin:10px 0 0">' +
+      esc(pName("ib")) + ": " + ar(ib.done) + " من " + ar(ib.total) +
+      "، " + perfectTxt(ib.perfect) + " — " +
+      esc(pName("nr")) + ": " + ar(nr.done) + " من " + ar(nr.total) +
+      "، " + perfectTxt(nr.perfect) +
+    '</p>';
 }
 
 /* ═══════════════ المراجعة التلقائية ═══════════════ */
@@ -2014,7 +2360,7 @@ function renderReview(node, st, tasks, mode){
 
   /* ترتيب المهام */
   var arr = tasks.map(function(t){
-    var d = mode === "week" ? 7 : st.counted;
+    var d = (mode === "week" ? 7 : st.counted) * st.units;
     return { t:t, n:st.per[t.id], p:pct(st.per[t.id], d), d:d };
   }).sort(function(a,b){ return b.p - a.p; });
 
@@ -2022,38 +2368,45 @@ function renderReview(node, st, tasks, mode){
   var v = document.createElement("div");
   var p = st.pct;
   v.className = "verdict " + lvl(p);
-  v.textContent = p >= 85 ? "🏆 التزامٌ عالٍ هذا " + unit + " — حافِظ على هذا الإيقاع."
+  v.textContent = p >= 85 ? "🏆 التزامٌ عالٍ هذا " + unit + du(" — حافِظ على هذا الإيقاع."," — حافِظا على هذا الإيقاع.")
     : p >= 60 ? "👍 " + unit + " جيّد، وفيه مساحة تُستدرَك."
-    : p >= 35 ? "⚖️ " + unit + " متذبذب — ركّز على المهامّ الثابتة أوّلًا."
-    : "🌱 " + unit + " ضعيف — ابدأ بمهمّة واحدة تثبّتها كل يوم.";
+    : p >= 35 ? "⚖️ " + unit + du(" متذبذب — ركّز على المهامّ الثابتة أوّلًا."," متذبذب — ركّزا على المهامّ الثابتة أوّلًا.")
+    : "🌱 " + unit + du(" ضعيف — ابدأ بمهمّة واحدة تثبّتها كل يوم."," ضعيف — ابدآ بمهمّة واحدة تثبّتانها كل يوم.");
   node.appendChild(v);
 
-  out.push({ e:"🎯", h:"أنجزتَ <b>"+ar(st.done)+"</b> من أصل <b>"+ar(st.total)+"</b> فرصة "+
+  out.push({ e:"🎯", h:du("أنجزتَ","أنجزتما")+" <b>"+ar(st.done)+"</b> من أصل <b>"+ar(st.total)+"</b> فرصة "+
     (st.ended ? "" : "حتى الآن ")+"— بنسبة <b>"+ar(p)+"٪</b>." });
 
   if(mode === "week"){
     out.push({ e: st.perfect >= 4 ? "🌟" : (st.perfect > 0 ? "✨" : "😔"),
-      h:"أيامٌ اكتملت فيها المهامّ كلّها: <b>"+ar(st.perfect)+"</b> من 7." });
+      h:"أيامٌ اكتملت فيها المهامّ كلّها"+(bothMode() ? " لكليكما" : "")+": <b>"+ar(st.perfect)+"</b> من 7." });
   } else {
     out.push({ e: st.perfect > 0 ? "🌟" : "😔",
       h:"أيامٌ كاملة خلال الشهر: <b>"+ar(st.perfect)+"</b> من "+ar(st.counted)+"." });
     if(st.bestDay && st.bestDay.score > 0){
-      out.push({ e:"🥇", h:"أفضل يوم: <b>"+DAY_LONG[dowIndex(st.bestDay.d)]+" "+st.bestDay.d.getDate()+"</b> بـ<b>"+ar(st.bestDay.score)+"</b> من "+ar(tasks.length)+"." });
+      out.push({ e:"🥇", h:"أفضل يوم: <b>"+DAY_LONG[dowIndex(st.bestDay.d)]+" "+st.bestDay.d.getDate()+"</b> بـ<b>"+ar(st.bestDay.score)+"</b> من "+ar(dayTotal(tasks))+"." });
     }
+  }
+
+  if(bothMode() && st.byWho){
+    var bi = st.byWho.ib, bn = st.byWho.nr, gp = Math.abs(bi.pct - bn.pct);
+    out.push({ e:"👥", h:"<b>"+esc(pName("ib"))+"</b> "+ar(bi.pct)+"٪ · <b>"+esc(pName("nr"))+"</b> "+ar(bn.pct)+"٪ — "+
+      (gp <= 5 ? "متقاربان." : "الفارق "+ar(gp)+"٪.") });
   }
 
   var top = arr[0], low = arr[arr.length-1];
   if(top && top.p > 0)
-    out.push({ e:"💪", h:"أكثر ما ثبّتّه: <b>"+(top.t.em||"⭐")+" "+esc(top.t.name)+"</b> — "+ar(top.n)+" من "+ar(top.d)+"." });
+    out.push({ e:"💪", h:du("أكثر ما ثبّتّه","أكثر ما ثبّتّماه")+": <b>"+(top.t.em||"⭐")+" "+esc(top.t.name)+"</b> — "+ar(top.n)+" من "+ar(top.d)+"." });
   if(low && low !== top)
-    out.push({ e: low.p < 50 ? "🩹" : "🔎", h:"أضعف ما لديك: <b>"+(low.t.em||"⭐")+" "+esc(low.t.name)+"</b> — "+ar(low.n)+" من "+ar(low.d)+"." });
+    out.push({ e: low.p < 50 ? "🩹" : "🔎", h:du("أضعف ما لديك","أضعف ما لديكما")+": <b>"+(low.t.em||"⭐")+" "+esc(low.t.name)+"</b> — "+ar(low.n)+" من "+ar(low.d)+"." });
 
   /* تفصيل كل مهمة على حدة في العرض الأسبوعي */
   if(mode === "week"){
     arr.forEach(function(x){
       var miss = x.d - x.n;
       if(miss <= 0) return;
-      var txt = "<b>"+(x.t.em||"⭐")+" "+esc(x.t.name)+"</b>: فاتك "+days(miss);
+      var txt = "<b>"+(x.t.em||"⭐")+" "+esc(x.t.name)+"</b>: "+
+        (bothMode() ? "فاتت "+ar(miss)+" فرصة" : "فاتك "+days(miss));
       if(x.t.makeup) txt += " — تحتاج تعويضًا";
       out.push({ e: x.p < 50 ? "⚠️" : "📌", h: txt + "." });
     });
@@ -2064,7 +2417,7 @@ function renderReview(node, st, tasks, mode){
     .map(function(t){ return { t:t, n:debtOf(t.id) }; })
     .filter(function(x){ return x.n > 0; });
   if(st.makeups > 0)
-    out.push({ e:"💧", h:"سدّدتَ <b>"+ar(st.makeups)+"</b> تعويضًا في هذه الفترة." });
+    out.push({ e:"💧", h:du("سدّدتَ","سدّدتما")+" <b>"+ar(st.makeups)+"</b> تعويضًا في هذه الفترة." });
   if(pend.length){
     var s = pend.map(function(x){ return (x.t.em||"⭐")+" "+esc(x.t.name)+" ("+ar(x.n)+")"; }).join("، ");
     out.push({ e:"⏳", h:"تعويضاتٌ ما زالت في ذمّتك: <b>"+s+"</b>." });
@@ -2115,6 +2468,7 @@ function renderPick(){
 function renderMore(){
   renderPick();
   renderBackupNote();
+  renderWhoEdit();
   var box = el("tkManage"); box.innerHTML = "";
   S.tasks.forEach(function(t){
     var row = document.createElement("div");
@@ -2124,6 +2478,23 @@ function renderMore(){
       '<span class="nm">'+(t.em||"⭐")+' '+esc(t.name)+' '+badge+'</span>'+
       '<button class="toggle'+(t.on!==false?" on":"")+'" data-tog="'+esc(t.id)+'" role="switch" aria-checked="'+(t.on!==false)+'" aria-label="تفعيل '+esc(t.name)+'"></button>'+
       (t.custom ? '<button class="x" data-del="'+esc(t.id)+'" aria-label="حذف">✕</button>' : "");
+    box.appendChild(row);
+  });
+}
+
+/* تسمية الشخصين، ولمحةٌ عن سلسلة كلٍّ منهما */
+function renderWhoEdit(){
+  var box = el("whoEdit"); if(!box) return;
+  box.innerHTML = "";
+  PIDS.forEach(function(w){
+    var row = document.createElement("div");
+    row.className = "who-edit";
+    row.setAttribute("data-who", w);
+    var st = whoStreak(w);
+    row.innerHTML =
+      '<span class="av">'+pEm(w)+'</span>'+
+      '<input data-pname="'+w+'" maxlength="18" value="'+esc(pName(w))+'" aria-label="اسم الشخص">'+
+      '<span class="st">'+(st > 0 ? "🔥 " + streakTxt(st) : "—")+'</span>';
     box.appendChild(row);
   });
 }
@@ -2244,12 +2615,16 @@ function rptTable(rows, denomLabel){
 
 /* ملاحظات الفترة */
 function rptNotes(from, to){
-  var out = [], d;
+  var out = [], d, m = scopeIds();
   for(d = new Date(from); d <= to; d = addDays(d, 1)){
-    var k = key(d), n = S.notes[k];
-    if(n && n.trim())
-      out.push('<div class="rpt-note"><b>' + DAY_LONG[dowIndex(d)] + " " + d.getDate() + " " +
-        MONTHS[d.getMonth()] + '</b>' + esc(n.trim()) + '</div>');
+    var k = key(d);
+    for(var i = 0; i < m.length; i++){
+      var n = noteOf(k, m[i]);
+      if(n && n.trim())
+        out.push('<div class="rpt-note"><b>' + DAY_LONG[dowIndex(d)] + " " + d.getDate() + " " +
+          MONTHS[d.getMonth()] + (bothMode() ? " — " + esc(pName(m[i])) : "") + '</b>' +
+          esc(n.trim()) + '</div>');
+    }
   }
   return out.length ? out.join("") : '<div class="rpt-empty">لا ملاحظات مدوّنة في هذه الفترة.</div>';
 }
@@ -2258,46 +2633,61 @@ function rptNotes(from, to){
 function rptRecs(mode, ctx){
   var r = [], p = ctx.pct;
 
-  if(p >= 85) r.push({ e:"🏆", t:"إيقاعك عالٍ — ثبّته",
-    x:"بلغتَ " + ar(p) + "٪. أنجح ما تفعله الآن هو ألّا تغيّر شيئًا؛ الاستمرار على الوتيرة نفسها أنفع من محاولة الزيادة." });
-  else if(p >= 60) r.push({ e:"📈", t:"أساسك متين وفيه فجوة تُسدّ",
-    x:"عند " + ar(p) + "٪. ارفع مهمّة واحدة ضعيفة إلى مستوى بقيّة مهامّك بدل توزيع الجهد على الكلّ." });
+  if(p >= 85) r.push({ e:"🏆", t:du("إيقاعك عالٍ — ثبّته","إيقاعكما عالٍ — ثبّتاه"),
+    x:du("بلغتَ ","بلغتما ") + ar(p) + "٪. " +
+      du("أنجح ما تفعله الآن هو ألّا تغيّر شيئًا؛","أنجح ما تفعلانه الآن هو ألّا تغيّرا شيئًا؛") +
+      " الاستمرار على الوتيرة نفسها أنفع من محاولة الزيادة." });
+  else if(p >= 60) r.push({ e:"📈", t:du("أساسك متين وفيه فجوة تُسدّ","أساسكما متين وفيه فجوة تُسدّ"),
+    x:"عند " + ar(p) + "٪. " +
+      du("ارفع مهمّة واحدة ضعيفة إلى مستوى بقيّة مهامّك","ارفعا مهمّة واحدة ضعيفة إلى مستوى بقيّة مهامّكما") +
+      " بدل توزيع الجهد على الكلّ." });
   else if(p >= 35) r.push({ e:"⚖️", t:"التذبذب هو التحدّي، لا الكسل",
-    x:"عند " + ar(p) + "٪، وأداؤك متفاوت. اختر مهمّتين ثابتتين والتزم بهما بلا استثناء قبل التفكير في الباقي." });
-  else r.push({ e:"🌱", t:"ابدأ صغيرًا واثبت",
-    x:"عند " + ar(p) + "٪. لا تحاول إتمام الثمانِ دفعة واحدة — مهمّة واحدة كل يوم لأسبوعين تبني عادة أقوى من اندفاعة تنطفئ." });
+    x:"عند " + ar(p) + "٪، " + du("وأداؤك متفاوت. اختر مهمّتين ثابتتين والتزم بهما","وأداؤكما متفاوت. اختارا مهمّتين ثابتتين والتزما بهما") +
+      " بلا استثناء قبل التفكير في الباقي." });
+  else r.push({ e:"🌱", t:du("ابدأ صغيرًا واثبت","ابدآ صغيرًا واثبتا"),
+    x:"عند " + ar(p) + "٪. " + du("لا تحاول","لا تحاولا") +
+      " إتمام الثمانِ دفعة واحدة — مهمّة واحدة كل يوم لأسبوعين تبني عادة أقوى من اندفاعة تنطفئ." });
 
   if(ctx.weak && ctx.weak.p < 70)
-    r.push({ e:"🎯", t:"ركّز على: " + ctx.weak.name,
-      x:"أضعف مهامّك — " + ar(ctx.weak.n) + " من " + ar(ctx.weak.d) + " فقط (" + ar(ctx.weak.p) + "٪). " +
-        (ctx.weak.grp === "night" ? "وهي مهمّة ليليّة، والليل مظنّة التفلّت؛ اربطها بموعد ثابت قبل النوم."
+    r.push({ e:"🎯", t:du("ركّز على: ","ركّزا على: ") + ctx.weak.name,
+      x:du("أضعف مهامّك — ","أضعف مهامّكما — ") + ar(ctx.weak.n) + " من " + ar(ctx.weak.d) + " فقط (" + ar(ctx.weak.p) + "٪). " +
+        (ctx.weak.grp === "night" ? "وهي مهمّة ليليّة، والليل مظنّة التفلّت؛ " + du("اربطها","اربطاها") + " بموعد ثابت قبل النوم."
          : ctx.weak.grp === "dawn" ? "وهي مهمّة فجريّة؛ تقديم موعد النوم ليلًا أنفع لها من أي تذكير."
-         : "اربطها بعادة قائمة عندك — بعد صلاة بعينها مثلًا — فالعادة تجرّ العادة.") });
+         : du("اربطها بعادة قائمة عندك","اربطاها بعادة قائمة عندكما") + " — بعد صلاة بعينها مثلًا — فالعادة تجرّ العادة.") });
 
   if(ctx.strong && ctx.strong.p >= 80)
-    r.push({ e:"💪", t:"أرسخ ما عندك: " + ctx.strong.name,
-      x:ar(ctx.strong.n) + " من " + ar(ctx.strong.d) + " (" + ar(ctx.strong.p) +
-        "٪). اجعلها المرساة: ألحِق بها المهمّة الضعيفة مباشرةً فتُحمل عليها." });
+    r.push({ e:"💪", t:du("أرسخ ما عندك: ","أرسخ ما عندكما: ") + ctx.strong.name,
+      x:ar(ctx.strong.n) + " من " + ar(ctx.strong.d) + " (" + ar(ctx.strong.p) + "٪). " +
+        du("اجعلها المرساة: ألحِق بها المهمّة الضعيفة","اجعلاها المرساة: ألحِقا بها المهمّة الضعيفة") +
+        " مباشرةً فتُحمل عليها." });
 
   if(ctx.debt.length){
     var tot = 0, names = ctx.debt.map(function(x){ tot += x.n; return x.name + " (" + ar(x.n) + ")"; });
-    r.push({ e:"⏳", t:"تعويضات في ذمّتك: " + ar(tot),
-      x:names.join("، ") + ". سدّد واحدة كل يوم مع وردك المعتاد حتى تُبرئ ذمّتك، ولا تؤجّلها دفعةً واحدة." });
+    r.push({ e:"⏳", t:du("تعويضات في ذمّتك: ","تعويضات في ذمّتكما: ") + ar(tot),
+      x:names.join("، ") + ". " +
+        du("سدّد واحدة كل يوم مع وردك المعتاد حتى تُبرئ ذمّتك، ولا تؤجّلها",
+           "سدّدا واحدة كل يوم مع وردكما المعتاد حتى تُبرئا ذمّتكما، ولا تؤجّلاها") + " دفعةً واحدة." });
   } else {
-    r.push({ e:"🤍", t:"ذمّتك بيضاء", x:"لا تعويضات معلّقة — وهذا في ذاته إنجاز يستحقّ أن يُحفظ." });
+    r.push({ e:"🤍", t:du("ذمّتك بيضاء","ذمّتكما بيضاء"),
+      x:"لا تعويضات معلّقة — وهذا في ذاته إنجاز يستحقّ أن يُحفظ." });
   }
 
   if(ctx.streak >= 7) r.push({ e:"🔥", t:"سلسلة " + days(ctx.streak),
-    x:"لا تكسرها. حين يضيق وقتك أدِّ الحدّ الأدنى ولا تُفوّت اليوم كاملًا — كسر السلسلة أغلى من نقص الإتقان." });
+    x:du("لا تكسرها. حين يضيق وقتك أدِّ الحدّ الأدنى ولا تُفوّت اليوم كاملًا",
+         "لا تكسراها. حين يضيق وقتكما أدّيا الحدّ الأدنى ولا تُفوّتا اليوم كاملًا") +
+      " — كسر السلسلة أغلى من نقص الإتقان." });
 
   if(mode !== "day" && ctx.worstDow)
-    r.push({ e:"📅", t:"أضعف أيامك: " + ctx.worstDow.name,
-      x:"متوسّط إنجازك فيه " + ar(ctx.worstDow.avg) + "٪ مقابل " + ar(ctx.avgDow) +
-        "٪ في بقيّة الأيام. انظر ما يميّز هذا اليوم في جدولك وهيّئ له ترتيبًا خاصًّا." });
+    r.push({ e:"📅", t:du("أضعف أيامك: ","أضعف أيامكما: ") + ctx.worstDow.name,
+      x:du("متوسّط إنجازك فيه ","متوسّط إنجازكما فيه ") + ar(ctx.worstDow.avg) + "٪ مقابل " + ar(ctx.avgDow) +
+        "٪ في بقيّة الأيام. " +
+        du("انظر ما يميّز هذا اليوم في جدولك وهيّئ","انظرا ما يميّز هذا اليوم في جدولكما وهيّئا") +
+        " له ترتيبًا خاصًّا." });
 
   if(mode !== "day" && ctx.perfect === 0)
     r.push({ e:"⭐", t:"لم يكتمل يوم واحد بعد",
-      x:"اجعل هدفك القادم يومًا واحدًا تامًّا لا أكثر. إتمام يوم كامل مرّة يكسر حاجزًا نفسيًّا يصعب وصفه." });
+      x:du("اجعل هدفك القادم يومًا","اجعلا هدفكما القادم يومًا") +
+        " واحدًا تامًّا لا أكثر. إتمام يوم كامل مرّة يكسر حاجزًا نفسيًّا يصعب وصفه." });
 
   return r;
 }
@@ -2305,8 +2695,28 @@ function rptRecs(mode, ctx){
 /* ═══ عناصر مشتركة ═══ */
 function rptHead(kind, range, hij){
   return '<div class="rpt-head">' + RPT_LOGO +
-    '<div class="ttl"><b>أساس</b><span>' + esc(kind) + '</span></div>' +
+    '<div class="ttl"><b>أساس</b><span>' + esc(kind) + '</span>' +
+    '<span class="who">' + esc(bothMode() ? "👥 " + scopeLabel() : pEm(S.who) + " " + scopeLabel()) + '</span></div>' +
     '<div class="per"><b>' + esc(range) + '</b>' + esc(hij || "") + '</div></div>';
+}
+
+/* قسم المقارنة بين الشخصين — في التقرير المشترك وحده */
+function rptVs(st){
+  if(!bothMode() || !st.counted) return "";
+  var rows = PIDS.map(function(w){
+    var b = st.byWho[w];
+    return '<div class="rpt-vs-row"><span class="nm">' + pEm(w) + " " + esc(pName(w)) + '</span>' +
+      '<span class="tr"><i class="' + w + '" style="width:' + b.pct + '%"></i></span>' +
+      '<span class="vl ' + lv(b.pct) + '">' + ar(b.pct) + '٪</span>' +
+      '<span class="nb">' + ar(b.done) + "/" + ar(b.total) + '</span>' +
+      '<span class="nb">' + perfectTxt(b.perfect) + '</span></div>';
+  }).join("");
+  var ib = st.byWho.ib, nr = st.byWho.nr, gap = Math.abs(ib.pct - nr.pct);
+  var verdict = gap <= 5
+    ? "النسبتان متقاربتان — تسيران معًا في هذه الفترة."
+    : esc(ib.pct > nr.pct ? pName("ib") : pName("nr")) + " أعلى بـ" + ar(gap) + "٪ في هذه الفترة.";
+  return rptSec("👥 " + esc(pName("ib")) + " و" + esc(pName("nr")),
+    '<div class="rpt-vs">' + rows + '</div><p class="rpt-vs-v">' + verdict + '</p>');
 }
 function rptFoot(){
   var n = new Date();
@@ -2340,7 +2750,7 @@ function dowProfile(from, to, tasks){
   for(d = new Date(from); d <= to; d = addDays(d, 1)){
     if(d > today || d < start) continue;
     var i = dowIndex(d);
-    sum[i] += pct(dayScore(key(d), tasks), tasks.length); cnt[i]++;
+    sum[i] += pct(dayScore(key(d), tasks), dayTotal(tasks)); cnt[i]++;
   }
   var avgs = [], all = 0, allN = 0;
   for(j = 0; j < 7; j++){
@@ -2354,7 +2764,7 @@ function dowProfile(from, to, tasks){
 /* ═══ التقرير اليوميّ ═══ */
 function buildDayReport(){
   var tasks = activeTasks(), k = key(curDay);
-  var done = dayScore(k, tasks), total = tasks.length, p = pct(done, total);
+  var done = dayScore(k, tasks), total = dayTotal(tasks), p = pct(done, total);
   var h = rptHead("تقرير يوميّ", DAY_LONG[dowIndex(curDay)] + " " + gDate(curDay),
         hijri(curDay, { day:"numeric", month:"long", year:"numeric" }));
 
@@ -2362,11 +2772,14 @@ function buildDayReport(){
     : p >= 70 ? "يومٌ قويّ، بقي القليل ليكتمل."
     : p >= 40 ? "يومٌ متوسّط، النصف قائم والنصف يحتاج شدّة."
     : done > 0 ? "يومٌ ضعيف، لكن البداية موجودة." : "لم يُسجَّل شيء في هذا اليوم.";
+  var vDone = du("أنجزتَ", "أنجزتما");
   h += rptSec("🎯 الخلاصة",
     '<div class="rpt-hero">' + rptRing(p) +
     '<div class="rpt-hero-txt"><p class="rpt-verdict">' + esc(msg) + '</p>' +
-    '<p>أنجزتَ <b>' + ar(done) + '</b> من <b>' + ar(total) + '</b> مهمّة. ' +
-    (done === total ? "أتمَمتَ كلّ ما نويت." : "بقيت " + ar(total - done) + " دون إنجاز.") + '</p></div></div>');
+    '<p>' + vDone + ' <b>' + ar(done) + '</b> من <b>' + ar(total) + '</b> ' +
+    du("مهمّة","فرصة") + '. ' +
+    (done === total ? du("أتمَمتَ كلّ ما نويت.","أتمَمتما كلّ ما نويتما.")
+                    : "بقيت " + ar(total - done) + " دون إنجاز.") + '</p></div></div>');
 
   var sum7 = 0, n7 = 0, i;
   for(i = 1; i <= 7; i++){
@@ -2388,11 +2801,16 @@ function buildDayReport(){
     if(!inG.length) return;
     body += '<div class="rpt-grp">' + g.em + " " + esc(g.label) + '</div>';
     inG.forEach(function(t){
-      var on = isDone(k, t.id), sk = taskStreak(t.id);
+      var sk = taskStreak(t.id), m = scopeIds();
+      var stat = m.map(function(w){
+        var o = doneFor(k, t.id, w);
+        return '<span class="st ' + (o ? "y" : "n") + '">' +
+          (bothMode() ? pEm(w) + " " : "") + (o ? "تمّ" : "فات") + '</span>';
+      }).join("");
       body += '<div class="rpt-day"><span class="em">' + (t.em || "⭐") + '</span>' +
         '<span class="nm">' + esc(t.name) + '</span>' +
         (sk > 1 ? '<span class="sk">' + streakTxt(sk) + '</span>' : '') +
-        '<span class="st ' + (on ? "y" : "n") + '">' + (on ? "تمّ" : "فات") + '</span></div>';
+        stat + '</div>';
     });
   });
   h += rptSec("✅ تفصيل المهامّ", body || '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
@@ -2403,6 +2821,16 @@ function buildDayReport(){
     bars.push({ v:dayScore(key(bd), tasks), l:DAY_SHORT[b], future: bd > today });
   }
   h += rptSec("📈 موقع اليوم من أسبوعه", rptBars(bars, total));
+  if(bothMode()){
+    var dvs = { counted:1, byWho:{} };
+    PIDS.forEach(function(w){
+      var n = 0;
+      tasks.forEach(function(x){ if(doneFor(k, x.id, w)) n++; });
+      dvs.byWho[w] = { done:n, total:tasks.length, perfect:(tasks.length && n === tasks.length ? 1 : 0),
+                       pct:pct(n, tasks.length) };
+    });
+    h += rptVs(dvs);
+  }
 
   var ctx = { tasks:tasks, pct:p, streak:streak, perfect:(p === 100 ? 1 : 0),
     debt:debtList(tasks), weak:null, strong:null, worstDow:null, avgDow:0 };
@@ -2416,10 +2844,13 @@ function buildDayReport(){
   if(srt.length){ ctx.strong = srt[0]; ctx.weak = srt[srt.length - 1]; }
   h += rptSec("💡 توصيات وملاحظات", rptRecList(rptRecs("day", ctx)));
 
-  var note = S.notes[k];
-  h += rptSec("✍️ ملاحظة اليوم", note && note.trim()
-    ? '<div class="rpt-note">' + esc(note.trim()) + '</div>'
-    : '<div class="rpt-empty">لا ملاحظة مدوّنة لهذا اليوم.</div>');
+  var nts = scopeIds().map(function(w){
+    var n = noteOf(k, w);
+    return (n && n.trim())
+      ? '<div class="rpt-note">' + (bothMode() ? '<b>' + esc(pName(w)) + '</b>' : '') + esc(n.trim()) + '</div>'
+      : "";
+  }).join("");
+  h += rptSec("✍️ ملاحظة اليوم", nts || '<div class="rpt-empty">لا ملاحظة مدوّنة لهذا اليوم.</div>');
   return h + rptFoot();
 }
 
@@ -2436,8 +2867,9 @@ function buildWeekReport(){
   h += rptSec("🎯 الخلاصة",
     '<div class="rpt-hero">' + rptRing(p) +
     '<div class="rpt-hero-txt"><p class="rpt-verdict">' + esc(msg) + '</p>' +
-    '<p>أنجزتَ <b>' + ar(st.done) + '</b> من <b>' + ar(st.total) + '</b> فرصة' +
-    (st.ended ? "" : " حتى الآن") + '، واكتملت <b>' + ar(st.perfect) + '</b> من ٧ أيام كاملةً.</p></div></div>');
+    '<p>' + du("أنجزتَ","أنجزتما") + ' <b>' + ar(st.done) + '</b> من <b>' + ar(st.total) + '</b> فرصة' +
+    (st.ended ? "" : " حتى الآن") + '، واكتمل <b>' + ar(st.perfect) + '</b> من ٧ أيام' +
+    du("", " لكليكما") + '.</p></div></div>');
 
   h += rptSec("📊 الأرقام",
     '<div class="rpt-kpis">' +
@@ -2447,13 +2879,16 @@ function buildWeekReport(){
       rptKpi(ar(st.makeups), "تعويضات سُدّدت", st.makeups ? "hi" : "") + '</div>');
 
   h += rptSec("📈 الإنجاز عبر أيام الأسبوع",
-    rptBars(st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], future:x.future }; }), tasks.length));
+    rptBars(st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], future:x.future }; }), dayTotal(tasks)));
 
+  h += rptVs(st);
+
+  var den = st.perDenom;
   var rows = tasks.map(function(t){
-    return { name:t.name, em:t.em, grp:t.grp, n:st.per[t.id], d:7, p:pct(st.per[t.id], 7) };
+    return { name:t.name, em:t.em, grp:t.grp, n:st.per[t.id], d:den, p:pct(st.per[t.id], den) };
   }).sort(function(a, b){ return b.p - a.p; });
   h += rptSec("✅ كل مهمّة على حدة",
-    rows.length ? rptTable(rows, "من ٧") : '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
+    rows.length ? rptTable(rows, "من " + ar(den)) : '<div class="rpt-empty">لا مهامّ مفعّلة.</div>');
 
   var ctx = { tasks:tasks, pct:p, streak:overallStreak(), perfect:st.perfect,
     debt:debtList(tasks), strong:rows[0] || null, weak:rows[rows.length - 1] || null,
@@ -2495,7 +2930,7 @@ function buildMonthReport(){
   });
   Object.keys(seen).sort().forEach(function(wk, i){
     var o = seen[wk];
-    wpts.push(pct(o.s, o.n * (tasks.length || 1)));
+    wpts.push(pct(o.s, o.n * (dayTotal(tasks) || 1)));
     wlbl.push("الأسبوع " + (i + 1));
   });
   if(wpts.length >= 2) h += rptSec("📈 اتّجاه الأسابيع", rptLine(wpts, wlbl));
@@ -2504,7 +2939,7 @@ function buildMonthReport(){
   DAY_SHORT.forEach(function(d){ heat += '<div class="hd">' + d + '</div>'; });
   for(i = 0; i < dowIndex(st.days[0].d); i++) heat += '<div class="cl pad"></div>';
   st.days.forEach(function(x){
-    var r = tasks.length ? x.score / tasks.length : 0, bg = "", cls = "cl";
+    var r = tasks.length ? x.score / dayTotal(tasks) : 0, bg = "", cls = "cl";
     if(!x.future && r > 0){
       if(r >= 1){ bg = "background:#9a6f22"; cls += " on"; }
       else bg = "background:rgba(154,111,34," + (0.15 + r * 0.6).toFixed(2) + ")";
@@ -2514,7 +2949,9 @@ function buildMonthReport(){
   });
   h += rptSec("🗓️ خريطة الشهر", heat + '</div>');
 
-  var elapsed = Math.max(st.counted, 1);
+  h += rptVs(st);
+
+  var elapsed = Math.max(st.counted, 1) * st.units;
   var rows = tasks.map(function(t){
     return { name:t.name, em:t.em, grp:t.grp, n:st.per[t.id], d:elapsed, p:pct(st.per[t.id], elapsed) };
   }).sort(function(a, b){ return b.p - a.p; });
@@ -2525,7 +2962,7 @@ function buildMonthReport(){
     h += rptSec("🥇 أبرز الأيام",
       '<div class="rpt-day"><span class="em">🥇</span><span class="nm">أفضل يوم — ' +
       DAY_LONG[dowIndex(st.bestDay.d)] + " " + st.bestDay.d.getDate() + " " + MONTHS[st.bestDay.d.getMonth()] +
-      '</span><span class="st y">' + ar(st.bestDay.score) + " من " + ar(tasks.length) + '</span></div>');
+      '</span><span class="st y">' + ar(st.bestDay.score) + " من " + ar(dayTotal(tasks)) + '</span></div>');
 
   var ctx = { tasks:tasks, pct:p, streak:overallStreak(), perfect:st.perfect,
     debt:debtList(tasks), strong:rows[0] || null, weak:rows[rows.length - 1] || null,
@@ -2582,10 +3019,11 @@ function seg(t, a, b){ return Math.max(0, Math.min(1, (t - a) / (b - a))); }
 /* ── بيانات الفيديو ── */
 function vidData(mode){
   var tasks = activeTasks(), today = startOfDay(new Date());
-  var D = { mode:mode, streak:overallStreak() };
+  var D = { mode:mode, streak:overallStreak(), who:scopeLabel(),
+            whoEm: bothMode() ? "👥" : pEm(S.who) };
 
   if(mode === "day"){
-    var k = key(curDay), done = dayScore(k, tasks), total = tasks.length, p = pct(done, total);
+    var k = key(curDay), done = dayScore(k, tasks), total = dayTotal(tasks), p = pct(done, total);
     D.kind = "تقرير يوميّ";
     D.period = DAY_LONG[dowIndex(curDay)] + " " + gDate(curDay);
     D.hij = hijri(curDay, { day:"numeric", month:"long", year:"numeric" });
@@ -2623,19 +3061,19 @@ function vidData(mode){
       { v:ar(st.makeups), l:"تعويضات سُدّدت" }
     ];
     D.bars = st.days.map(function(x, i){ return { v:x.score, l:DAY_SHORT[i], off:x.future }; });
-    D.barMax = tasks.length;
+    D.barMax = dayTotal(tasks);
     D.barTitle = "الإنجاز عبر الأسبوع";
     D.nDone = st.done; D.nTotal = st.total; D.nPerfect = st.perfect;
     D.verdict = st.pct >= 85 ? "أسبوعٌ عالي الالتزام"
       : st.pct >= 60 ? "أسبوعٌ جيّد وفيه فسحة"
       : st.pct >= 35 ? "أسبوعٌ متذبذب — ثبّته" : "ابدأ بمهمّة واحدة تثبتها";
-    var wd = st.ended ? 7 : Math.max(st.counted, 1);
+    var wd = (st.ended ? 7 : Math.max(st.counted, 1)) * st.units;
     D.rows = tasks.map(function(t){
       return { name:t.name, em:t.em, n:st.per[t.id], d:wd, p:pct(st.per[t.id], wd) };
     }).sort(function(a, b){ return b.p - a.p; });
   }
   else{
-    var ms = monthStats(curMonth), el2 = Math.max(ms.counted, 1);
+    var ms = monthStats(curMonth), el2 = Math.max(ms.counted, 1) * units();
     D.kind = "تقرير شهريّ";
     D.period = MONTHS[curMonth.getMonth()] + " " + curMonth.getFullYear();
     D.hij = hijri(new Date(curMonth.getFullYear(), curMonth.getMonth(), 15), { month:"long", year:"numeric" });
@@ -2656,7 +3094,7 @@ function vidData(mode){
     D.bars = []; D.barMax = 100;
     Object.keys(seen).sort().forEach(function(wk, i){
       var o = seen[wk];
-      D.bars.push({ v:pct(o.s, o.n * (tasks.length || 1)), l:String(i + 1), off:false });
+      D.bars.push({ v:pct(o.s, o.n * (dayTotal(tasks) || 1)), l:String(i + 1), off:false });
     });
     D.barTitle = "اتّجاه الأسابيع";
     D.nDone = ms.done; D.nTotal = ms.total; D.nPerfect = ms.perfect; D.nCounted = ms.counted;
@@ -2787,8 +3225,9 @@ function vidFrame(x, t, D){
     vidText(x, "أساس", cx, 925, 120, VC.ink, 700);
     x.globalAlpha = ease(s1c) * out1;
     vidText(x, D.kind, cx, 1030, 46, VC.gold, 700);
-    vidText(x, D.period, cx, 1104, 38, VC.mute, 600);
-    if(D.hij) vidText(x, D.hij, cx, 1168, 32, VC.mute, 500);
+    vidText(x, D.whoEm + " " + D.who, cx, 1104, 40, VC.ink, 700);
+    vidText(x, D.period, cx, 1170, 36, VC.mute, 600);
+    if(D.hij) vidText(x, D.hij, cx, 1230, 31, VC.mute, 500);
     x.globalAlpha = 1;
   }
 
@@ -2808,7 +3247,8 @@ function vidFrame(x, t, D){
     x.shadowBlur = 0;
     vidNum(x, Math.round(pv) + "٪", cx, ry - 10, 190, VC.ink);
     vidText(x, "نسبة الالتزام", cx, ry + 130, 44, VC.mute, 600);
-    vidText(x, D.kind + " · " + D.period, cx, 1380, 40, VC.mute, 600);
+    vidText(x, D.kind + " · " + D.who, cx, 1380, 40, VC.mute, 600);
+    vidText(x, D.period, cx, 1436, 36, VC.mute, 500);
     x.restore();
   }
 
@@ -3148,7 +3588,7 @@ function vidNarration(D){
   var kind = D.mode === "day" ? "اليوميّ" : D.mode === "week" ? "الأسبوعيّ" : "الشهريّ";
   var L = [];
 
-  L.push({ t:1.3, s:"تقرير أساس " + kind + "، " + D.period });
+  L.push({ t:1.3, s:"تقرير أساس " + kind + "، لـ" + D.who + "، " + D.period });
   L.push({ t:5.6, s:"نسبة التزامك " + D.pct + " بالمئة" });
 
   /* صيغة الجمع العربيّة تُنطق كما تُكتب — «واكتملت ١ أيام» لحنٌ ظاهر */
@@ -3577,6 +4017,7 @@ function dbtSave(){
 
 /* ═══════════════ التحديث الشامل ═══════════════ */
 function renderAll(){
+  renderWhoBar();
   renderToday(); renderWeek(); renderMonth(); renderDebts(); renderMore();
   storeBanner();
 }
@@ -3585,26 +4026,35 @@ function renderAll(){
 document.addEventListener("click", function(e){
   var t;
 
-  /* تبديل مهمة اليوم */
-  t = e.target.closest("[data-toggle]");
+  /* اختيار الشخص المعروض */
+  t = e.target.closest("[data-who]");
+  if(t && t.parentNode && t.parentNode.id === "whoBar"){
+    setWho(t.getAttribute("data-who"));
+    return;
+  }
+
+  /* تبديل مهمة اليوم — لكل شخص علامته */
+  t = e.target.closest("[data-mark]");
   if(t){
-    var id = t.getAttribute("data-toggle"), k = key(curDay);
-    var now = !isDone(k, id);
-    setDone(k, id, now);
+    var id = t.getAttribute("data-mark"), w = t.getAttribute("data-who"), k = key(curDay);
+    var now = !doneFor(k, id, w);
+    setDoneFor(k, id, w, now);
     buzz(now ? 14 : 8);
     renderAll();
     var tasks = activeTasks();
-    if(now && tasks.length && dayScore(k, tasks) === tasks.length){
+    /* هل أتمّ هذا الشخص يومه؟ */
+    var mine = 0;
+    tasks.forEach(function(x){ if(doneFor(k, x.id, w)) mine++; });
+    if(now && tasks.length && mine === tasks.length){
       celebrate();
       buzz([16, 60, 16]);
-      var stk = overallStreak();
-      if(stk === 7)        toast("🏆 أسبوع كامل بلا انقطاع — سبعة أيام!");
-      else if(stk === 30)  toast("🥇 ثلاثون يومًا متتاليًا — إنجاز نادر!");
-      else if(stk === 100) toast("👑 مئة يوم متتالٍ — أصبحت عادة راسخة!");
-      else                 toast("🎉 اكتمل اليوم — تمّت المهامّ كلّها");
-    } else if(now){
-      var left = tasks.length - dayScore(k, tasks);
-      if(left === 1) toast("🔥 بقيت مهمّة واحدة فقط!");
+      var stk = whoStreak(w);
+      if(stk === 7)        toast("🏆 " + pName(w) + " — أسبوع كامل بلا انقطاع!");
+      else if(stk === 30)  toast("🥇 " + pName(w) + " — ثلاثون يومًا متتاليًا!");
+      else if(stk === 100) toast("👑 " + pName(w) + " — مئة يوم متتالٍ!");
+      else                 toast("🎉 " + pName(w) + " أتمّ اليوم — المهامّ كلّها");
+    } else if(now && tasks.length - mine === 1){
+      toast("🔥 " + pName(w) + " — بقيت مهمّة واحدة فقط!");
     }
     return;
   }
@@ -3612,10 +4062,11 @@ document.addEventListener("click", function(e){
   /* سداد تعويض */
   t = e.target.closest("[data-pay]");
   if(t){
-    var pid = t.getAttribute("data-pay");
-    payMakeup(pid); buzz(16); renderAll();
-    var left = debtOf(pid);
-    toast(left > 0 ? "💧 سُجّل التعويض — بقي " + days(left) : "🤍 سُجّل التعويض — ذمّتك بيضاء");
+    var pid = t.getAttribute("data-pay"), pw = t.getAttribute("data-payw") || scopeIds()[0];
+    payMakeup(pid, pw); buzz(16); renderAll();
+    var left = debtOfFor(pid, pw);
+    toast(left > 0 ? "💧 سُجّل التعويض — بقي " + days(left) + " على " + pName(pw)
+                   : "🤍 سُجّل التعويض — ذمّة " + pName(pw) + " بيضاء");
     return;
   }
 
@@ -3623,7 +4074,14 @@ document.addEventListener("click", function(e){
   t = e.target.closest("[data-wd]");
   if(t){
     var dk = t.getAttribute("data-wd"), tid = t.getAttribute("data-wt");
-    setDone(dk, tid, !isDone(dk, tid));
+    /* في «كلاهما»: تدور على لا أحد ← إبراهيم ← كلاهما ← لا أحد */
+    if(bothMode()){
+      var ci = doneFor(dk, tid, "ib"), cn = doneFor(dk, tid, "nr");
+      var nx = (!ci && !cn) ? [1,0] : (ci && !cn) ? [1,1] : (ci && cn) ? [0,1] : [0,0];
+      putDone(dk, tid, "ib", !!nx[0]); putDone(dk, tid, "nr", !!nx[1]); save();
+    } else {
+      setDone(dk, tid, !isDone(dk, tid));
+    }
     buzz(10); renderAll();
     return;
   }
@@ -3652,8 +4110,11 @@ document.addEventListener("click", function(e){
     var tk = taskById(did);
     if(tk && confirm("حذف «" + tk.name + "» وكل سجلّها؟")){
       S.tasks = S.tasks.filter(function(x){ return x.id !== did; });
-      for(var d in S.log){ delete S.log[d][did]; if(!Object.keys(S.log[d]).length) delete S.log[d]; }
-      delete S.makeups[did];
+      PIDS.forEach(function(w){
+        var L = S.logs[w];
+        for(var d in L){ delete L[d][did]; if(!Object.keys(L[d]).length) delete L[d]; }
+        delete S.makeups[w][did];
+      });
       save(); renderAll(); toast("🗑️ حُذفت المهمّة");
     }
     return;
@@ -3724,15 +4185,28 @@ el("mNext").onclick = function(){
 };
 el("mNow").onclick  = function(){ var d = new Date(); curMonth = new Date(d.getFullYear(), d.getMonth(), 1); renderMonth(); };
 
-/* الملاحظة */
-var noteT;
-el("noteBox").addEventListener("input", function(){
-  var k = key(curDay), val = this.value;
-  clearTimeout(noteT);
-  noteT = setTimeout(function(){
-    if(val.trim()) S.notes[k] = val; else delete S.notes[k];
-    save();
+/* تعديل اسم أحد الشخصين */
+var pnT;
+el("whoEdit").addEventListener("input", function(e){
+  var inp = e.target.closest("[data-pname]");
+  if(!inp) return;
+  var w = inp.getAttribute("data-pname"), val = inp.value;
+  clearTimeout(pnT);
+  pnT = setTimeout(function(){
+    var nm = val.trim();
+    person(w).name = nm || PEOPLE_DEF[PIDS.indexOf(w)].name;
+    save(); renderWhoBar(); renderToday(); renderWeek(); renderMonth();
   }, 400);
+});
+
+/* الملاحظة — لكل شخص مربّعه */
+var noteT;
+el("noteWrap").addEventListener("input", function(e){
+  var ta = e.target.closest("[data-note]");
+  if(!ta) return;
+  var k = key(curDay), w = ta.getAttribute("data-note"), val = ta.value;
+  clearTimeout(noteT);
+  noteT = setTimeout(function(){ setNote(k, w, val); }, 400);
 });
 
 /* إضافة مهمة */
@@ -3770,11 +4244,8 @@ el("impFile").onchange = function(){
     try{
       var o = JSON.parse(r.result);
       if(!o || !o.tasks) throw new Error("bad");
-      S = o;
-      S.log = S.log || {}; S.makeups = S.makeups || {}; S.notes = S.notes || {};
-      if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
-      if(!S.start) S.start = key(new Date());
-      save(); renderAll(); toast("📥 استُوردت النسخة بنجاح");
+      S = migrate(o);
+      save(); renderWhoBar(); renderAll(); toast("📥 استُوردت النسخة بنجاح");
     }catch(err){ toast("⚠️ الملف غير صالح"); }
   };
   r.readAsText(f);
@@ -3784,11 +4255,13 @@ el("resetBtn").onclick = function(){
   if(!confirm("سيُمسح كل سجلّك نهائيًا. متأكّد؟")) return;
   if(!confirm("تأكيد أخير — لا يمكن التراجع.")) return;
   S = {
-    v:1, start:key(new Date()),
+    v:2, start:key(new Date()),
     tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
-    log:{}, makeups:{}, notes:{}, debts:{ cur:"₪", people:[] }, theme:S.theme
+    people: S.people.map(function(x){ return Object.assign({}, x); }),
+    who:S.who, logs:{ ib:{}, nr:{} }, makeups:{ ib:{}, nr:{} }, notes:{ ib:{}, nr:{} },
+    debts:{ cur:"₪", people:[] }, theme:S.theme
   };
-  save(); renderAll(); toast("🧹 مُسحت البيانات");
+  migrate(S); save(); renderWhoBar(); renderAll(); toast("🧹 مُسحت البيانات");
 };
 
 /* الديون */
@@ -3852,6 +4325,7 @@ function show(v){
   Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
     b.classList.toggle("on", b.getAttribute("data-v") === v);
   });
+  el("whoBar").hidden = (v === "debt" || v === "more");
   window.scrollTo({ top:0, behavior:"instant" });
   if(v === "week") renderWeek();
   if(v === "month") renderMonth();
