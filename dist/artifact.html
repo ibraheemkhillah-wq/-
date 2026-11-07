@@ -555,6 +555,115 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
 }
 
 
+/* ═══════════════ الميزانية ═══════════════ */
+.bg-hero{
+  background:linear-gradient(175deg, var(--surface) 0%, var(--surface-2) 100%);
+  border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:16px 15px;
+}
+.bg-hero.over{border-color:color-mix(in srgb,var(--warn) 55%,var(--line));}
+.bg-top{display:flex;align-items:center;gap:15px;}
+.bg-ring{position:relative;width:96px;height:96px;flex:none;}
+.bg-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.bg-ring circle{fill:none;stroke-width:9;stroke-linecap:round;}
+.bg-ring .tr{stroke:var(--surface-3);}
+.bg-ring b{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1.15rem;font-weight:800;
+}
+.bg-top-txt{flex:1;min-width:0;}
+.bg-top-txt .lbl{font-size:.76rem;color:var(--ink-3);}
+.bg-top-txt .big{
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:2rem;font-weight:800;line-height:1.15;color:var(--good);
+  word-break:break-all;
+}
+.bg-hero.over .bg-top-txt .big{color:var(--warn);}
+.bg-top-txt .cur{font-size:1rem;font-weight:700;color:var(--ink-3);margin-inline-start:4px;}
+.bg-top-txt .hint{font-size:.72rem;color:var(--ink-3);margin-top:3px;line-height:1.5;}
+
+.bg-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px;}
+.bg-mini div{background:var(--surface-2);border-radius:var(--r-sm);padding:9px 6px;text-align:center;}
+.bg-mini b{
+  display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1rem;font-weight:800;line-height:1.2;
+}
+.bg-mini span{display:block;font-size:.63rem;color:var(--ink-3);margin-top:2px;}
+.bg-mini .w b{color:var(--warn);}
+.bg-mini .g b{color:var(--good);}
+
+/* ضبط الحدّ والعملة */
+.bg-set{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.bg-set label{font-size:.74rem;color:var(--ink-3);white-space:nowrap;}
+.bg-set input{
+  flex:1;min-width:92px;
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.92rem;font-weight:800;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:7px 10px;text-align:center;
+}
+.bg-set input:focus{outline:none;border-color:var(--lapis);}
+.bg-set select{
+  font-family:var(--font-body);font-size:.8rem;font-weight:700;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:7px 9px;flex:none;
+}
+
+/* شريط أبواب الصرف */
+.bg-cat{display:flex;flex-direction:column;gap:5px;padding:9px 0;border-top:1px solid var(--line);}
+.bg-cat:first-of-type{border-top:0;padding-top:0;}
+.bg-cat-t{display:flex;align-items:baseline;gap:8px;font-size:.85rem;}
+.bg-cat-t .nm{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bg-cat-t .vl{
+  flex:none;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:.85rem;font-weight:800;
+}
+.bg-cat-t .pc{flex:none;font-size:.7rem;color:var(--ink-3);
+  font-family:var(--font-num);font-variant-numeric:tabular-nums;}
+.bg-cat .bar{height:7px;border-radius:20px;background:var(--surface-2);overflow:hidden;}
+.bg-cat .bar i{display:block;height:100%;border-radius:20px;background:var(--gold);
+  transition:width .45s cubic-bezier(.2,.8,.3,1);}
+
+/* حركة صرف */
+.bg-tx{
+  display:flex;align-items:center;gap:11px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);
+  box-shadow:var(--shadow-sm);padding:10px 12px;
+}
+.bg-tx .em{
+  width:36px;height:36px;flex:none;border-radius:11px;background:var(--surface-2);
+  display:grid;place-items:center;font-size:1.05rem;
+}
+.bg-tx .bd{flex:1;min-width:0;}
+.bg-tx .bd b{display:block;font-size:.88rem;font-weight:600;line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bg-tx .bd span{display:block;font-size:.7rem;color:var(--ink-3);margin-top:1px;}
+.bg-tx .amt{
+  flex:none;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-size:1rem;font-weight:800;color:var(--warn);white-space:nowrap;
+}
+.bg-tx .x{
+  flex:none;width:28px;height:28px;border-radius:9px;
+  background:var(--surface-2);color:var(--ink-3);font-size:.85rem;
+}
+.bg-day{
+  font-size:.7rem;font-weight:700;color:var(--ink-3);
+  margin:10px 2px 2px;display:flex;align-items:center;gap:8px;
+}
+.bg-day i{flex:1;height:1px;background:var(--line);}
+.bg-day .s{font-family:var(--font-num);font-variant-numeric:tabular-nums;}
+
+/* اختيار الباب في الورقة */
+.bg-pick{display:flex;flex-wrap:wrap;gap:6px;}
+.bg-pick button{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 10px;border-radius:20px;font-size:.78rem;font-weight:600;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid transparent;
+  transition:background .16s, color .16s, border-color .16s;
+}
+.bg-pick button.on{background:var(--gold-wash);color:var(--gold-2);border-color:var(--gold);}
+
 /* ═══════════════ الديون ═══════════════ */
 .dbt-hero{
   background:linear-gradient(175deg, var(--surface) 0%, var(--surface-2) 100%);
@@ -699,8 +808,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   backdrop-filter:saturate(1.6) blur(14px);
   -webkit-backdrop-filter:saturate(1.6) blur(14px);
   border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(5,1fr);
-  padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);
+  display:grid;grid-template-columns:repeat(6,1fr);
+  padding:6px 3px calc(env(safe-area-inset-bottom) + 6px);
 }
 .tab{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -1211,6 +1320,59 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   </div>
 </section>
 
+<!-- ══════════════════ الميزانية ══════════════════ -->
+<section class="view" id="v-budget">
+  <div class="nav-bar">
+    <button class="nav-arrow" id="bPrev" aria-label="الشهر السابق">›</button>
+    <div class="nav-mid"><b id="bName">—</b><span id="bSub">—</span></div>
+    <button class="today-btn" id="bNow">الحالي</button>
+    <button class="nav-arrow" id="bNext" aria-label="الشهر التالي">‹</button>
+  </div>
+
+  <div class="bg-hero" id="bgHero">
+    <div class="bg-top">
+      <div class="bg-ring">
+        <svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="42"/><circle class="vl" id="bgRing" cx="50" cy="50" r="42"/></svg>
+        <b id="bgRingTxt">0٪</b>
+      </div>
+      <div class="bg-top-txt">
+        <div class="lbl" id="bgLeftLbl">المتبقّي من الميزانية</div>
+        <div class="big"><span id="bgLeft">0</span><span class="cur" id="bgCur1">₪</span></div>
+        <div class="hint" id="bgHint">—</div>
+      </div>
+    </div>
+    <div class="bg-mini">
+      <div class="w"><b id="bgSpent">0</b><span>ما انخصم</span></div>
+      <div><b id="bgLimitTxt">0</b><span>الحدّ الشهريّ</span></div>
+      <div><b id="bgCount">0</b><span>حركة</span></div>
+    </div>
+    <div class="bg-set">
+      <label for="bgLimit">الحدّ المسموح شهريًّا</label>
+      <input id="bgLimit" type="number" inputmode="decimal" step="any" min="0" placeholder="0">
+      <select id="curSel">
+        <option value="₪">₪ شيكل</option>
+        <option value="د.أ">د.أ دينار</option>
+        <option value="₺">₺ ليرة</option>
+        <option value="$">$ دولار</option>
+        <option value="€">€ يورو</option>
+        <option value="ر.س">ر.س ريال</option>
+        <option value="ج.م">ج.م جنيه</option>
+        <option value="د.إ">د.إ درهم</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="vid-btn" id="bgNew"><span class="ic">➕</span> تسجيل مصروف</button>
+
+  <div class="card" id="bgCatsCard" hidden>
+    <h3 class="card-t">🧭 وين راحت المصاريف</h3>
+    <p class="card-s">أبواب الصرف هذا الشهر، الأثقل أوّلًا</p>
+    <div id="bgCats"></div>
+  </div>
+
+  <div id="bgList" style="display:flex;flex-direction:column;gap:7px;"></div>
+</section>
+
 <!-- ══════════════════ الديون ══════════════════ -->
 <section class="view" id="v-debt">
   <div class="dbt-hero">
@@ -1230,17 +1392,8 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
       <div><b id="dbtCount">0</b><span>أشخاص</span></div>
     </div>
     <div class="dbt-curbar">
-      <span>العملة</span>
-      <select id="dbtCurSel">
-        <option value="₪">₪ شيكل</option>
-        <option value="د.أ">د.أ دينار</option>
-        <option value="₺">₺ ليرة</option>
-        <option value="$">$ دولار</option>
-        <option value="€">€ يورو</option>
-        <option value="ر.س">ر.س ريال</option>
-        <option value="ج.م">ج.م جنيه</option>
-        <option value="د.إ">د.إ درهم</option>
-      </select>
+      <span>العملة تُضبط من صفحة «الميزانية»</span>
+      <b id="dbtCurTxt" style="font-weight:800;color:var(--ink)">₪</b>
     </div>
   </div>
 
@@ -1306,6 +1459,10 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
   <button class="tab" data-v="month">
     <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8.5 13h2M13.5 13h2M8.5 16.5h2M13.5 16.5h2"/></svg>
     <span>الشهر</span>
+  </button>
+  <button class="tab" data-v="budget">
+    <svg viewBox="0 0 24 24"><path d="M4 9.5h16M4 9.5A1.5 1.5 0 0 1 5.5 8h13A1.5 1.5 0 0 1 20 9.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5Z"/><path d="M7.5 8V5.6a1.6 1.6 0 0 1 1.6-1.6h5.8A1.6 1.6 0 0 1 16.5 5.6V8"/><path d="M12 12.5v4M10 14.5h4"/></svg>
+    <span>الميزانية</span>
   </button>
   <button class="tab" data-v="debt">
     <svg viewBox="0 0 24 24"><path d="M3 7.5h13.5a3.5 3.5 0 0 1 3.5 3.5v6a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 2 17V6.8A2.3 2.3 0 0 1 4.3 4.5h10.2"/><circle cx="16.5" cy="13.5" r="1.2"/></svg>
@@ -1383,6 +1540,34 @@ main{flex:1;padding:16px 14px 24px;max-width:640px;width:100%;margin-inline:auto
     <div class="sheet-acts">
       <button class="no" id="dbtCancel">إلغاء</button>
       <button class="yes" id="dbtOk">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="bgSheet" hidden>
+  <div class="sheet-box">
+    <h3>مصروف جديد</h3>
+    <p class="sub" id="bgSheetS">كم صرفت، وفي أيّ باب؟</p>
+    <div class="sheet-f">
+      <label for="bgIAmt" id="bgLAmt">المبلغ</label>
+      <input id="bgIAmt" type="number" inputmode="decimal" step="any" min="0" placeholder="0">
+    </div>
+    <div class="sheet-f">
+      <label>وين راح المبلغ؟</label>
+      <div class="bg-pick" id="bgPick"></div>
+    </div>
+    <div class="sheet-f">
+      <label for="bgINote">تفصيل (اختياريّ)</label>
+      <input id="bgINote" maxlength="60" placeholder="مثلًا: سوق الخضار" autocomplete="off">
+    </div>
+    <div class="sheet-f">
+      <label for="bgIDate">التاريخ</label>
+      <input id="bgIDate" type="date">
+    </div>
+    <div class="sheet-err" id="bgErr"></div>
+    <div class="sheet-acts">
+      <button class="no" id="bgCancel">إلغاء</button>
+      <button class="yes" id="bgOk">حفظ المصروف</button>
     </div>
   </div>
 </div>
@@ -1625,6 +1810,21 @@ var GROUPS = [
 ];
 var PICK_EM = ["⭐","🏃","💧","🌿","✍️","🧠","🍎","💤","🧹","🤲","💰","📞","🏋️","🧺"];
 
+/* ═══════════════ أبواب الصرف ═══════════════ */
+var CATS_DEF = [
+  { id:"food",  name:"بقالة وطعام",  em:"🛒" },
+  { id:"trans", name:"مواصلات",       em:"🚗" },
+  { id:"bills", name:"فواتير",         em:"🧾" },
+  { id:"home",  name:"بيت وإيجار",    em:"🏠" },
+  { id:"heal",  name:"صحّة",          em:"💊" },
+  { id:"edu",   name:"تعليم",          em:"📚" },
+  { id:"gift",  name:"هدايا وضيافة",  em:"🎁" },
+  { id:"wear",  name:"ملابس",          em:"👕" },
+  { id:"sadaqa",name:"صدقة",           em:"🤲" },
+  { id:"other", name:"أخرى",           em:"✨" }
+];
+var CAT_EM = ["🛒","🚗","🧾","🏠","💊","📚","🎁","👕","🤲","✨","☕","🔧","📱","🚸","💈","🎒"];
+
 /* ═══════════════ الأشخاص ═══════════════ */
 /* المتابعة لشخصين: كل بند مطلوبٌ من كليهما، ويُقيَّم كلٌّ منهما على حِدة */
 var PIDS = ["ib", "nr"];
@@ -1659,7 +1859,18 @@ function migrate(o){
     if(!x.em)   x.em   = PEOPLE_DEF[i].em;
   });
   if(["ib","nr","both"].indexOf(o.who) < 0) o.who = "both";
-  if(!o.debts || !o.debts.people) o.debts = { cur:"₪", people:[] };
+  if(!o.debts || !o.debts.people) o.debts = { people:[] };
+  /* العملة صارت للتطبيق كلّه لا للديون وحدها */
+  if(!o.cur || o.debts.cur){
+    o.cur = o.cur || o.debts.cur || "₪";
+    delete o.debts.cur;
+    migrated = true;
+  }
+  if(!o.budget || typeof o.budget !== "object"){ o.budget = {}; migrated = true; }
+  if(typeof o.budget.limit !== "number") o.budget.limit = 0;
+  if(!Array.isArray(o.budget.tx)) o.budget.tx = [];
+  if(!Array.isArray(o.budget.cats) || !o.budget.cats.length)
+    o.budget.cats = CATS_DEF.map(function(c){ return Object.assign({}, c); });
   if(!o.start) o.start = key(new Date());
   return o;
 }
@@ -1669,10 +1880,12 @@ var S = readStore();
 if(!S || !S.tasks){
   bootFresh = true;
   S = {
-    v:2,
+    v:3,
     start: key(new Date()),
     tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
     people: PEOPLE_DEF.map(function(x){ return Object.assign({}, x); }),
+    cur:"₪",
+    budget:{ limit:0, tx:[], cats: CATS_DEF.map(function(c){ return Object.assign({}, c); }) },
     who:"both",           /* نطاق العرض: ib | nr | both */
     logs:    { ib:{}, nr:{} },   /* شخص → "2026-08-03" → { fajr:1 } */
     makeups: { ib:{}, nr:{} },   /* شخص → taskId → ["2026-08-03", ...] */
@@ -1683,7 +1896,7 @@ if(!S || !S.tasks){
 migrate(S);
 if(S.updated) storeAt = S.updated;
 /* اكتب الشكل الجديد فورًا — سواءٌ حالةٌ جديدة أو سجلٌّ رُقِّي للتوّ */
-if(bootFresh || migrated){ S.v = 2; writeStore(S); }
+if(bootFresh || migrated){ S.v = 3; writeStore(S); }
 
 function save(){ writeStore(S); }
 function activeTasks(){ return S.tasks.filter(function(t){ return t.on !== false; }); }
@@ -3800,12 +4013,251 @@ async function vidShareFile(){
 
 
 /* ═══════════════════════════════════════════════════
+   الميزانية — حدٌّ شهريّ، ومصاريف بأبوابها، وما بقي
+   ═══════════════════════════════════════════════════ */
+
+var curBud = (function(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
+
+function bgInit(){
+  if(!S.budget || typeof S.budget !== "object") S.budget = {};
+  if(typeof S.budget.limit !== "number") S.budget.limit = 0;
+  if(!Array.isArray(S.budget.tx)) S.budget.tx = [];
+  if(!Array.isArray(S.budget.cats) || !S.budget.cats.length)
+    S.budget.cats = CATS_DEF.map(function(c){ return Object.assign({}, c); });
+  if(!S.cur) S.cur = "₪";
+}
+function catOf(id){
+  var a = S.budget.cats;
+  for(var i=0;i<a.length;i++) if(a[i].id === id) return a[i];
+  return { id:id, name:"أخرى", em:"✨" };
+}
+/* مفتاح الشهر "2026-11" */
+function monKey(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0"); }
+
+/* كل مصاريف شهرٍ بعينه، مرتَّبةً من الأحدث */
+function bgMonthTx(m0){
+  var mk = monKey(m0);
+  return S.budget.tx.filter(function(t){
+    return String(t.date || "").slice(0,7) === mk;
+  }).sort(function(a,b){
+    return a.date === b.date ? (b.id > a.id ? 1 : -1) : (a.date < b.date ? 1 : -1);
+  });
+}
+
+function bgStats(m0){
+  var tx = bgMonthTx(m0);
+  var spent = 0, per = {};
+  tx.forEach(function(t){
+    var v = +t.amount || 0;
+    spent += v;
+    per[t.cat] = (per[t.cat] || 0) + v;
+  });
+  var limit = +S.budget.limit || 0;
+  var left  = limit - spent;
+  var pc    = limit > 0 ? Math.round(spent * 100 / limit) : 0;
+
+  /* أيام الشهر: المنقضي منها والباقي — للمتوسّط والتوقّع */
+  var today = startOfDay(new Date());
+  var len   = new Date(m0.getFullYear(), m0.getMonth()+1, 0).getDate();
+  var isNow = m0.getFullYear() === today.getFullYear() && m0.getMonth() === today.getMonth();
+  var past  = isNow ? today.getDate() : (m0 < today ? len : 0);
+  var rest  = isNow ? (len - today.getDate()) : 0;
+  var avg   = past > 0 ? spent / past : 0;
+
+  var cats = Object.keys(per).map(function(id){
+    return { id:id, c:catOf(id), v:per[id], p: spent > 0 ? Math.round(per[id]*100/spent) : 0 };
+  }).sort(function(a,b){ return b.v - a.v; });
+
+  return { tx:tx, spent:spent, limit:limit, left:left, pc:pc, cats:cats,
+           len:len, past:past, rest:rest, avg:avg, isNow:isNow,
+           projected: avg * len };
+}
+
+function renderBudget(){
+  bgInit();
+  var st = bgStats(curBud), cur = S.cur;
+  var today = startOfDay(new Date());
+  var isNow = st.isNow;
+
+  el("bName").textContent = MONTHS[curBud.getMonth()] + " " + curBud.getFullYear();
+  el("bSub").textContent = isNow ? "الشهر الحالي" : (curBud < today ? "شهر منتهٍ" : "شهر قادم");
+  el("bNow").style.visibility = isNow ? "hidden" : "visible";
+  el("bNext").disabled = isNow;
+
+  el("bgCur1").textContent = cur;
+  el("bgSpent").textContent = money(st.spent);
+  el("bgLimitTxt").textContent = st.limit > 0 ? money(st.limit) : "—";
+  el("bgCount").textContent = ar(st.tx.length);
+  el("dbtCurTxt").textContent = cur;
+  var li = el("bgLimit");
+  if(document.activeElement !== li) li.value = st.limit > 0 ? st.limit : "";
+  el("curSel").value = cur;
+
+  var over = st.limit > 0 && st.left < 0;
+  el("bgHero").classList.toggle("over", over);
+  el("bgLeftLbl").textContent = st.limit > 0
+    ? (over ? "تجاوزتَ الحدّ بـ" : "المتبقّي من الميزانية")
+    : "مجموع ما صرفت";
+  el("bgLeft").textContent = st.limit > 0 ? money(Math.abs(st.left)) : money(st.spent);
+
+  /* الحلقة: نسبة ما انخصم من الحدّ */
+  var R = 42, C = 2 * Math.PI * R, c = el("bgRing");
+  var shown = Math.min(st.pc, 100);
+  c.style.strokeDasharray = C;
+  c.style.strokeDashoffset = C * (1 - shown / 100);
+  c.style.stroke = st.limit <= 0 ? "var(--ink-3)"
+    : (st.pc >= 100 ? "var(--warn)" : (st.pc >= 75 ? "var(--gold)" : "var(--good)"));
+  el("bgRingTxt").textContent = st.limit > 0 ? ar(st.pc) + "٪" : "—";
+
+  /* سطر الإرشاد: متوسّط يوميّ وما يسع صرفه يوميًّا فيما بقي */
+  var hint;
+  if(st.limit <= 0){
+    hint = "اضبط الحدّ الشهريّ أسفل البطاقة ليحسب لك المتبقّي.";
+  } else if(!st.tx.length){
+    hint = "لم تُسجَّل مصاريف في هذا الشهر بعد.";
+  } else if(over){
+    hint = "صرفتَ " + money(st.spent) + " من حدٍّ قدره " + money(st.limit) + " " + cur + ".";
+  } else if(isNow && st.rest > 0){
+    hint = "يسعك " + money(Math.floor(st.left / st.rest)) + " " + cur +
+           " يوميًّا فيما بقي من الشهر (" + days(st.rest) + ").";
+  } else {
+    hint = "متوسّط اليوم " + money(Math.round(st.avg)) + " " + cur + ".";
+  }
+  el("bgHint").textContent = hint;
+
+  /* أبواب الصرف */
+  var cc = el("bgCatsCard"), cb = el("bgCats");
+  cc.hidden = !st.cats.length;
+  cb.innerHTML = "";
+  var top = st.cats.length ? st.cats[0].v : 0;
+  st.cats.forEach(function(x){
+    var row = document.createElement("div");
+    row.className = "bg-cat";
+    row.innerHTML =
+      '<div class="bg-cat-t"><span class="nm">'+x.c.em+' '+esc(x.c.name)+'</span>'+
+      '<span class="vl">'+money(x.v)+'</span><span class="pc">'+ar(x.p)+'٪</span></div>'+
+      '<div class="bar"><i style="width:'+(top>0?Math.round(x.v*100/top):0)+'%"></i></div>';
+    cb.appendChild(row);
+  });
+
+  /* الحركات مجمَّعةً بأيامها */
+  var box = el("bgList");
+  box.innerHTML = "";
+  if(!st.tx.length){
+    box.innerHTML = '<div class="card"><div class="empty">لا مصاريف مسجّلة في '+
+      esc(MONTHS[curBud.getMonth()])+'.<br>اضغط «تسجيل مصروف» لتبدأ.</div></div>';
+    return;
+  }
+  var lastDay = null;
+  st.tx.forEach(function(t){
+    if(t.date !== lastDay){
+      lastDay = t.date;
+      var sum = 0;
+      st.tx.forEach(function(o){ if(o.date === t.date) sum += (+o.amount || 0); });
+      var h = document.createElement("div");
+      h.className = "bg-day";
+      var d = fromKey(t.date);
+      h.innerHTML = '<span>'+DAY_LONG[dowIndex(d)]+' '+d.getDate()+' '+MONTHS[d.getMonth()]+'</span>'+
+                    '<i></i><span class="s">'+money(sum)+' '+esc(cur)+'</span>';
+      box.appendChild(h);
+    }
+    var c2 = catOf(t.cat);
+    var row = document.createElement("div");
+    row.className = "bg-tx";
+    row.innerHTML =
+      '<span class="em">'+c2.em+'</span>'+
+      '<span class="bd"><b>'+esc(t.note ? t.note : c2.name)+'</b>'+
+      '<span>'+esc(t.note ? c2.name : "بلا تفصيل")+'</span></span>'+
+      '<span class="amt">'+money(t.amount)+'</span>'+
+      '<button class="x" data-bgdel="'+esc(t.id)+'" aria-label="حذف المصروف">✕</button>';
+    box.appendChild(row);
+  });
+}
+
+/* ── ورقة التسجيل ── */
+var bgCat = "food";
+function bgRenderPick(){
+  var box = el("bgPick"); box.innerHTML = "";
+  S.budget.cats.forEach(function(c){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = c.id === bgCat ? "on" : "";
+    b.setAttribute("data-bgcat", c.id);
+    b.innerHTML = '<span>'+c.em+'</span><span>'+esc(c.name)+'</span>';
+    box.appendChild(b);
+  });
+}
+function bgSheetOpen(){
+  bgInit();
+  bgCat = "food";
+  el("bgIAmt").value = "";
+  el("bgINote").value = "";
+  el("bgErr").textContent = "";
+  el("bgLAmt").textContent = "المبلغ (" + S.cur + ")";
+  /* التاريخ: اليوم إن كنّا في الشهر المعروض، وإلّا أوّل يومٍ منه */
+  var today = startOfDay(new Date());
+  var d = (curBud.getFullYear() === today.getFullYear() && curBud.getMonth() === today.getMonth())
+    ? today : new Date(curBud.getFullYear(), curBud.getMonth(), 1);
+  el("bgIDate").value = key(d);
+  var st = bgStats(curBud);
+  el("bgSheetS").textContent = st.limit > 0
+    ? "بقي لك " + money(st.left) + " " + S.cur + " من حدّ " + MONTHS[curBud.getMonth()]
+    : "كم صرفت، وفي أيّ باب؟";
+  bgRenderPick();
+  el("bgSheet").hidden = false;
+  document.body.style.overflow = "hidden";
+  setTimeout(function(){ el("bgIAmt").focus(); }, 120);
+}
+function bgSheetClose(){
+  el("bgSheet").hidden = true;
+  document.body.style.overflow = "";
+}
+function bgSave(){
+  var amt = parseFloat(el("bgIAmt").value);
+  var err = el("bgErr");
+  if(!(amt > 0)){ err.textContent = "أدخل مبلغًا أكبر من صفر."; return; }
+  var dv = el("bgIDate").value;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dv)){ err.textContent = "اختر تاريخًا صحيحًا."; return; }
+
+  S.budget.tx.push({
+    id: "e" + Date.now().toString(36) + Math.floor(Math.random()*1e4).toString(36),
+    amount: amt, cat: bgCat, note: el("bgINote").value.trim(), date: dv
+  });
+  save(); bgSheetClose();
+  /* انتقل إلى شهر المصروف ليراه مباشرةً */
+  var d = fromKey(dv);
+  curBud = new Date(d.getFullYear(), d.getMonth(), 1);
+  renderBudget(); buzz(14);
+
+  var st = bgStats(curBud);
+  var c = catOf(bgCat);
+  if(st.limit > 0 && st.left < 0)
+    toast("⚠️ " + c.em + " سُجّل " + money(amt) + " — تجاوزتَ الحدّ بـ" + money(-st.left) + " " + S.cur);
+  else if(st.limit > 0)
+    toast(c.em + " سُجّل " + money(amt) + " — بقي " + money(st.left) + " " + S.cur);
+  else
+    toast(c.em + " سُجّل مصروف " + money(amt) + " " + S.cur);
+}
+function bgDel(id){
+  bgInit();
+  var a = S.budget.tx;
+  for(var i=0;i<a.length;i++){
+    if(a[i].id === id){
+      var v = a[i].amount;
+      a.splice(i,1); save(); renderBudget(); buzz(10);
+      toast("🗑️ حُذف مصروف " + money(v) + " " + S.cur);
+      return;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════
    الديون — دفتر حركات لكل شخص: إضافةٌ تزيد وسدادٌ ينقص
    ═══════════════════════════════════════════════════ */
 
 function dbtInit(){
-  if(!S.debts || !S.debts.people) S.debts = { cur:"₪", people:[] };
-  if(!S.debts.cur) S.debts.cur = "₪";
+  if(!S.debts || !S.debts.people) S.debts = { people:[] };
+  if(!S.cur) S.cur = "₪";
 }
 
 function money(n){
@@ -3851,14 +4303,14 @@ var dbtOpen = {};   /* أي السجلّات مفتوحة */
 
 function renderDebts(){
   dbtInit();
-  var cur = S.debts.cur, T = dbtTotals();
+  var cur = S.cur, T = dbtTotals();
 
   el("dbtRemain").textContent = money(T.left);
   el("dbtCur1").textContent = cur;
   el("dbtOwed").textContent = money(T.owed);
   el("dbtPaid").textContent = money(T.paid);
   el("dbtCount").textContent = ar(T.count);
-  el("dbtCurSel").value = cur;
+  el("dbtCurTxt").textContent = cur;
 
   var pc = T.owed > 0 ? Math.round(T.paid * 100 / T.owed) : 0;
   var R = 42, C = 2 * Math.PI * R, c = el("dbtRing");
@@ -3943,18 +4395,18 @@ function dbtSheet(mode, id){
   if(mode === "new"){
     t.textContent = "دَين جديد";
     sub.textContent = "سجّل لمن تدين وبكم";
-    el("dbtLAmt").textContent = "المبلغ (" + S.debts.cur + ")";
+    el("dbtLAmt").textContent = "المبلغ (" + S.cur + ")";
     ok.textContent = "حفظ الدَّين";
   } else if(mode === "add"){
     t.textContent = "زيادة دَين — " + (p ? p.name : "");
     sub.textContent = "يُضاف إلى رصيده فيرتفع مجموع ما عليك";
-    el("dbtLAmt").textContent = "المبلغ المُضاف (" + S.debts.cur + ")";
+    el("dbtLAmt").textContent = "المبلغ المُضاف (" + S.cur + ")";
     ok.textContent = "إضافة";
   } else {
     t.textContent = "سداد — " + (p ? p.name : "");
     var b = p ? dbtOf(p) : { left:0 };
-    sub.textContent = "المتبقّي له " + money(b.left) + " " + S.debts.cur;
-    el("dbtLAmt").textContent = "المبلغ المسدَّد (" + S.debts.cur + ")";
+    sub.textContent = "المتبقّي له " + money(b.left) + " " + S.cur;
+    el("dbtLAmt").textContent = "المبلغ المسدَّد (" + S.cur + ")";
     ok.textContent = "تسجيل السداد";
   }
   el("dbtSheet").hidden = false;
@@ -3984,7 +4436,7 @@ function dbtSave(){
       tx: [{ id:"t" + Date.now().toString(36), t:"add", amount:amt, date:key(new Date()), note:"" }]
     });
     save(); dbtClose(); renderDebts(); buzz(14);
-    toast("➕ أُضيف دَين " + money(amt) + " " + S.debts.cur);
+    toast("➕ أُضيف دَين " + money(amt) + " " + S.cur);
     return;
   }
 
@@ -3994,7 +4446,7 @@ function dbtSave(){
   if(dbtMode === "pay"){
     var b = dbtOf(p);
     if(amt - b.left > 0.004){
-      err.textContent = "المبلغ أكبر من المتبقّي (" + money(b.left) + " " + S.debts.cur + ").";
+      err.textContent = "المبلغ أكبر من المتبقّي (" + money(b.left) + " " + S.cur + ").";
       return;
     }
   }
@@ -4009,16 +4461,16 @@ function dbtSave(){
   if(dbtMode === "pay"){
     toast(left <= 0.004
       ? "🤍 سُدّد دَين " + p.name + " بالكامل"
-      : "− سُجّل سداد " + money(amt) + " — بقي " + money(left) + " " + S.debts.cur);
+      : "− سُجّل سداد " + money(amt) + " — بقي " + money(left) + " " + S.cur);
   } else {
-    toast("+ زاد دَين " + p.name + " إلى " + money(left) + " " + S.debts.cur);
+    toast("+ زاد دَين " + p.name + " إلى " + money(left) + " " + S.cur);
   }
 }
 
 /* ═══════════════ التحديث الشامل ═══════════════ */
 function renderAll(){
   renderWhoBar();
-  renderToday(); renderWeek(); renderMonth(); renderDebts(); renderMore();
+  renderToday(); renderWeek(); renderMonth(); renderBudget(); renderDebts(); renderMore();
   storeBanner();
 }
 
@@ -4085,6 +4537,10 @@ document.addEventListener("click", function(e){
     buzz(10); renderAll();
     return;
   }
+
+  /* حذف مصروف */
+  t = e.target.closest("[data-bgdel]");
+  if(t){ bgDel(t.getAttribute("data-bgdel")); return; }
 
   /* الانتقال إلى يوم من خريطة الشهر */
   t = e.target.closest("[data-goday]");
@@ -4255,14 +4711,49 @@ el("resetBtn").onclick = function(){
   if(!confirm("سيُمسح كل سجلّك نهائيًا. متأكّد؟")) return;
   if(!confirm("تأكيد أخير — لا يمكن التراجع.")) return;
   S = {
-    v:2, start:key(new Date()),
+    v:3, start:key(new Date()),
     tasks: DEFAULTS.map(function(t){ return Object.assign({}, t, { on:true }); }),
     people: S.people.map(function(x){ return Object.assign({}, x); }),
     who:S.who, logs:{ ib:{}, nr:{} }, makeups:{ ib:{}, nr:{} }, notes:{ ib:{}, nr:{} },
-    debts:{ cur:"₪", people:[] }, theme:S.theme
+    cur:S.cur, budget:{ limit:S.budget.limit, tx:[], cats:S.budget.cats },
+    debts:{ people:[] }, theme:S.theme
   };
   migrate(S); save(); renderWhoBar(); renderAll(); toast("🧹 مُسحت البيانات");
 };
+
+/* الميزانية */
+el("bgNew").onclick    = bgSheetOpen;
+el("bgCancel").onclick = bgSheetClose;
+el("bgOk").onclick     = bgSave;
+el("bgSheet").addEventListener("click", function(e){ if(e.target === this) bgSheetClose(); });
+el("bgIAmt").addEventListener("keydown", function(e){ if(e.key === "Enter") bgSave(); });
+el("bgINote").addEventListener("keydown", function(e){ if(e.key === "Enter") bgSave(); });
+el("bgPick").addEventListener("click", function(e){
+  var b = e.target.closest("[data-bgcat]");
+  if(!b) return;
+  bgCat = b.getAttribute("data-bgcat"); bgRenderPick(); buzz(8);
+});
+
+var bgLimT;
+el("bgLimit").addEventListener("input", function(){
+  var v = parseFloat(this.value);
+  clearTimeout(bgLimT);
+  bgLimT = setTimeout(function(){
+    bgInit();
+    S.budget.limit = (v > 0) ? v : 0;
+    save(); renderBudget();
+  }, 400);
+});
+el("curSel").onchange = function(){
+  bgInit(); S.cur = this.value; save(); renderBudget(); renderDebts(); buzz(8);
+};
+
+el("bPrev").onclick = function(){ curBud = new Date(curBud.getFullYear(), curBud.getMonth()-1, 1); renderBudget(); };
+el("bNext").onclick = function(){
+  var n = new Date(curBud.getFullYear(), curBud.getMonth()+1, 1);
+  if(n <= new Date()){ curBud = n; renderBudget(); }
+};
+el("bNow").onclick  = function(){ var d = new Date(); curBud = new Date(d.getFullYear(), d.getMonth(), 1); renderBudget(); };
 
 /* الديون */
 el("dbtNew").onclick    = function(){ dbtSheet("new"); };
@@ -4271,9 +4762,6 @@ el("dbtOk").onclick     = dbtSave;
 el("dbtSheet").addEventListener("click", function(e){
   if(e.target === this) dbtClose();
 });
-el("dbtCurSel").onchange = function(){
-  dbtInit(); S.debts.cur = this.value; save(); renderDebts(); buzz(8);
-};
 el("dbtIAmt").addEventListener("keydown", function(e){ if(e.key === "Enter") dbtSave(); });
 el("dbtINote").addEventListener("keydown", function(e){ if(e.key === "Enter") dbtSave(); });
 
@@ -4318,17 +4806,19 @@ el("themeBtn").onclick = function(){
 
 /* التبويبات */
 function show(v){
-  var views = { today:"v-today", week:"v-week", month:"v-month", debt:"v-debt", more:"v-more" };
+  var views = { today:"v-today", week:"v-week", month:"v-month",
+                budget:"v-budget", debt:"v-debt", more:"v-more" };
   Object.keys(views).forEach(function(k){
     el(views[k]).classList.toggle("on", k === v);
   });
   Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
     b.classList.toggle("on", b.getAttribute("data-v") === v);
   });
-  el("whoBar").hidden = (v === "debt" || v === "more");
+  el("whoBar").hidden = (v === "debt" || v === "more" || v === "budget");
   window.scrollTo({ top:0, behavior:"instant" });
   if(v === "week") renderWeek();
   if(v === "month") renderMonth();
+  if(v === "budget") renderBudget();
   if(v === "debt") renderDebts();
   if(v === "more") renderMore();
 }
